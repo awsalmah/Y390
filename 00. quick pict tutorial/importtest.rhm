@@ -1,0 +1,9 @@
+#lang rhombus
+
+import:
+  "quick.rhm" as q
+  pict as p
+
+q.rainbow(p.square(~size:10,~fill:#'inherit))
+q.rainbow(q.square(5))
+q.square(5)

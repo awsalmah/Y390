@@ -1,0 +1,90 @@
+#lang rhombus
+
+import:
+  pict as p
+  draw
+  rhombus/random open
+
+// this is a single-line comment
+
+// def img of the text OCT.31,1978
+def txt_img = p.text("OCT.31,1978").colorize("white") // this is equivalent to the text function
+txt_img
+// def square img to contain the txt img
+def y = p.rectangle(~width:200, ~height:100,~fill:"black")
+//overlay both images on top of each other
+def res = p.overlay(y,txt_img)
+res
+
+//draw and sizing
+//def big = draw.Font(~size: 24)
+//def hello = text("Hello", ~font: big).colorize("forestgreen")
+
+//text("Hi!", ~font: (~style: #'italic))
+//text("Hi!", ~font: draw.Font(~kind: #'roman, ~size: 20, ~style: #'italic))
+//text("Hi!", ~font: draw.Font(~kind: #'roman, ~size: 20, ~style: #'italic))
+
+println("")
+println("")
+println("")
+
+def vert_rect = p.rectangle(~width:100, ~height:200, ~line:"black", ~line_width:10, ~fill:#'inherit)
+
+def col1 = p.stack(vert_rect.colorize("white"),vert_rect.colorize("white"))
+
+def red_sqr = p.square(~size:400, ~line:"black", ~line_width:10, ~fill:"red")
+
+def row1 = p.beside(col1,red_sqr)
+
+def horizontal_rect = p.rectangle(~width:350, ~height:100, ~line:"black", ~line_width:10, ~fill:#'inherit)
+
+def big_sqr = p.square(~size:100,~line:"black", ~line_width:10, ~fill:#'inherit)
+
+def sqr = p.square(~size:50,~line:"black", ~line_width:10, ~fill:#'inherit)
+
+def row2 = p.beside(big_sqr.colorize("blue"),horizontal_rect.colorize("white"),p.stack(sqr.colorize("white"),sqr.colorize("yellow")))
+
+
+def piet_mondrian = p.stack(row1,row2)
+
+piet_mondrian
+println("")
+
+// this is equivalent to place-image me thinks
+def layer1 = p.overlay(~horiz: #'left, ~vert: #'top, ~order: #'front, p.square(~size:500, ~line:"black", ~line_width:10, ~fill:"red"),p.stack(vert_rect.colorize("white"),vert_rect.colorize("white")))
+def layer2 = p.overlay(~horiz: #'left, ~vert: #'bottom, ~order: #'front, layer1,row2)
+layer2
+
+println("")
+println("")
+println("")
+
+Random()
+// Random().random(5)
+
+def txt_img2 = p.text("OCT.31,1978").colorize("white")
+def y2 = p.rectangle(~width:math.random(200,1000), ~height:math.random(100,1000),~fill:"black")
+def res2 = p.overlay(y2,txt_img2)
+res2
+
+def vert_rect11 = p.rectangle(~width:math.random(100), ~height:math.random(200), ~line:"black", ~line_width:10, ~fill:#'inherit)
+
+def col11 = p.stack(vert_rect11.colorize("white"),vert_rect11.colorize("white"))
+
+def red_sqr11 = p.square(~size:math.random(200,400), ~line:"black", ~line_width:10, ~fill:"red")
+
+def row11 = p.beside(col11,red_sqr11)
+
+def horizontal_rect11 = p.rectangle(~width:math.random(350), ~height:math.random(100), ~line:"black", ~line_width:10, ~fill:#'inherit)
+
+def big_sqr11 = p.square(~size:math.random(100),~line:"black", ~line_width:10, ~fill:#'inherit)
+
+def sqr11 = p.square(~size:math.random(50),~line:"black", ~line_width:10, ~fill:#'inherit)
+
+def row21 = p.beside(big_sqr11.colorize("blue"),horizontal_rect11.colorize("white"),p.stack(sqr11.colorize("white"),sqr11.colorize("yellow")))
+
+
+def pm11 = p.stack(row11,row21)
+
+def piet_mordan11 = p.overlay(~order: #'back, p.square(~size:500,~line:"black", ~line_width:10,),pm11)
+piet_mordan11

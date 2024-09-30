@@ -1,0 +1,28 @@
+#|
+Filename: f2c
+Part of: 01. Rhombus Essentials
+Created by: Aws Almahasneh
+Created on: Monday September 16th 2024 (MM/DD/YYYY)
+Last Modified by: Aws Almahasneh
+Last Modified on: 09/16/2024
+Notes: This is part of the "1.2 Modules, Variables, and Functions" file 
+|#
+
+#lang rhombus
+
+export:
+  farenheit_freezing
+  farenheit_to_celsius
+
+def farenheit_freezing : 32
+
+fun farenheit_to_celsius(f):
+  (f - 32) * 5 / 9
+
+// A Rhombus module can export definitions to other modules using export,
+// and it can import other modules using import.
+
+// The #lang rhombus line is a kind of import already,
+
+// so normally more imports are written at the top of a module,
+// and then exports, and then the definitions.

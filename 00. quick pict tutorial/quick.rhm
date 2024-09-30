@@ -1,0 +1,185 @@
+#lang rhombus
+
+import: pict as p
+
+// 3. Go
+println("Go!")
+// The below are expressions
+
+5
+
+"art gallery"
+
+p.circle(~size:10)
+
+p.rectangle(~width:10, ~height: 20)
+
+p.beside( p.circle(~size:10), p.rectangle(~width:10, ~height: 20) )
+println("")
+
+// 4. Definitions
+println("4. Definitions")
+def c = p.circle(~size:10)
+def r = p.rectangle(~width:10, ~height: 20)
+
+r
+
+p.beside(c,r)
+
+p.beside(~sep:20, r, c, r)
+
+fun square(n):
+  p.rectangle(~width:n, ~height: n, ~fill: #'inherit)
+
+square(10)
+println("")
+
+// 5. Local Binding
+println("Local Binding")
+
+fun four(x):
+  def two_p = p.beside(x, x)
+  p.stack(two_p,two_p)
+
+four(c)
+// four(p.circle(~size:10))
+
+fun checker(p1, p2):
+  //def also works here
+  let p12 = p.beside(p1,p2)
+  let p21 = p.beside(p2,p1)
+  p.stack(p12,p21)
+
+checker(p.square(~size:10,~fill:"red"),p.square(~size:10,~fill:"black"))
+
+fun checkerboard(x):
+  def rp = x.colorize("red")
+  def bp = x.colorize("black")
+  def c = checker(rp,bp)
+  def c4 = four(c)
+  four(c4)
+  
+checkerboard(square(10))
+// ask about "#'inherit" vs #'inherit
+println("")
+
+// 6. Functions as values
+println("6. Functions as values")
+
+p.circle
+
+fun series(mk):
+  p.beside(~sep:4, mk(~size:5),mk(~size:10),mk(~size:20))
+
+series(p.circle)
+series(p.square)
+// checkerboard(p.circle(~size:10,~fill:#'inherit))
+series(fun(~size: size):checkerboard(p.square(~size:size,~fill:#'inherit))) 
+println("")
+
+println("7. Lexical Scope")
+
+fun rgb_series(mk):
+  p.stack(
+    series(mk).colorize("red"),series(mk).colorize("green"),series(mk).colorize("blue")
+  )
+
+rgb_series(p.circle)
+rgb_series(fun(~size:s): square(s))
+//rgb_series(square)
+println()
+
+println("8. Lists")
+["red", "green", "blue"]
+List("red", "green", "blue")
+
+List(p.circle(~size:10), square(10))
+
+List(p.circle(~size:10), p.square(~size:10))
+
+fun rainbow(x):
+  // x = p.square
+  List.map(["red", "orange", "yellow", "green", "blue", "purple"],fun(y): x.colorize(y))
+  
+
+rainbow(p.square(~size:5,~fill:#'inherit))
+
+List.map([1,2,3] , fun(x) :x+1)
+// apply takes a function and a list
+// a function given to apply should take all of the arguments at once
+// instead of each one individually
+// apply(p.stack, rainbow(p.square(~size:5,~fill:#'inherit)))
+//list length rainbow(p.square(~size:5,~fill:#'inherit)) |> List.length
+List.length([1, 2, 3])
+println("")
+
+// 9. Modules
+println("9. Modules")
+
+// A Rhombus module can export definitions to other modules using export,
+// and it can import other modules using import.
+
+// The #lang rhombus line is a kind of import already,
+
+// so normally more imports are written at the top of a module,
+// and then exports, and then the definitions.
+
+import:
+  // to reference a racket module, use a lib path with a ".rkt" suffix i.e: lib("racket/math.rkt")
+  lib("racket/math.rkt")
+  lib("pict/flash.rkt") as op
+  "f2c.rhm" as convert
+  pict/radial as pr
+
+export:
+  rainbow
+  square
+
+convert.farenheit_to_celsius(32)
+
+pr.flash(~fill: "black")
+println("")
+
+// 10. Macros
+println("10. Macros")
+
+import:
+  pict/rhombus as r
+
+r.rhombus(p.circle(~size:10))
+
+r. @rhombusblock( p.circle(~size:10))
+
+// Instead of a circle, the result is a picture of the code that, if it were used as an expression, would produce a circle.
+
+//cant call it pict+code
+// want to create a macro that results in the below
+// p.beside(~sep:20, expr, r.rhombus(expr))
+p.beside(~sep:20,p.circle(~size:10),r.rhombus(p.circle(~size:10)))
+//macro??
+//macro 'pict_plus_code':
+  //'fun (expr): $p.beside(expr,expr)'
+
+//def y = pict_plus_code
+macro 'pr($expr)':
+  'p.beside(~sep:20,$expr,r.rhombus($expr))'
+
+pr(p.circle(~size:20))
+
+println()
+println()
+
+// 11. Objects
+import: gui as g
+  
+def f = g.Window(~title: "My Art",
+                 ~size: [300,
+                         300],
+                 ~alignment: [#'center,
+                              #'center],
+                 )
+g.render(f)
+
+// fun add_drawing(x):
+  // let drawer = p.drawer()
+  // canvas
