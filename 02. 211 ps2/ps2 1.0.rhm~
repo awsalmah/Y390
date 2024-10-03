@@ -1,0 +1,54 @@
+#lang rhombus
+import: pict as p
+        draw
+
+fun cube(x):
+  x*x*x
+
+cube(10)
+println("")
+println("")
+
+def diamond_eat = 1;
+
+//fun text(string, font_size = 10, color = "black"):
+//text is a function that MUST TAKE 3 arguments, a string, a number between 1 and 255 and a color
+// it returns an image that draws the given string using the number and the color 
+fun text(string, font_size, color):
+  if font_size is_a Real.in(0, 256 ~exclusive) //adds the same size limitations as racket 1 to 255
+  | p.text(string,~font:draw.Font(~size:font_size)).colorize(color)
+  | "text: expects a font-size as second argument" // modify this message and make it an actual error message
+  // make sure that If the string contains newlines, the result image will have multiple lines.
+
+text("Hello", 24, "olive")
+text("Hello", 2444, "olive")
+text("awS",255,"red")
+text
+// Calling text like this has the same effect as calling circle or text in racket,
+// returns the function and function name as opposed to procedure and procedure
+// name
+
+//circle is a function that must take 3 inputs, radius, mode, and color.
+// returns an image of a circle with the given radius, mode, and color.
+fun circle(radius, mode, color):
+  cond
+  | mode == "solid" : p.circle(~size:radius, ~fill:#'inherit).colorize(color)
+  | mode == "outline" : p.circle(~size:radius).colorize(color) // if it is an outline then the last argument can be a pen struct or a color
+  //add a case for when mode is a number between 1 and 255 to adjust the opacity of the clr
+  | ~else: "L"
+
+circle(30,"outline","red")
+circle(30,"solid","blue")
+
+fun square(side_len, mode, color): // rhombus should be pretty similar to this but with rotate built in
+  cond
+  | mode == "solid" : p.square(~size:side_len, ~fill:#'inherit).colorize(color)
+  | mode == "outline" : p.square(~size:side_len).colorize(color) // if it is an outline then the last argument can be a pen struct or a color
+  //add a case for when mode is a number between 1 and 255 to adjust the opacity of the clr
+  | ~else: "L"
+
+square(40, "solid", "blue")
+square(40, "outline", "purple") // darkmagneta dne does not exist
+
+fun rotate(angle, image):
+  image.rotate(angle)
