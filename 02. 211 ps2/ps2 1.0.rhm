@@ -2,141 +2,120 @@
 import: pict as p
         pict/radial as pr
         draw
-/////////////// ask abt if and cond
-fun cube(x):
+        // pict/text open
+        //pict/rhombus as r
+
+fun cube(x :: Number):
   x*x*x
 
-cube(10)
-println("")
-println("")
-
-//fun text(string, font_size = 10, color = "black"):
-//text is a function that MUST TAKE 3 arguments, a string, a number between 1 and 255 and a color
-// it returns an image that draws the given string using the number and the color 
-fun text(string :: String, font_size ::  Real.in(0, 256 ~exclusive), color :: String):
+//check verbatim and pict text layout to deal with the newline issue
+//text is a function that constructs an image that draws the given string, using the font size and color.
+fun text(string :: String, font_size ::  Real.in(1, 255 ~inclusive), color :: String):
   p.text(string,~font:draw.Font(~size:font_size)).colorize(color)
- 
-// implement text font on another day
-text("Hello", 24, "olive")
-// text("Hello", 2444, "olive")
-text("awS",255,"red")
-text
-// Calling text like this has the same effect as calling circle or text in racket,
-// returns the function and function name as opposed to procedure and procedure
-// name
+// If the string contains newlines, the result image will have multiple lines. ==> check this
+
 
 //circle is a function that must take 3 inputs, radius, mode, and color.
 // returns an image of a circle with the given radius, mode, and color.
-fun circle(radius, mode, color):
-  cond
-  | mode == "solid" : p.circle(~size:radius, ~fill:#'inherit).colorize(color)
-  | mode == "outline" : p.circle(~size:radius).colorize(color) // if it is an outline then the last argument can be a pen struct or a color
-  //add a case for when mode is a number between 1 and 255 to adjust the opacity of the clr
-  | ~else: "L"
-
-circle(30,"outline","red")
-circle(30,"solid","blue")
-
-fun do_constructor(fn, mode, color, args, ...):
-  cond
-  | #true: fn(~fill: #'inherit)
-
 fun mode_to_color(mode):
   cond
   | mode == "solid": #'inherit
   | mode == "outline": #false
-  | mode is_a Number: #true
-  
+  | mode is_a Number: mode :: Real.in(1,255 ~inclusive) // mode number raises an error
+  | ~else: error(~who: #'mode_to_color,
+                 "expects a mode as second argument",
+                 ~details: ["given:",mode])
+                 //~details: ["expects a mode as second argument;",
+                   //         "given ",mode])
 
-fun square(side_len, mode, color): // rhombus should be pretty similar to this but with rotate built in
-  // do_constructor(p.square, stuff)
-  cond
-  | mode == "solid" : p.square(~size:side_len, ~fill:#'inherit).colorize(color)
-  | mode == "outline" : p.square(~size:side_len).colorize(color) // if it is an outline then the last argument can be a pen struct or a color
+//is color argument a string only
+//number non negative
+// p.circle(~size:30, ~fill: 250).colorize("red") mode being a number raises a rhombus error
+fun circle(radius :: Number, mode, color):
+  p.circle(~size:radius, ~fill: mode_to_color(mode)).colorize(color)
+    // if it is an outline then the last argument can be a pen struct or a color
   //add a case for when mode is a number between 1 and 255 to adjust the opacity of the clr
-  | ~else: "L"
 
-square(40, "solid", "blue")
-square(40, "outline", "purple") // darkmagneta dne does not exist
+/*
+fun do_constructor(fn:: Function, mode, color, args, ...):
+  cond
+  | #true: fn(~fill: mode_to_color(mode)).colorize(color)
+*/
 
-fun rotate(angle, image):
-  image.rotate(angle)
+fun square(side_len :: Number, mode, color): // rhombus should be pretty similar to this but with rotate built in
+  // do_constructor(p.square, stuff)
+  p.square(~size:side_len, ~fill: mode_to_color(mode)).colorize(color)
+  // if it is an outline then the last argument can be a pen struct or a color
+  //add a case for when mode is a number between 1 and 255 to adjust the opacity of the clr
+// ::Pict
+fun rotate(angle :: Number, image):
+  image.rotate(angle * math.pi/180)
 
-rotate(.78,square(40, "solid", "blue"))
-
-fun overlay(x,...): // check this soon to confirm
+fun overlay(x,...): 
   p.overlay(x,...)
 
-/*def eat = p.text("EAT",~font: draw.Font(~size: 30)).colorize("darkgreen")
-def red_crcl = circle.colorize("red")
-def grn_dmd = dmd.colorize("darkgreen")
-def diamond_eat = p.overlay(~order:#'back,eat,red_crcl,grn_dmd)
-diamond_eat
-*/
-def eat= text("EAT",30,"darkgreen")
-def rd_crcl = circle(95,"solid","red")
-def grn_dmd = rotate(.78,square(100, "solid", "darkgreen"))
-def diamond_eat = overlay(grn_dmd,rd_crcl,eat)
-diamond_eat
-println("")
-println("")
-
-//ask abt the size and whether or not it should be static
-fun diamond(string):
-  def txt = text(string,30,"darkgreen")
-  def rd_crcl = circle(95,"solid","red")
-  def grn_dmd = rotate(.78,square(100, "solid", "darkgreen"))
-  overlay(grn_dmd,rd_crcl,txt)
-
-def diamond_eat1 = diamond("EAT")
-diamond_eat1
-
-fun beside(x,...): // check if this takes sep as well
+fun beside(x,...): 
   p.beside(x,...)
 
-def dipytch = beside(diamond("EAT"),diamond("DIE"))
-dipytch
-
-//rush wip
-fun triangle(side_len, mode, color): 
-  cond
-  | mode == "solid" : pr.radial_pict(~points:side_len, ~fill:#'inherit,~bound: #'shrink).colorize(color)
-  | mode == "outline" : pr.radial_pict(~points:side_len,~bound: #'shrink).colorize(color) // if it is an outline then the last argument can be a pen struct or a color
+fun triangle(side_len :: Number, mode, color): 
+  pr.radial_pict(~points:side_len, ~fill:mode_to_color(mode),~bound: #'shrink).colorize(color)
+  // if it is an outline then the last argument can be a pen struct or a color
   //add a case for when mode is a number between 1 and 255 to adjust the opacity of the clr
-  | ~else: "L"
 
-fun rectangle(width, height, mode, color): 
-  cond
-  | mode == "solid" : p.rectangle(~width:width, ~height:height, ~fill:#'inherit).colorize(color)
-  | mode == "outline" : p.rectangle(~width:width, ~height:height).colorize(color) // if it is an outline then the last argument can be a pen struct or a color
+fun rectangle(width :: Number, height :: Number, mode, color): 
+  p.rectangle(~width:width, ~height:height, ~fill:mode_to_color(mode)).colorize(color)
+  // if it is an outline then the last argument can be a pen struct or a color
   //add a case for when mode is a number between 1 and 255 to adjust the opacity of the clr
-  | ~else: "L"
 
 fun above(x,...):
   p.stack(x,...)
 
-def blue_arrow_on_yellow = overlay(circle(100,"solid","yellow"),above(triangle(3,"solid","blue"),rectangle(25,35,"solid","blue")))
-blue_arrow_on_yellow
+fun scale_xy(x :: Number, y :: Number, image):
+  image.scale(x,y)
 
+//place_image can be constructed as a variation of overlay but should check this as overlay takes words whereas place image takes xy coords
+//fun place_image(image,x,y,scene):
+  
+// below are some tests for some of the functions defined above:
+ 
+//cube(10)
+//text("Hello\naws", 24, "olive")
+//text("awS",255,"red")
+//text
+//circle(30,"outline","red")
+//circle(30,"solid","blue")
+//square(40, "solid", "blue")
+//square(40, "solid", "blue")
+//square(40, "outline", "darkmagenta")
+//rotate(45,square(40, "solid", "blue"))
+def eat= text("EAT",30,"darkgreen")
+def rd_crcl = circle(95,"solid","red")
+def grn_dmd = rotate(45,square(100, "solid", "darkgreen"))
+def diamond_eat = overlay(grn_dmd,rd_crcl,eat)
+//diamond_eat
+fun diamond(string):
+  def txt = text(string,30,"darkgreen")
+  def rd_crcl = circle(95,"solid","red")
+  def grn_dmd = rotate(45,square(100, "solid", "darkgreen"))
+  overlay(grn_dmd,rd_crcl,txt)
+def diamond_eat1 = diamond("EAT")
+//diamond_eat1
+def dipytch = beside(diamond("EAT"),diamond("DIE"))
+//dipytch
+def blue_arrow_on_yellow = overlay(circle(100,"solid","yellow"),above(triangle(3,"solid","blue"),rectangle(25,35,"solid","blue")))
+// blue_arrow_on_yellow
 fun arrow(clr1, clr2):
   overlay(circle(100,"solid",clr2),above(triangle(3,"solid",clr1),rectangle(25,50,"solid",clr1)))
-
-arrow("blue", "yellow")
-
+// arrow("blue", "yellow")
 def blue_arrow_on_yellow1 = arrow("blue", "yellow")
-blue_arrow_on_yellow1
-
-rotate(1.57, arrow("red", "darkgreen"))
-
-def arrow1 = rotate(-3.14, arrow("yellow","blue"))
-def arrow2 = rotate(1.57,arrow("red", "darkgreen"))
-def arrow3 = rotate(-1.57,arrow("darkgreen", "red"))
+// blue_arrow_on_yellow1
+// rotate(90, arrow("red", "darkgreen"))
+def arrow1 = rotate(180, arrow("yellow","blue"))
+def arrow2 = rotate(90,arrow("red", "darkgreen"))
+def arrow3 = rotate(270,arrow("darkgreen", "red"))
 def arrow4 = arrow("blue","yellow")
-arrow1
-arrow2
-arrow3
-arrow4
-above(beside(arrow1,arrow2),beside(arrow3,arrow4))
+// above(beside(arrow1,arrow2),beside(arrow3,arrow4))
+
 // continue extra fun
 
 fun trmph_of_tra(txt,txt_clr,bg_crcl_clr,sqr_clr,sml_crcl_clr,str_clr,rott):
@@ -158,3 +137,17 @@ def tot_r2 = beside(men,square(10, "outline","black"),sex)
 def tot_crcls = above(tot_r1,square(10, "outline","black"),tot_r2)
 def triumph_of_tira = overlay(p.square(~size:350,~fill:"black"),tot_crcls)
 triumph_of_tira
+
+fun vertical_triband(clr1, clr2, clr3):
+  def band1 = rectangle(50,100,"solid",clr1)
+  def band2 = rectangle(50,100,"solid",clr2)
+  def band3 = rectangle(50,100,"solid",clr3)
+  p.beside(band1, band2, band3)
+  
+vertical_triband("blue", "white", "red")
+
+fun horizontal_triband(clr1, clr2, clr3):
+  def scaled_image = scale_xy(2/3,3/2,vertical_triband(clr1, clr2, clr3))
+  rotate(270,scaled_image)
+
+horizontal_triband("darkred", "white", "blue")
