@@ -33,3 +33,11 @@
       (circle 4 "solid" "white")
       8 14
       (rectangle 24 24 "solid" "goldenrod")))))
+
+(circle 20 "outline" "red")
+(circle 20 "solid" "blue")
+(circle 20 100 "blue")
+(circle 20 "outline" (pen "red" 2 "long-dash" "round" "bevel"))
+;; (circle 20 "solid" (pen "red" 2 "long-dash" "round" "bevel"))
+;; (circle 20 199 (pen "red" 2 "long-dash" "round" "bevel"))
+;; solid and number modes can only take a color whereas outline takes a color or a pen struct
