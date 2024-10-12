@@ -1,4 +1,5 @@
 #lang rhombus
+// change #lang shrubbery
 import: pict as p
         pict/radial as pr
         draw
@@ -8,7 +9,7 @@ import: pict as p
 fun cube(x :: Number):
   x*x*x
 
-//check verbatim and pict text layout to deal with the newline issue
+//check verbatim and pict text layout to deal with the newline issue -done?
 //text is a function that constructs an image that draws the given string, using the font size and color.
 fun text(string :: String, font_size ::  Real.in(1, 255 ~inclusive), color :: String):
   p.text(string,~font:draw.Font(~size:font_size)).colorize(color)
@@ -31,9 +32,10 @@ fun mode_to_color(mode):
 //is color argument a string only
 //number non negative
 // p.circle(~size:30, ~fill: 250).colorize("red") mode being a number raises a rhombus error
-fun circle(radius :: Number, mode, color):
+fun circle(radius :: NonnegReal, mode, color):
   p.circle(~size:radius, ~fill: mode_to_color(mode)).colorize(color)
     // if it is an outline then the last argument can be a pen struct or a color
+        // install snapshot version of racket hit f1 to see local docs
   //add a case for when mode is a number between 1 and 255 to adjust the opacity of the clr
 
 /*
@@ -42,11 +44,15 @@ fun do_constructor(fn:: Function, mode, color, args, ...):
   | #true: fn(~fill: mode_to_color(mode)).colorize(color)
 */
 
-fun square(side_len :: Number, mode, color): // rhombus should be pretty similar to this but with rotate built in
+fun square(side_len :: NonnegReal, mode, color): // rhombus should be pretty similar to this but with rotate built in
   // do_constructor(p.square, stuff)
   p.square(~size:side_len, ~fill: mode_to_color(mode)).colorize(color)
   // if it is an outline then the last argument can be a pen struct or a color
   //add a case for when mode is a number between 1 and 255 to adjust the opacity of the clr
+  //create a color where clr can take alpha value tghat takes a real number between 0 and 1
+  //pict.clr with alpha = 0.5
+  //pict.clr(c.red,c.green,c.blue,alpha)
+  //color docs
 // ::Pict
 fun rotate(angle :: Number, image):
   image.rotate(angle * math.pi/180)
@@ -57,8 +63,8 @@ fun overlay(x,...):
 fun beside(x,...): 
   p.beside(x,...)
 
-fun triangle(side_len :: Number, mode, color): 
-  pr.radial_pict(~points:side_len, ~fill:mode_to_color(mode),~bound: #'shrink).colorize(color)
+fun triangle(side_len :: NonnegReal, mode, color):  //fix side len and height and width
+  pr.radial_pict(~points:3, ~width:side_len, ~height:side_len, ~fill:mode_to_color(mode),~bound: #'shrink).colorize(color)
   // if it is an outline then the last argument can be a pen struct or a color
   //add a case for when mode is a number between 1 and 255 to adjust the opacity of the clr
 
@@ -75,7 +81,15 @@ fun scale_xy(x :: Number, y :: Number, image):
 
 //place_image can be constructed as a variation of overlay but should check this as overlay takes words whereas place image takes xy coords
 //fun place_image(image,x,y,scene):
-  
+  //use pict.find to find a particular location and use pin\
+def bc = circle(300,"solid","blue")
+def sc = circle(30,"solid","red")
+overlay(bc,sc)
+def x = p.pin(~on: bc,~at: p.Find.left_topline(bc,~dx:0,~dy:0),sc)
+def b = rectangle(100,100,"solid","gray")
+def a = triangle(3,"solid","red")//find top left and make sure to check shrinkage as well as centering?
+def c = p.pin(~on: b,~at: p.Find.left_top(b,~dx:0,~dy:0),a)
+//compare to place image
 // below are some tests for some of the functions defined above:
  
 //cube(10)

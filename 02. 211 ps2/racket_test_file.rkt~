@@ -1,0 +1,5 @@
+#lang racket
+(require 2htdp/image)
+(circle 30 "solid" "red")
+(text "Hello and\nGoodbye" 24 "orange")
+
