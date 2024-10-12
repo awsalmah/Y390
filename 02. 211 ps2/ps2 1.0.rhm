@@ -79,19 +79,21 @@ fun above(x,...):
 fun scale_xy(x :: Number, y :: Number, image):
   image.scale(x,y)
 
-//place_image can be constructed as a variation of overlay but should check this as overlay takes words whereas place image takes xy coords
-//fun place_image(image,x,y,scene):
-  //use pict.find to find a particular location and use pin\
-def bc = circle(300,"solid","blue")
-def sc = circle(30,"solid","red")
-overlay(bc,sc)
-def x = p.pin(~on: bc,~at: p.Find.left_topline(bc,~dx:0,~dy:0),sc)
-def b = rectangle(100,100,"solid","gray")
-def a = triangle(3,"solid","red")//find top left and make sure to check shrinkage as well as centering?
-def c = p.pin(~on: b,~at: p.Find.left_top(b,~dx:0,~dy:0),a)
-//compare to place image
+// place_image can be constructed as a variation of overlay
+// but should check this as overlay takes words whereas
+// place_image takes xy coords
+// compare to place image // center of image on scene?
+
+fun place_image(image, x, y, scene): 
+  if image.width > scene.width
+  | p.pin(~on: scene,~at: p.Find.left_top(scene,~dx:x,~dy:x),image.scale(scene.width/image.width))
+  // if image size > scene size then shrink image
+  //crops the resulting image so that it has the same size as scene.
+  | p.pin(~on: scene,~at: p.Find.left_top(scene,~dx:x,~dy:x),image)
+    //ask about Find.left_topline
+    
 // below are some tests for some of the functions defined above:
- 
+
 //cube(10)
 //text("Hello\naws", 24, "olive")
 //text("awS",255,"red")
@@ -150,7 +152,7 @@ def tot_r2 = beside(men,square(10, "outline","black"),sex)
 
 def tot_crcls = above(tot_r1,square(10, "outline","black"),tot_r2)
 def triumph_of_tira = overlay(p.square(~size:350,~fill:"black"),tot_crcls)
-triumph_of_tira
+//triumph_of_tira
 
 fun vertical_triband(clr1, clr2, clr3):
   def band1 = rectangle(50,100,"solid",clr1)
@@ -158,10 +160,34 @@ fun vertical_triband(clr1, clr2, clr3):
   def band3 = rectangle(50,100,"solid",clr3)
   p.beside(band1, band2, band3)
   
-vertical_triband("blue", "white", "red")
+//vertical_triband("blue", "white", "red")
 
 fun horizontal_triband(clr1, clr2, clr3):
   def scaled_image = scale_xy(2/3,3/2,vertical_triband(clr1, clr2, clr3))
   rotate(270,scaled_image)
 
-horizontal_triband("darkred", "white", "blue")
+//horizontal_triband("darkred", "white", "blue")
+place_image(triangle(32,"solid","red"), 0, 0, rectangle(48,48,"solid","gray"))
+place_image(triangle(32,"solid","red"), 24, 24, rectangle(48,48,"solid","gray"))
+
+place_image(
+  circle(4,"solid","white"),
+  18,
+  20,
+  place_image(
+    circle(4,"solid","white"),
+    0,
+    6,
+    place_image(
+      circle(4,"solid","white"),
+      14,
+      2,
+      place_image(
+        circle(4,"solid","white"),
+        8,
+        14,
+        rectangle(24,24,"solid","goldenrod")
+      )
+    )
+  )
+)
