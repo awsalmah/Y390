@@ -41,3 +41,10 @@
 ;; (circle 20 "solid" (pen "red" 2 "long-dash" "round" "bevel"))
 ;; (circle 20 199 (pen "red" 2 "long-dash" "round" "bevel"))
 ;; solid and number modes can only take a color whereas outline takes a color or a pen struct
+(define x 1)
+(overlay (circle 20 "solid" "blue")
+(circle 200 255 "red"))
+;; (overlay (circle 20 "solid" "blue") x) this raises an error
+(rhombus 40 45 "solid" "magenta")
+(rhombus 100 180 "solid" "red")
+(rhombus 40 3 "solid" "magenta")

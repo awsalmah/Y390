@@ -3,8 +3,10 @@
 import: pict as p
         pict/radial as pr
         draw
+        rhombus/rx open
         // pict/text open
         //pict/rhombus as r
+// interface draw.DC
 
 fun cube(x :: Number):
   x*x*x
@@ -12,7 +14,11 @@ fun cube(x :: Number):
 //check verbatim and pict text layout to deal with the newline issue -done?
 //text is a function that constructs an image that draws the given string, using the font size and color.
 fun text(string :: String, font_size ::  Real.in(1, 255 ~inclusive), color :: String):
-  p.text(string,~font:draw.Font(~size:font_size)).colorize(color)
+  def str = rx'"\n"'.split(string)
+  def mutable str_pic = []
+  for(x : str):
+    str_pic := str_pic.append(List(p.text(x,~font:draw.Font(~size:24)).colorize("red")))
+  p.stack(~horiz:#'left,& str_pic)
 // If the string contains newlines, the result image will have multiple lines. ==> check this
 
 fun mode_to_color(mode):
@@ -38,7 +44,7 @@ fun opacity(mode):
 //circle is a function that must take 3 inputs, radius, mode, and color.
 // returns an image of a circle with the given radius, mode, and color.
 fun circle(radius :: NonnegReal, mode, color):
-  p.circle(~size:radius, ~fill: mode_to_color(mode)[0]).colorize(color).alpha(mode_to_color(mode)[1])
+  p.circle(~size:radius * 2, ~fill: mode_to_color(mode)[0]).colorize(color).alpha(mode_to_color(mode)[1])
     //line and line_width are not the solution
      // if solid or a number then the last argument is color only and not a pen struct
      // if it is an outline then the last argument can be a pen struct or a color
@@ -56,11 +62,13 @@ fun square(side_len :: NonnegReal, mode, color): // rhombus should be pretty sim
   // do_constructor(p.square, stuff)
   p.square(~size:side_len, ~fill: mode_to_color(mode)[0]).colorize(color).alpha(mode_to_color(mode)[1])
   // if it is an outline then the last argument can be a pen struct or a color
-  
+  //(circle 20 outline (pen "red" 10 "long-dash" "round" "bevel")) pad and clip
+  //draw.Pen(~color:"red",~width:10,~style:#'solid,~cap:#'round,~join:#'bevel)
+  //stipple
 fun rotate(angle :: Number, image):
   image.rotate(angle * math.pi/180)
 
-fun overlay(x,...): 
+fun overlay(x :: p.Pict,...): // is this needed
   p.overlay(x,...)
 
 fun beside(x,...): 
@@ -84,14 +92,19 @@ fun scale_xy(x :: Number, y :: Number, image):
 // but should check this as overlay takes words whereas
 // place_image takes xy coords
 // compare to place image // center of image on scene?
-fun place_image(image, x, y, scene): 
-  if image.width > scene.width
-  | p.pin(~on: scene,~at: p.Find.left_top(scene,~dx:x,~dy:x),image.scale(scene.width/image.width))
+  //pinhole argument find left top to change pinhole arg
+  //use width ND heoght to compute to place image
+  //pass diff vals of dx and dy
+fun place_image(image, x, y, scene):
+  p.pin(~on: scene,~at: p.Find.left_top(scene,~dx:x,~dy:y),~pinhole: p.Find.center(image),image)
+  //if image.width > scene.width
+  //| p.pin(~on: scene,~at: p.Find.left_top(scene,~dx:x,~dy:y,~pinhole: p.Find.center(image),image)
+    //| p.pin(~on: scene,~at: p.Find.left_top(scene,~dx:x - ((image.width)/2),~dy:y - ((image.height)/2)),~pinhole: p.Find.left_top(image),image.scale(scene.width/image.width))
+  //crop instead of scale use pict.pad and clip
   // if image size > scene size then shrink image
   //crops the resulting image so that it has the same size as scene.
-  | p.pin(~on: scene,~at: p.Find.left_top(scene,~dx:x,~dy:x),image)
-    //ask about Find.left_topline
-    
+  //| p.pin(~on: scene,~at: p.Find.left_top(scene,~dx:x - ((image.width)/2),~dy:y - ((image.height)/2)),~pinhole: p.Find.left_top(image),image)
+  //p.pin(~on: scene,~at: p.Find.left_top(scene,~dx:x,~dy:y,~pinhole: p.Find.center(image),image)
 // below are some tests for some of the functions defined above:
 
 //cube(10)
@@ -169,6 +182,7 @@ fun horizontal_triband(clr1, clr2, clr3):
 //horizontal_triband("darkred", "white", "blue")
 place_image(triangle(32,"solid","red"), 0, 0, rectangle(48,48,"solid","gray"))
 place_image(triangle(32,"solid","red"), 24, 24, rectangle(48,48,"solid","gray"))
+place_image(triangle(64,"solid","red"), 24, 24, rectangle(48,48,"solid","gray"))
 
 place_image(
   circle(4,"solid","white"),
@@ -205,3 +219,32 @@ p.line(~dx: 10, ~dy: 10)
 p.line(~dx: 10, ~line_width: 3)
 p.line(~dy: 10, ~line: "blue", ~line_width: 3)
 p.line(~dx: 10, ~dy: 10)
+
+circle(20,255,"red") is_a p.Pict
+
+// above(triangle(100,"solid","red"),rotate(180,triangle(100,"solid","red")))
+rx'"hello"'.match("hello")
+rx'"hello world hello how are hello you"'.match("hello")
+rx'"\n"'.split("a\nb")
+def a = circle(24,255,"red")
+a
+def s = circle(48,255,"blue")
+s
+def d = circle(96,255,"black")
+[d,s,a]
+//overlay(
+ // for (x: [d,s,a]):
+ //   x,
+  //)
+// overlay([s,a])
+def x = Function.for_each(overlay,[d,s,a])
+
+recur nest_to(n = 5):
+
+    match n
+
+    | 0: [0]
+
+    | ~else: [n, nest_to(n-1)]
+
+//p.stack(& rainbow( p.square(~size:10,~fill:#'inherit)))
