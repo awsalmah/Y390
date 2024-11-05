@@ -1,0 +1,11 @@
+#lang rhombus
+
+// Check out the Rhombus Essentials documentation for a detailed guide: https://docs.racket-lang.org/rhombus/Modules.html
+
+// A Rhombus module can export definitions to other modules using export,
+// and it can import other modules using import.
+
+// The #lang rhombus line is a kind of import already,
+
+// so normally more imports are written at the top of a module,
+// and then exports, and then the definitions.

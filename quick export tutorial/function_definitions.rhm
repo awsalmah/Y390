@@ -1,0 +1,11 @@
+#lang rhombus
+
+// Let's start of by defining a function cube that takes a number x as an input and returns it's cube.
+fun cube(x):
+  x * x * x
+
+// for the purposes of this quick guide, both files are meant to be in the same folder
+// say we want to export this function to use it in another file
+
+export:
+  cube

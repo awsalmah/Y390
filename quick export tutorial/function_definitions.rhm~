@@ -1,0 +1,20 @@
+#lang rhombus
+
+// Rhombus Essentials: https://docs.racket-lang.org/rhombus/Modules.html
+
+// A Rhombus module can export definitions to other modules using export,
+// and it can import other modules using import.
+
+// The #lang rhombus line is a kind of import already,
+
+// so normally more imports are written at the top of a module,
+// and then exports, and then the definitions.
+
+// Let's start of by defining a function cube that takes a number x as an input and returns it's cube.
+fun cube(x):
+  x * x * x
+
+// say we want to export this function to use it another file
+
+export:
+  cube

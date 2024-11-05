@@ -1,151 +1,55 @@
 #lang rhombus
 // change #lang shrubbery
-import: pict as p
+import: "shp.rhm" open
         pict/radial as pr
-        draw
-        rhombus/rx open
-        // pict/text open
-        //pict/rhombus as r
-// interface draw.DC
 
 fun cube(x :: Number):
   x*x*x
-
-//check verbatim and pict text layout to deal with the newline issue -done?
-//text is a function that constructs an image that draws the given string, using the font size and color.
-fun text(string :: String, font_size ::  Real.in(1, 255 ~inclusive), color :: String):
-  def str = rx'"\n"'.split(string)
-  def mutable str_pic = []
-  for(x : str):
-    str_pic := str_pic.append(List(p.text(x,~font:draw.Font(~size:24)).colorize("red")))
-  p.stack(~horiz:#'left,& str_pic)
-// If the string contains newlines, the result image will have multiple lines. ==> check this
-
-fun mode_to_color(mode):
-  cond
-  | mode == "solid": [#'inherit,1]
-  | mode == "outline": [#false,1]
-  | mode is_a Number: mode :: Real.in(0,255 ~inclusive)
-                      [#'inherit,mode/255]// mode number raises an error
-  | ~else: error(~who: #'mode_to_color,
-                 "expects a mode as second argument",
-                 ~details: ["given:",mode])
-
-//opacity might be useless
-//mode_to_color returns fill and alpha arguments as it is might be more efficient to call one function
-//and return a list of length 2 instead of calling 2 functions
-fun opacity(mode):
-  cond
-  // only check for if mode is a string as if it isnt solid or outline then it wont pass the mode_to_color function call
-  | mode is_a String: 1
-  | mode is_a Number: mode:: Real.in(0,255 ~inclusive)
-                      mode/255
-
-//circle is a function that must take 3 inputs, radius, mode, and color.
-// returns an image of a circle with the given radius, mode, and color.
-fun circle(radius :: NonnegReal, mode, color):
-  p.circle(~size:radius * 2, ~fill: mode_to_color(mode)[0]).colorize(color).alpha(mode_to_color(mode)[1])
-    //line and line_width are not the solution
-     // if solid or a number then the last argument is color only and not a pen struct
-     // if it is an outline then the last argument can be a pen struct or a color
-         // install snapshot version of racket hit f1 to see local docs
-     //color docs for pen and outline
-// ::Pict
   
-/*
-fun do_constructor(fn:: Function, mode, color, args, ...):
-  cond
-  | #true: fn(~fill: mode_to_color(mode)).colorize(color)
-*/
+cube(4)
+cube(1)
+cube(10)
+cube(cube(3))
+println ("")
 
-fun square(side_len :: NonnegReal, mode, color): // rhombus should be pretty similar to this but with rotate built in
-  // do_constructor(p.square, stuff)
-  p.square(~size:side_len, ~fill: mode_to_color(mode)[0]).colorize(color).alpha(mode_to_color(mode)[1])
-  // if it is an outline then the last argument can be a pen struct or a color
-  //(circle 20 outline (pen "red" 10 "long-dash" "round" "bevel")) pad and clip
-  //draw.Pen(~color:"red",~width:10,~style:#'solid,~cap:#'round,~join:#'bevel)
-  //stipple
-fun rotate(angle :: Number, image):
-  image.rotate(angle * math.pi/180)
-
-fun overlay(x :: p.Pict,...): // is this needed
-  p.overlay(x,...)
-
-fun beside(x,...): 
-  p.beside(x,...)
-
-fun triangle(side_len :: NonnegReal, mode, color):  
-  pr.radial_pict(~points:3, ~width:side_len, ~height:side_len, ~fill:mode_to_color(mode)[0],~bound: #'shrink).colorize(color).alpha(mode_to_color(mode)[1])
-  // if it is an outline then the last argument can be a pen struct or a color
-
-fun rectangle(width :: NonnegReal, height :: NonnegReal, mode, color): 
-  p.rectangle(~width:width, ~height:height, ~fill:mode_to_color(mode)[0]).colorize(color).alpha(mode_to_color(mode)[1])
-  // if it is an outline then the last argument can be a pen struct or a color
-
-fun above(x,...):
-  p.stack(x,...)
-
-fun scale_xy(x :: Number, y :: Number, image):
-  image.scale(x,y)
-
-// place_image can be constructed as a variation of overlay
-// but should check this as overlay takes words whereas
-// place_image takes xy coords
-// compare to place image // center of image on scene?
-  //pinhole argument find left top to change pinhole arg
-  //use width ND heoght to compute to place image
-  //pass diff vals of dx and dy
-fun place_image(image, x, y, scene):
-  p.pin(~on: scene,~at: p.Find.left_top(scene,~dx:x,~dy:y),~pinhole: p.Find.center(image),image)
-  //if image.width > scene.width
-  //| p.pin(~on: scene,~at: p.Find.left_top(scene,~dx:x,~dy:y,~pinhole: p.Find.center(image),image)
-    //| p.pin(~on: scene,~at: p.Find.left_top(scene,~dx:x - ((image.width)/2),~dy:y - ((image.height)/2)),~pinhole: p.Find.left_top(image),image.scale(scene.width/image.width))
-  //crop instead of scale use pict.pad and clip
-  // if image size > scene size then shrink image
-  //crops the resulting image so that it has the same size as scene.
-  //| p.pin(~on: scene,~at: p.Find.left_top(scene,~dx:x - ((image.width)/2),~dy:y - ((image.height)/2)),~pinhole: p.Find.left_top(image),image)
-  //p.pin(~on: scene,~at: p.Find.left_top(scene,~dx:x,~dy:y,~pinhole: p.Find.center(image),image)
-// below are some tests for some of the functions defined above:
-
-//cube(10)
-//text("Hello\naws", 24, "olive")
-//text("awS",255,"red")
-//text
-//circle(30,"outline","red")
-//circle(30,"solid","blue")
-//square(40, "solid", "blue")
-//square(40, "solid", "blue")
-//square(40, "outline", "darkmagenta")
-//rotate(45,square(40, "solid", "blue"))
 def eat= text("EAT",30,"darkgreen")
-def rd_crcl = circle(95,"solid","red")
-def grn_dmd = rotate(45,square(100, "solid", "darkgreen"))
+def rd_crcl = circle(45,"solid","red")
+def grn_dmd = rotate(45,square(95, "solid", "darkgreen"))
 def diamond_eat = overlay(grn_dmd,rd_crcl,eat)
-//diamond_eat
+diamond_eat
+println ("")
+
 fun diamond(string):
   def txt = text(string,30,"darkgreen")
-  def rd_crcl = circle(95,"solid","red")
-  def grn_dmd = rotate(45,square(100, "solid", "darkgreen"))
+  def rd_crcl = circle(45,"solid","red")
+  def grn_dmd = rotate(45,square(95, "solid", "darkgreen"))
   overlay(grn_dmd,rd_crcl,txt)
 def diamond_eat1 = diamond("EAT")
-//diamond_eat1
+diamond_eat1
+println ("")
+
 def dipytch = beside(diamond("EAT"),diamond("DIE"))
-//dipytch
-def blue_arrow_on_yellow = overlay(circle(100,"solid","yellow"),above(triangle(3,"solid","blue"),rectangle(25,35,"solid","blue")))
-// blue_arrow_on_yellow
+dipytch
+println ("")
+
+def blue_arrow_on_yellow = overlay(circle(50,"solid","yellow"),above(triangle(45,"solid","blue"),rectangle(20,45,"solid","blue")))
+blue_arrow_on_yellow
+println ("")
+
 fun arrow(clr1, clr2):
-  overlay(circle(100,"solid",clr2),above(triangle(3,"solid",clr1),rectangle(25,50,"solid",clr1)))
-// arrow("blue", "yellow")
+  overlay(circle(50,"solid",clr2),above(triangle(45,"solid",clr1),rectangle(20,45,"solid",clr1)))
+arrow("blue", "yellow")
+println("")
+
 def blue_arrow_on_yellow1 = arrow("blue", "yellow")
-// blue_arrow_on_yellow1
-// rotate(90, arrow("red", "darkgreen"))
 def arrow1 = rotate(180, arrow("yellow","blue"))
 def arrow2 = rotate(90,arrow("red", "darkgreen"))
 def arrow3 = rotate(270,arrow("darkgreen", "red"))
 def arrow4 = arrow("blue","yellow")
-// above(beside(arrow1,arrow2),beside(arrow3,arrow4))
+above(beside(arrow1,arrow2),beside(arrow3,arrow4))
 
-// continue extra fun
+// continue extra fun q12 place_image
+
 
 fun trmph_of_tra(txt,txt_clr,bg_crcl_clr,sqr_clr,sml_crcl_clr,str_clr,rott):
   def bg_crcl = circle(150,"solid",bg_crcl_clr)
@@ -164,22 +68,22 @@ def sex = trmph_of_tra("SEX","blue","yellow","black","blue","red",0.758)
 def tot_r2 = beside(men,square(10, "outline","black"),sex)
 
 def tot_crcls = above(tot_r1,square(10, "outline","black"),tot_r2)
-def triumph_of_tira = overlay(p.square(~size:350,~fill:"black"),tot_crcls)
+def triumph_of_tira = overlay(square(350,255,"black"),tot_crcls)
 //triumph_of_tira
 
 fun vertical_triband(clr1, clr2, clr3):
   def band1 = rectangle(50,100,"solid",clr1)
   def band2 = rectangle(50,100,"solid",clr2)
   def band3 = rectangle(50,100,"solid",clr3)
-  p.beside(band1, band2, band3)
+  beside(band1, band2, band3)
   
-//vertical_triband("blue", "white", "red")
+vertical_triband("blue", "white", "red")
 
 fun horizontal_triband(clr1, clr2, clr3):
   def scaled_image = scale_xy(2/3,3/2,vertical_triband(clr1, clr2, clr3))
   rotate(270,scaled_image)
 
-//horizontal_triband("darkred", "white", "blue")
+horizontal_triband("darkred", "white", "blue")
 place_image(triangle(32,"solid","red"), 0, 0, rectangle(48,48,"solid","gray"))
 place_image(triangle(32,"solid","red"), 24, 24, rectangle(48,48,"solid","gray"))
 place_image(triangle(64,"solid","red"), 24, 24, rectangle(48,48,"solid","gray"))
@@ -213,6 +117,7 @@ circle(20,100,"blue")
 // ask about the \n in p.text(string,~font:draw.Font(~size:font_size)).colorize(color)
 // p.text("Hello\nWorld!",~font:draw.Font(~size:24)).colorize("darkgreen")
 // ask about this as it might be a bug
+/*
 p.line(~dy:1, ~dx: 10, ~line_width: 30)
 p.line(~dx: 1, ~dy: 10, ~line: "blue", ~line_width: 3)
 p.line(~dx: 10, ~dy: 10)
@@ -221,30 +126,23 @@ p.line(~dy: 10, ~line: "blue", ~line_width: 3)
 p.line(~dx: 10, ~dy: 10)
 
 circle(20,255,"red") is_a p.Pict
-
+*/
 // above(triangle(100,"solid","red"),rotate(180,triangle(100,"solid","red")))
+/*
 rx'"hello"'.match("hello")
 rx'"hello world hello how are hello you"'.match("hello")
 rx'"\n"'.split("a\nb")
-def a = circle(24,255,"red")
-a
-def s = circle(48,255,"blue")
-s
-def d = circle(96,255,"black")
-[d,s,a]
-//overlay(
- // for (x: [d,s,a]):
- //   x,
-  //)
-// overlay([s,a])
-def x = Function.for_each(overlay,[d,s,a])
-
-recur nest_to(n = 5):
-
-    match n
-
-    | 0: [0]
-
-    | ~else: [n, nest_to(n-1)]
-
+*/
+/*
 //p.stack(& rainbow( p.square(~size:10,~fill:#'inherit)))
+place_image(triangle(100,"solid","red"), 24, 24, rectangle(48,48,"solid","gray"))
+def scene = rectangle(48,48,"solid","gray")
+def image = triangle(100,"solid","red")
+def x1=24
+def y =24
+p.pin(~on: scene,~at: p.Find.left_top(scene,~dx:x1,~dy:y),~pinhole: p.Find.center(image),image)
+
+p.pin(~on: scene,~at: p.Find.left_top(scene,~dx:x1,~dy:y),~pinhole: p.Find.center(image),image.clip().pad())
+
+p.pin(~on: scene,~at: p.Find.left_top(scene,~dx:x1,~dy:y),~pinhole: p.Find.center(image),image).clip() // do this
+*/

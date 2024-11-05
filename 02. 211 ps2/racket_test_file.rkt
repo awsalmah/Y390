@@ -1,5 +1,6 @@
 #lang racket
 (require 2htdp/image)
+
 (circle 30 "solid" "red")
 (text "Hello and\nGoodbye" 24 "orange")
 
@@ -48,3 +49,23 @@
 (rhombus 40 45 "solid" "magenta")
 (rhombus 100 180 "solid" "red")
 (rhombus 40 3 "solid" "magenta")
+(place-image
+   (triangle 64 "solid" "red")
+   24 24
+   (rectangle 48 48 "solid" "gray"))
+
+(place-image
+   (triangle 100 "solid" "red")
+   24 24
+   (rectangle 48 48 "solid" "gray"))
+(crop 24 24 48 48 (triangle 100 "solid" "red"))
+
+(image-width (circle 30 "outline" "red"))
+(image-height (circle 30 "outline" "red"))
+(image-width (square 40 "solid" "slateblue"))
+(image-height (square 40 "solid" "slateblue"))
+(image-width (triangle 100 "solid" "red")) ;; 100
+(image-height (triangle 100 "solid" "red")) ;; 87
+(image-width (triangle 25 "solid" "red")) ;; 25
+(image-height (triangle 25 "solid" "red")) ;; 22
+(image-height (triangle 24 "solid" "red"))

@@ -1,0 +1,69 @@
+#lang rhombus
+import: pict as p
+        pict/radial as pr
+        draw
+        rhombus/rx open
+
+export: text
+        mode_to_color
+        circle
+        square
+        rotate
+        overlay
+        beside
+        triangle
+        rectangle
+        above
+        scale_xy
+        place_image
+        
+  //dont want any of the pict apis a string is fine or extend to support color structs
+fun text(string :: String, font_size ::  Real.in(1, 255 ~inclusive), color :: String )://colormode?
+  def str = rx'"\n"'.split(string)
+  def strs = for List(x : str):
+    p.text(x,~font:draw.Font(~size:font_size)).colorize(color)
+  p.stack(~horiz:#'left,& strs)
+
+fun mode_to_color(mode):
+  cond
+  | mode == "solid": [#'inherit,1]
+  | mode == "outline": [#false,1]
+  | mode is_a Number: mode :: Real.in(0,255 ~inclusive)
+                      [#'inherit,mode/255]
+  | ~else: error(~who: #'mode_to_color,
+                 "expects a mode as second argument",
+                 ~details: ["given:",mode])
+
+fun circle(radius :: NonnegReal, mode, color :: String):
+  p.circle(~size:radius * 2, ~fill: mode_to_color(mode)[0]).colorize(color).alpha(mode_to_color(mode)[1])
+
+fun square(side_len :: NonnegReal, mode, color :: String): 
+  p.square(~size:side_len, ~fill: mode_to_color(mode)[0]).colorize(color).alpha(mode_to_color(mode)[1])
+
+fun rotate(angle :: Number, image :: p.Pict):
+  image.rotate(angle * math.pi/180)
+
+fun overlay(x :: p.Pict,...): 
+  p.overlay(x,...)
+
+fun beside(x :: p.Pict,...): 
+  p.beside(x,...)
+// call racket functions from 2htdp img
+// get test failures if anything changes like unit testing
+//check width and height as they differ from racket
+// round up
+  //check a triangle with each angle of size 60
+fun triangle(side_len :: NonnegReal, mode, color :: String):  
+  pr.radial_pict(~points:3, ~width:side_len * 1.15, ~height:side_len * 1.14, ~fill:mode_to_color(mode)[0],~bound: #'shrink).colorize(color).alpha(mode_to_color(mode)[1])
+
+fun rectangle(width :: NonnegReal, height :: NonnegReal, mode, color :: String): 
+  p.rectangle(~width:width, ~height:height, ~fill:mode_to_color(mode)[0]).colorize(color).alpha(mode_to_color(mode)[1])
+
+fun above(x :: p.Pict,...):
+  p.stack(x,...)
+
+fun scale_xy(x :: NonnegReal, y :: NonnegReal, image :: p.Pict):
+  image.scale(x,y)
+
+fun place_image(image :: p.Pict, x :: Real, y :: Real, scene :: p.Pict):
+  p.pin(~on: scene,~at: p.Find.left_top(scene,~dx:x,~dy:y),~pinhole: p.Find.center(image),image).clip()
