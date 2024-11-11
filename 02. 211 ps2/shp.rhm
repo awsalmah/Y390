@@ -1,3 +1,4 @@
+;; shp stands for ShortHandProgram
 #lang rhombus
 import: pict as p
         pict/radial as pr
@@ -16,8 +17,11 @@ export: text
         above
         scale_xy
         place_image
+        triangle2
         
-  //dont want any of the pict apis a string is fine or extend to support color structs
+// create a star function and a rhombus function
+// call mode_to_color once instead of twice
+//dont want any of the pict apis a string is fine or extend to support color structs
 fun text(string :: String, font_size ::  Real.in(1, 255 ~inclusive), color :: String )://colormode?
   def str = rx'"\n"'.split(string)
   def strs = for List(x : str):
@@ -50,12 +54,20 @@ fun beside(x :: p.Pict,...):
   p.beside(x,...)
 // call racket functions from 2htdp img
 // get test failures if anything changes like unit testing
-//check width and height as they differ from racket
+//check width and height as they differ from racket ==> ask about this 1.16 floor and ceiling
 // round up
   //check a triangle with each angle of size 60
-fun triangle(side_len :: NonnegReal, mode, color :: String):  
-  pr.radial_pict(~points:3, ~width:side_len * 1.15, ~height:side_len * 1.14, ~fill:mode_to_color(mode)[0],~bound: #'shrink).colorize(color).alpha(mode_to_color(mode)[1])
 
+fun triangle2(side_len :: NonnegReal, mode, color:: String):
+  def height = math.round(side_len * math.sqrt(3)/2)
+  p.polygon([[side_len/2,0], [side_len,height], [0,height]], ~fill: mode_to_color(mode)[0]).colorize(color).alpha(mode_to_color(mode)[1])
+//triangle with lines // cba
+  //p.polygon([[50,0], [100, 100],[0, 100]], ~fill: "lightgreen") // cba
+fun triangle(side_len :: NonnegReal, mode, color :: String):
+  def width = math.floor(side_len * 1.16)
+  def height = math.floor(side_len * 1.16)
+  pr.radial_pict(~points:3, ~width:side_len, ~height: side_len, ~fill:mode_to_color(mode)[0],~bound: #'shrink).colorize(color).alpha(mode_to_color(mode)[1])
+//triangle with lines
 fun rectangle(width :: NonnegReal, height :: NonnegReal, mode, color :: String): 
   p.rectangle(~width:width, ~height:height, ~fill:mode_to_color(mode)[0]).colorize(color).alpha(mode_to_color(mode)[1])
 
@@ -67,3 +79,12 @@ fun scale_xy(x :: NonnegReal, y :: NonnegReal, image :: p.Pict):
 
 fun place_image(image :: p.Pict, x :: Real, y :: Real, scene :: p.Pict):
   p.pin(~on: scene,~at: p.Find.left_top(scene,~dx:x,~dy:y),~pinhole: p.Find.center(image),image).clip()
+
+fun scene_line(image :: p.Pict, x1 :: Real, y1 :: Real, x2 :: Real, y1 :: Real, scene :: p.Pict):
+  place_image(image,)
+
+p.line(~dx: 10, ~dy: 10)
+p.line(~dx:10,~dy:-10,~line:"blue",~line_width: 3)
+rectangle(40,40,255,"gray")
+place_image(p.line(~dx: 40, ~dy: 40),0,0,rectangle(40,40,255,"gray"))
+place_image(p.line(~dx: 75, ~dy: 75),0,0,rectangle(40,40,255,"gray"))
