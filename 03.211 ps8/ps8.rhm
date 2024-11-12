@@ -116,8 +116,8 @@ fun draw_step(s, t:: turtle, i):
   |draw(d): scene_line(i, t.x, t.y,move(s,t).x,move(s,t).y,"red")
 
 // check scene_line(square(200,"outline","red"),60,50,60,150,"red") ~is draw_step(turn(90),turtle(60,50,270),square(200,"outline","red")) check this
-draw_step(turn(90),turtle(60,50,270),square(200,"outline","red"))
-draw_step(draw(90),turtle(60,50,270),square(200,"outline","red"))
+draw_step(turn(90),turtle(60,50,270),square(200,255,"white"))
+draw_step(draw(90),turtle(60,50,270),square(200,255,"white"))
 
 println("")
 println("")
@@ -129,15 +129,49 @@ fun draw_trip(ls,t,i):
   match ls:
   |List(): i
   |List(a,...): draw_trip(ls.rest, move(ls.first, t),draw_step(ls.first,t,i))
+
+draw_trip(square_trip,turtle(75,123,0),square(200,255,"white"))
+draw_trip(z_trip,turtle(120,150,180),square(200,255,"white"))
+draw_trip(trip1,turtle(60,50,270),square(200,255,"white"))
+draw_trip(trip2,turtle(100,150,90),square(200,255,"white"))
 println("")
 println("")
 
-draw_trip(square_trip,turtle(75,123,0),square(200,"solid","white"))
-draw_trip(z_trip,turtle(120,150,180),square(200,"solid","white"))
-draw_trip(trip1,turtle(60,50,270),square(200,"solid","white"))
-draw_trip(trip2,turtle(100,150,90),square(200,"solid","white"))
+println("Exercise 6")
+println("")
 
+fun repeat(n,t):
+  match n
+  |0: []
+  | ~else: t.append(repeat(n-1,t))
+
+check repeat(0,trip1) ~is []
+check repeat(2,trip1) ~is [draw(100), turn(90), draw(80), draw(100), turn(90), draw(80)]
+
+def hexagon_trip = repeat(6,[draw(50),turn(60)])
+draw_trip(hexagon_trip,turtle(130,130,90),square(200,255,"white"))
+
+def ring_trip = repeat(36, [draw(100), turn(130)])
+draw_trip(ring_trip,turtle(120,130,90),square(200,255,"white"))
+println("")
+println("")
 /*
+(define ring-trip
+  (repeat 36 (list (make-draw 100) (make-turn 130))))
+(draw-trip ring-trip (make-turtle 50 50 90) (empty-scene 200 200))
+hexagon_trip
+(define hexagon-trip
+  (repeat 6 (list (make-draw 50) (make-turn 60))))
+(draw-trip hexagon-trip (make-turtle 50 50 90) (empty-scene 200 200))
+
+    (check-expect (repeat 0 trip1) empty)
+(check-expect (repeat 2 trip1)
+              (list (make-draw 100) (make-turn 90) (make-draw 80)
+                    (make-draw 100) (make-turn 90) (make-draw 80)))
+
+(define (repeat n t)
+  (cond [(= n 0) empty]
+        [else (append t (repeat (- n 1) t))]))
 create and use empty-scene!
 
 fun trip_length(t:: List):
