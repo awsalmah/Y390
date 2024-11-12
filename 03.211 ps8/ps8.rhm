@@ -1,10 +1,34 @@
 #lang rhombus
 
+import: pict as p
 // 211: Turtle graphics
 
 class turn(angle::Number)
 class draw(distance::Number)
 
+
+fun mode_to_color(mode):
+  cond
+  | mode == "solid": [#'inherit,1]
+  | mode == "outline": [#false,1]
+  | mode is_a Number: mode :: Real.in(0,255 ~inclusive)
+                      [#'inherit,mode/255]
+  | ~else: error(~who: #'mode_to_color,
+                 "expects a mode as second argument",
+                 ~details: ["given:",mode])
+
+fun circle(radius :: NonnegReal, mode, color :: String):
+  p.circle(~size:radius * 2, ~fill: mode_to_color(mode)[0]).colorize(color).alpha(mode_to_color(mode)[1])
+
+fun square(side_len :: NonnegReal, mode, color :: String): 
+  p.square(~size:side_len, ~fill: mode_to_color(mode)[0]).colorize(color).alpha(mode_to_color(mode)[1])
+
+fun scene_line(image :: p.Pict, x1 :: Real, y1 :: Real, x2 :: Real, y2 :: Real, clr):
+  def ln = line(x2-x1,y2-y1,clr)
+  p.pin(~on: image,~at: p.Find.left_top(image,~dx:x1,~dy:y1),~pinhole: p.Find.left_top(ln),ln).clip()
+
+fun line(x1, y1, penorclr):
+  p.line(~dx: x1, ~dy: y1, ~line: penorclr)
 // Examples of Trips
 def square_trip = List[draw(50),turn(90),draw(50),turn(90),draw(50),turn(90),draw(50)]
 def z_trip = List[draw(80),turn(-135),draw(120),turn(135),draw(80)]
@@ -89,7 +113,71 @@ println("")
 fun draw_step(s, t:: turtle, i):
   match s:
   |turn(a): i
-  |draw(d): 1
-// 
+  |draw(d): scene_line(i, t.x, t.y,move(s,t).x,move(s,t).y,"red")
+
+// check scene_line(square(200,"outline","red"),60,50,60,150,"red") ~is draw_step(turn(90),turtle(60,50,270),square(200,"outline","red")) check this
+draw_step(turn(90),turtle(60,50,270),square(200,"outline","red"))
+draw_step(draw(90),turtle(60,50,270),square(200,"outline","red"))
+
+println("")
+println("")
+
+println("Exercise 5")
+println("")
+
+fun draw_trip(ls,t,i):
+  match ls:
+  |List(): i
+  |List(a,...): draw_trip(ls.rest, move(ls.first, t),draw_step(ls.first,t,i))
+println("")
+println("")
+
+draw_trip(square_trip,turtle(75,123,0),square(200,"solid","white"))
+draw_trip(z_trip,turtle(120,150,180),square(200,"solid","white"))
+draw_trip(trip1,turtle(60,50,270),square(200,"solid","white"))
+draw_trip(trip2,turtle(100,150,90),square(200,"solid","white"))
+
+/*
+create and use empty-scene!
+
+fun trip_length(t:: List):
+  match t
+  |List(): 0
+  |List(a,...): step_length(t.first) + trip_length(t.rest)
+
+(draw-trip z-trip (make-turtle 60 50 270) (empty-scene 200 200))
+(define draw-trip
+  (λ (ls t i)
+    (cond
+      ((null? ls) i)
+      ((cons? ls) (draw-trip
+                   (rest ls)
+                   (move (first ls) t)
+                   (draw-step (first ls) t i))))))
+
+(draw-trip square-trip (make-turtle 100 123 45) (empty-scene 200 200))
+(draw-trip z-trip (make-turtle 50 140 90) (empty-scene 200 200))
+
+create an empty-scene
+(check-expect (draw-step (make-draw 100) (make-turtle 60 50 270) (empty-scene 200 200))
+              (scene+line (empty-scene 200 200) 60 50 60 150 "orange"))
+(check-expect (draw-step (make-turn 90) (make-turtle 60 50 270) (empty-scene 200 200))
+              (empty-scene 200 200))
+
+scene_line(image :: p.Pict, x1 :: Real, y1 :: Real, x2 :: Real, y2 :: Real, clr):
+(define draw-step
+  (λ (s t i)
+    (cond
+      ((turn? s) i) 
+      ((draw? s) (scene+line i
+                     (turtle-x t)
+                     (turtle-y t)
+                     (turtle-x (move s t))
+                     (turtle-y (move s t))
+                     "red")))))
+
+(draw-step (make-draw 100) (make-turtle 60 50 270) (empty-scene 200 200))
+(draw-step (make-turn 90) (make-turtle 60 50 270) (empty-scene 200 200))
+*/
 println("")
 println("")
