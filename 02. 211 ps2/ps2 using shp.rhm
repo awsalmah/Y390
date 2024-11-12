@@ -90,9 +90,6 @@ println("Exercise 9")
 fun arrow(clr1, clr2):
   overlay(circle(50,"solid",clr2),above(triangle(45,"solid",clr1),rectangle(20,45,"solid",clr1)))
 
-fun arrow0(clr1, clr2):
-  overlay(circle(50,"solid",clr2),above(triangle2(45,"solid",clr1),rectangle(20,45,"solid",clr1)))
-
 arrow("blue", "yellow")
 def blue_arrow_on_yellow0 = arrow("blue", "yellow")
 blue_arrow_on_yellow0
@@ -237,3 +234,9 @@ p.pin(~on: scene,~at: p.Find.left_top(scene,~dx:x1,~dy:y),~pinhole: p.Find.cente
 def t = triangle(100,255,"red")
 t.width
 t.height
+
+fun arrow0(clr1, clr2):
+  overlay(circle(50,"solid",clr2),above(triangle2(45,"solid",clr1),rectangle(20,45,"solid",clr1)))
+
+arrow("blue","yellow")
+arrow0("blue","yellow")

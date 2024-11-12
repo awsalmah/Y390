@@ -58,12 +58,12 @@ fun beside(x :: p.Pict,...):
 // round up
   //check a triangle with each angle of size 60
 
-fun triangle2(side_len :: NonnegReal, mode, color:: String):
+fun triangle(side_len :: NonnegReal, mode, color:: String):
   def height = math.round(side_len * math.sqrt(3)/2)
   p.polygon([[side_len/2,0], [side_len,height], [0,height]], ~fill: mode_to_color(mode)[0]).colorize(color).alpha(mode_to_color(mode)[1])
 //triangle with lines // cba
   //p.polygon([[50,0], [100, 100],[0, 100]], ~fill: "lightgreen") // cba
-fun triangle(side_len :: NonnegReal, mode, color :: String):
+fun triangle2(side_len :: NonnegReal, mode, color :: String):
   def width = math.floor(side_len * 1.16)
   def height = math.floor(side_len * 1.16)
   pr.radial_pict(~points:3, ~width:side_len, ~height: side_len, ~fill:mode_to_color(mode)[0],~bound: #'shrink).colorize(color).alpha(mode_to_color(mode)[1])
@@ -80,11 +80,38 @@ fun scale_xy(x :: NonnegReal, y :: NonnegReal, image :: p.Pict):
 fun place_image(image :: p.Pict, x :: Real, y :: Real, scene :: p.Pict):
   p.pin(~on: scene,~at: p.Find.left_top(scene,~dx:x,~dy:y),~pinhole: p.Find.center(image),image).clip()
 
-fun scene_line(image :: p.Pict, x1 :: Real, y1 :: Real, x2 :: Real, y1 :: Real, scene :: p.Pict):
-  place_image(image,)
-
+fun scene_line(image :: p.Pict, x1 :: Real, y1 :: Real, x2 :: Real, y2 :: Real, clr):
+  // check overlay first then this place_image(image,)
+  // overlay does not work because the location of the line is always in the center
+  def ln = line(x2-x1,y2-y1,clr)
+  //place_image(line(x2-x1,y2-y1,clr),x1,y1,image)
+  p.pin(~on: image,~at: p.Find.left_top(image,~dx:x1,~dy:y1),~pinhole: p.Find.left_top(ln),ln).clip()
+  // place_image(line((x2-x1) * 2,(y2-y1 )* 2,clr),x1,y1,image)
+// p.pin(~on: image,~at: p.Find(image,~dx:x1,~dy:y1),~pinhole: p.Find(l1),l2) // doesnt work in most cases
+  // overlay(rectangle(math.abs(x2-x1),math.abs(y2-y1),0,"white"),image,line(x2-x1,y2-y1,clr))
+  // overlay(square(60,0,"blue"),square(40,255,"gray"),line(60,-60,"red")) => check width and height
+// add pen support in the future switch clr with penorclr
+fun line(x1, y1, penorclr):
+  // Constructs an image representing a line segment that connects the points (0,0) to (x1,y1).
+  // Creates a pict that draws a line from the top-left of the pict.
+  // The dx and dy arguments determine both the shape of the line and the width and height of the pict.
+  p.line(~dx: x1, ~dy: y1, ~line: penorclr)
+//// p.line(~dx: math.round(1+ x1), ~dy: math.round(1+ y1), ~line: penorclr)
+  // implement smthn similar to be like racket / check racket text file
+  // check the difference in width
 p.line(~dx: 10, ~dy: 10)
 p.line(~dx:10,~dy:-10,~line:"blue",~line_width: 3)
 rectangle(40,40,255,"gray")
 place_image(p.line(~dx: 40, ~dy: 40),0,0,rectangle(40,40,255,"gray"))
 place_image(p.line(~dx: 75, ~dy: 75),0,0,rectangle(40,40,255,"gray"))
+p.line(~dx:100,~dy:100,~line:"blue",~line_width: 3) //left to right and downwards
+p.line(~dx:100,~dy:-100,~line:"blue",~line_width: 3) // left to right and upwards
+p.line(~dx:-100,~dy:100,~line:"blue",~line_width: 3) // right to left and downwards
+p.line(~dx:-100,~dy:-100,~line:"blue",~line_width: 3) // right to left and upwards
+line(30,30,"black")
+line(-30,20,"red")
+line(30,-20,"red").width
+line(30,-20,"red").height
+scene_line(square(40,255,"gray"),-10,50,50,-10,"maroon")
+scene_line(circle(20,"outline","maroon"),0,40,40,0,"maroon") // create ellipse function
+scene_line(rectangle(100,100,255,"darkolivegreen"),25,25,100,100,"maroon")

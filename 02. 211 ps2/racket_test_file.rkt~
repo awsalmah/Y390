@@ -69,10 +69,3 @@
 (image-width (triangle 25 "solid" "red")) ;; 25
 (image-height (triangle 25 "solid" "red")) ;; 22
 (image-height (triangle 24 "solid" "red"))
-(image-width (line 30 30 "red"))
-(image-height (line 30 30 "red"))
-(image-width (line 0 0 "red"))
-(image-height (line 0 0 "red"))
-(image-width (line 0.5 0.5 "red"))
-(image-height (line 0.5 0.5 "red"))
-(image-height (line 0.5 -20 "red"))
