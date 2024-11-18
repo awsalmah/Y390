@@ -64,6 +64,18 @@ fun draw_step(s, t:: turtle, i):
   match s:
   |turn(a): i
   |draw(d): scene_line(i, t.x, t.y,move(s,t).x,move(s,t).y,"red")
+  |fork(c): draw_trip(c,t,i)
+
+fun draw_trip(ls,t,i):
+  match ls:
+  | []: i
+  | [a,b,...]: draw_trip([b,...], move(a, t),draw_step(a,t,i))
 
 // check scene_line(square(200,"outline","red"),60,50,60,150,"red") ~is draw_step(turn(90),turtle(60,50,270),square(200,"outline","red")) check this
 draw_step(draw(90),turtle(60,50,270),square(200,255,"white"))
+
+//exercise 8
+draw_trip(y_trip,turtle(75,123,0),square(200,255,"white"))
+draw_trip(y_trip,turtle(75,123,0),square(200,255,"white"))
+draw_trip([turn(-60), draw(20),fork([turn(120),draw(20)]),turn(-60),draw(20)],turtle(75,123,0),square(200,255,"white")) // upside down λ
+draw_trip([turn(-60), draw(20),fork([turn(120),draw(20)]),fork([draw(20)]),turn(-60),draw(20)],turtle(130,130,90),square(200,255,"white"))
