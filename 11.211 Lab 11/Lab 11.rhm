@@ -1,0 +1,69 @@
+#lang rhombus
+
+import: "../shp.rhm" open
+// 211: Forking turtles
+        
+class turn(angle::Number)
+class draw(distance::Number)
+class fork(child) // child is of a type trip. A trip is a list of draws and turns.
+
+def child_trip = List[turn(30), draw(50)]
+def y_trip = List[draw(50), fork(child_trip), turn(-30), draw(50)]
+
+def fork_trip1 = List[turn(-60),draw(20),fork([turn(120),draw(20)]),turn(-60),draw(20)]; // -- λ
+def fork_trip2 = List[turn(-60),draw(20),fork([turn(120),draw(20)]),fork([draw(20)]),turn(-60),draw(20)]; // -- x
+
+// exercise 1
+// draw_trip([turn(-60), draw(20),turn(120),draw(20)],turtle(130,130,90),square(200,255,"white")) -- left side of an x
+// draw_trip([turn(-60), draw(20),turn(-60),draw(20)],turtle(130,130,90),square(200,255,"white")) -- bottom half of an x
+// draw_trip([turn(-60), draw(20),upperleft,upperright,turn(-60),draw(20)],turtle(130,130,90),square(200,255,"white"))
+// draw_trip([turn(-60), draw(20),upperleft,draw(20),turn(-60),draw(20)],turtle(130,130,90),square(200,255,"white"))
+// draw_trip([turn(-60), draw(20),[turn(120),draw(20)],[draw(20)],turn(-60),draw(20)],turtle(130,130,90),square(200,255,"white")) -- x with 2 forks
+// draw_trip([turn(-60), draw(20),[turn(120),draw(20)],turn(-60),draw(20)],turtle(130,130,90),square(200,255,"white")) -- λ with 1 fork
+
+// check exercise 2 and exercise 3
+
+// exercise 4
+fun step_length(s):
+  match s:
+  |turn(a): 0
+  |draw(d): d
+  |fork(c): trip_length(c)
+
+fun trip_length(t:: List):
+  match t
+  |[]: 0
+  |[a,b,...]: step_length(a) + trip_length([b,...])
+
+// exercise 5
+trip_length(y_trip)
+trip_length(fork_trip1)
+trip_length(fork_trip2)
+// they pass because we changed step length
+
+
+class turtle(x::Number,y::Number,dir::Number)
+
+fun turtle_rad(t :: turtle):
+  t.dir * math.pi/180
+
+//exercise 6
+fun move(s,t :: turtle):
+  match s:
+  | turn(a): t with (dir = a + t.dir)
+  | draw(d): t with (x = t.x + d * math.cos(turtle_rad(t)),
+                     y = t.y - d * math.sin(turtle_rad(t)))
+  | fork(c): t // t does not change, rather we create a temporary turtle and move it?
+
+move(draw(100),turtle(60,50,270))
+move(fork(child_trip),turtle(60,50,270))
+
+// exercise 7
+// wip
+fun draw_step(s, t:: turtle, i):
+  match s:
+  |turn(a): i
+  |draw(d): scene_line(i, t.x, t.y,move(s,t).x,move(s,t).y,"red")
+
+// check scene_line(square(200,"outline","red"),60,50,60,150,"red") ~is draw_step(turn(90),turtle(60,50,270),square(200,"outline","red")) check this
+draw_step(draw(90),turtle(60,50,270),square(200,255,"white"))

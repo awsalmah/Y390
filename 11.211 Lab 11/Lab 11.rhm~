@@ -1,0 +1,8 @@
+#lang rhombus
+
+import: "../shp.rhm" open
+// 211: Forking turtles
+        
+class turn(angle::Number)
+class draw(distance::Number)
+class fork(child)
