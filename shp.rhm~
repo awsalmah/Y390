@@ -1,0 +1,109 @@
+;; shp stands for ShortHandProgram
+#lang rhombus
+import: pict as p
+        pict/radial as pr
+        draw
+        rhombus/rx open
+
+export: text
+        mode_to_color
+        circle
+        square
+        rotate
+        overlay
+        beside
+        triangle
+        rectangle
+        above
+        scale_xy
+        place_image
+        
+// create a star function and a rhombus function
+// call mode_to_color once instead of twicee
+fun text(string :: String, font_size ::  Real.in(1, 255 ~inclusive), color :: String ):
+  def str = rx'"\n"'.split(string)
+  def strs = for List(x : str):
+    p.text(x,~font:draw.Font(~size:font_size)).colorize(color)
+  p.stack(~horiz:#'left,& strs)
+
+fun mode_to_color(mode):
+  cond
+  | mode == "solid": [#'inherit,1]
+  | mode == "outline": [#false,1]
+  | mode is_a Number: mode :: Real.in(0,255 ~inclusive)
+                      [#'inherit,mode/255]
+  | ~else: error(~who: #'mode_to_color,
+                 "expects a mode as second argument",
+                 ~details: ["given:",mode])
+
+fun circle(radius :: NonnegReal, mode, color :: String):
+  p.circle(~size:radius * 2, ~fill: mode_to_color(mode)[0]).colorize(color).alpha(mode_to_color(mode)[1])
+
+check circle(30,255,"red").width ~is 60
+check circle(30,255,"red").height ~is 60
+
+fun square(side_len :: NonnegReal, mode, color :: String): 
+  p.square(~size:side_len, ~fill: mode_to_color(mode)[0]).colorize(color).alpha(mode_to_color(mode)[1])
+
+check square(30,255,"red").height ~is 30
+check square(30,255,"red").width ~is 30
+
+fun rotate(angle :: Number, image :: p.Pict):
+  image.rotate(angle * math.pi/180)
+
+fun overlay(x :: p.Pict,...): 
+  p.overlay(x,...)
+
+fun beside(x :: p.Pict,...): 
+  p.beside(x,...)
+  
+// call racket functions from 2htdp img
+// get test failures if anything changes like unit testing
+
+fun triangle(side_len :: NonnegReal, mode, color:: String):
+  def height = math.round(side_len * math.sqrt(3)/2)
+  p.polygon([[side_len/2,0], [side_len,height], [0,height]], ~fill: mode_to_color(mode)[0]).colorize(color).alpha(mode_to_color(mode)[1])
+
+check triangle(100,255,"red").width ~is 100
+check triangle(100,255,"red").height ~is 87.0
+// check triangle(100,255,"red").height ~is 87
+
+fun rectangle(width :: NonnegReal, height :: NonnegReal, mode, color :: String): 
+  p.rectangle(~width:width, ~height:height, ~fill:mode_to_color(mode)[0]).colorize(color).alpha(mode_to_color(mode)[1])
+
+check rectangle(100,90,255,"red").width ~is 100
+check rectangle(100,90,255,"red").height ~is 90
+
+fun above(x :: p.Pict,...):
+  p.stack(x,...)
+
+fun scale_xy(x :: NonnegReal, y :: NonnegReal, image :: p.Pict):
+  image.scale(x,y)
+
+check scale_xy(2,3,rectangle(100,90,255,"red")).width ~is 200
+check scale_xy(2,3,rectangle(100,90,255,"red")).height ~is 270
+
+fun place_image(image :: p.Pict, x :: Real, y :: Real, scene :: p.Pict):
+  p.pin(~on: scene,~at: p.Find.left_top(scene,~dx:x,~dy:y),~pinhole: p.Find.center(image),image).clip()
+
+fun line(x1, y1, clr):
+  p.line(~dx: x1, ~dy: y1, ~line: clr)
+
+check line(10,10,"red").width ~is 10
+check line(10,10,"red").height ~is 10
+check line(10,0,"red").height ~is 0
+check line(0,10,"red").width ~is 0
+check line(0,0,"red").width ~is 0
+check line(0,0,"red").height ~is 0
+
+
+fun scene_line(image :: p.Pict, x1 :: Real, y1 :: Real, x2 :: Real, y2 :: Real, clr):
+  def ln = line(x2-x1,y2-y1,clr)
+  p.pin(~on: image,~at: p.Find.left_top(image,~dx:x1,~dy:y1),~pinhole: p.Find.left_top(ln),ln).clip()
+ 
+check scene_line(circle(20,"outline","maroon"),0,40,40,0,"maroon").width ~is 40
+check scene_line(circle(20,"outline","maroon"),0,40,40,0,"maroon").height ~is 40
+check scene_line(circle(10,"outline","maroon"),0,40,40,0,"maroon").width ~is 20
+check scene_line(circle(5,"outline","maroon"),0,40,40,0,"maroon").height ~is 10
+check scene_line(circle(0,"outline","maroon"),0,40,40,0,"maroon").width ~is 0
+check scene_line(circle(0,"outline","maroon"),0,40,40,0,"maroon").height ~is 0
