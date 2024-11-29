@@ -2,7 +2,7 @@
 
 import:
   pict as p
-  //draw open
+  draw
   rhombus/random open
 
 // this is a single-line comment
@@ -60,4 +60,31 @@ println("")
 println("")
 
 Random()
+// Random().random(5)
 
+def txt_img2 = p.text("OCT.31,1978").colorize("white")
+def y2 = p.rectangle(~width:math.random(200,1000), ~height:math.random(100,1000),~fill:"black")
+def res2 = p.overlay(y2,txt_img2)
+res2
+
+def vert_rect11 = p.rectangle(~width:math.random(100), ~height:math.random(200), ~line:"black", ~line_width:10, ~fill:#'inherit)
+
+def col11 = p.stack(vert_rect11.colorize("white"),vert_rect11.colorize("white"))
+
+def red_sqr11 = p.square(~size:math.random(200,400), ~line:"black", ~line_width:10, ~fill:"red")
+
+def row11 = p.beside(col11,red_sqr11)
+
+def horizontal_rect11 = p.rectangle(~width:math.random(350), ~height:math.random(100), ~line:"black", ~line_width:10, ~fill:#'inherit)
+
+def big_sqr11 = p.square(~size:math.random(100),~line:"black", ~line_width:10, ~fill:#'inherit)
+
+def sqr11 = p.square(~size:math.random(50),~line:"black", ~line_width:10, ~fill:#'inherit)
+
+def row21 = p.beside(big_sqr11.colorize("blue"),horizontal_rect11.colorize("white"),p.stack(sqr11.colorize("white"),sqr11.colorize("yellow")))
+
+
+def pm11 = p.stack(row11,row21)
+
+def piet_mordan11 = p.overlay(~order: #'back, p.square(~size:500,~line:"black", ~line_width:10,),pm11)
+piet_mordan11
