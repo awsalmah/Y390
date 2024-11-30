@@ -19,8 +19,9 @@ export: text
         place_image
         scene_line
         line
+        rhombus
         
-// create a star function and a rhombus function
+// create a star function
 // call mode_to_color once instead of twicee
 fun text(string :: String, font_size ::  Real.in(1, 255 ~inclusive), color :: String ):
   def str = rx'"\n"'.split(string)
@@ -38,6 +39,27 @@ fun mode_to_color(mode):
                  "expects a mode as second argument",
                  ~details: ["given:",mode])
 
+fun star(side_length :: Number, mode, color :: String):
+  def a = side_length
+  def angle = 36 * math.pi / 180
+  def Rc = a / (2 * math.sin (angle/2))
+  def Ri = a / (2 * math.tan (angle/2))
+  def height = math.round(Rc + Ri)
+  println([Rc,Ri,height,a * math.cos(78 * math.pi / 180)])
+  pr.star(~points: 5, ~width: math.round(Rc), ~height: math.round(Ri),~fill: mode_to_color(mode)[0]).colorize(color).alpha(mode_to_color(mode)[1])
+star(100,255,"red")
+
+fun star2(side_length :: Number, mode, color :: String):
+  def angle = 36 * math.pi / 180
+  def Rc = side_length / (2 * math.sin (angle))
+  def Ri = side_length / (2 * math.tan (angle))
+  def height = math.round(Rc + Ri)
+  def width = math.round(side_length + 2 * side_length  * math.cos(2 * angle))
+  println([Rc,Ri,height,side_length * math.cos(78 * math.pi / 180),height,height,width])
+  pr.star(~points: 5, ~width: math.round(2 * Rc), ~height: math.round(height),~fill: mode_to_color(mode)[0]).colorize(color).alpha(mode_to_color(mode)[1])
+
+star2(100,255,"red")
+
 fun circle(radius :: NonnegReal, mode, color :: String):
   p.circle(~size:radius * 2, ~fill: mode_to_color(mode)[0]).colorize(color).alpha(mode_to_color(mode)[1])
 
@@ -49,6 +71,23 @@ fun square(side_len :: NonnegReal, mode, color :: String):
 
 check square(30,255,"red").height ~is 30
 check square(30,255,"red").width ~is 30
+
+fun rhombus(side_length :: NonnegReal, angle :: Number, mode, color :: String):
+  // we have our angle, we need to divide it by 2 alright
+  // angle * math.pi/180
+  def new_angle = angle/2
+  // we need our opposite angle = 180 - angle / 2
+  def opposite_angle = ((180 - angle) / 2) * math.pi / 180
+  // width/2 = side_length * (opposite angle)
+  // width = math.round(2 * compute)
+  // multiply the computed value of width by 2 and round
+  def width = math.round(2 * math.cos(opposite_angle) * side_length)
+  // height = side_length * sin(opposite angle)
+  def height = math.round(2 * math.sin(opposite_angle) * side_length)
+  // multiply the computed value of height by 2 and round
+  // [[0,height/2], [width/2,0],[width,height/2], [width/2, height]]
+  p.polygon([[0,height/2], [width/2,0],[width,height/2], [width/2, height]], ~fill: mode_to_color(mode)[0]).colorize(color).alpha(mode_to_color(mode)[1])
+  // p.polygon([[side_length/2,0], [side_length,side_length], [0,side_length],[0,side_length]], ~fill: mode_to_color(mode)[0]).colorize(color).alpha(mode_to_color(mode)[1])
 
 fun rotate(angle :: Number, image :: p.Pict):
   image.rotate(angle * math.pi/180)

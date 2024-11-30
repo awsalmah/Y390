@@ -17,6 +17,8 @@ export: text
         above
         scale_xy
         place_image
+        scene_line
+        line
         
 // create a star function and a rhombus function
 // call mode_to_color once instead of twicee
