@@ -2,7 +2,7 @@
 
 // change #lang shrubbery
 
-import: "shp.rhm" open
+import: "../shp.rhm" open
         pict/radial as pr
 
 println("1 Warmup: calculating numbers")
@@ -235,8 +235,4 @@ def t = triangle(100,255,"red")
 t.width
 t.height
 
-fun arrow0(clr1, clr2):
-  overlay(circle(50,"solid",clr2),above(triangle2(45,"solid",clr1),rectangle(20,45,"solid",clr1)))
-
 arrow("blue","yellow")
-arrow0("blue","yellow")
