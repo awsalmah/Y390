@@ -18,6 +18,7 @@ export: mode_to_color
         overlay 
         beside
         above
+        empty_scene
         place_image
         scene_line
         rotate
@@ -182,6 +183,14 @@ check above(ellipse(70,20,"solid","gray"),
             ellipse(50,20,"solid","darkgray"),
             ellipse(30,20,"solid","dimgray"),
             ellipse(10,20,"solid","white")).height ~is 80
+
+fun empty_scene(width :: NonnegReal, height :: NonnegReal):
+  p.rectangle(~width:width, ~height:height, ~fill:"white",~line:"black")
+  
+check empty_scene(160,90).width ~is 160
+check empty_scene(160,90).height ~is 90
+check empty_scene(200,200).width ~is 200
+check empty_scene(200,200).height ~is 200
 
 fun place_image(image :: p.Pict, x :: Real, y :: Real, scene :: p.Pict):
   p.pin(~on: scene,~at: p.Find.left_top(scene,~dx:x,~dy:y),~pinhole: p.Find.center(image),image).clip()

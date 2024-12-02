@@ -1,36 +1,13 @@
 #lang rhombus
 
-import: pict as p
+import: "../shp.rhm" open
 // 211: Turtle graphics
-//use shp
-        
+// create a check within like function
+// test s'more
+
 class turn(angle::Number)
 class draw(distance::Number)
 
-
-fun mode_to_color(mode):
-  cond
-  | mode == "solid": [#'inherit,1]
-  | mode == "outline": [#false,1]
-  | mode is_a Number: mode :: Real.in(0,255 ~inclusive)
-                      [#'inherit,mode/255]
-  | ~else: error(~who: #'mode_to_color,
-                 "expects a mode as second argument",
-                 ~details: ["given:",mode])
-
-fun circle(radius :: NonnegReal, mode, color :: String):
-  p.circle(~size:radius * 2, ~fill: mode_to_color(mode)[0]).colorize(color).alpha(mode_to_color(mode)[1])
-
-fun square(side_len :: NonnegReal, mode, color :: String): 
-  p.square(~size:side_len, ~fill: mode_to_color(mode)[0]).colorize(color).alpha(mode_to_color(mode)[1])
-
-fun scene_line(image :: p.Pict, x1 :: Real, y1 :: Real, x2 :: Real, y2 :: Real, clr):
-  def ln = line(x2-x1,y2-y1,clr)
-  p.pin(~on: image,~at: p.Find.left_top(image,~dx:x1,~dy:y1),~pinhole: p.Find.left_top(ln),ln).clip()
-
-fun line(x1, y1, pen):
-  p.line(~dx: x1, ~dy: y1, ~line: pen)
-  
 // Examples of Trips
 def square_trip = List[draw(50),turn(90),draw(50),turn(90),draw(50),turn(90),draw(50)]
 def z_trip = List[draw(80),turn(-135),draw(120),turn(135),draw(80)]

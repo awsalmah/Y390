@@ -25,13 +25,13 @@ fun step_length(s):
 check step_length(draw(100)) ~is 100
 check step_length(turn(100)) ~is 0
 
-step_length(draw(100)) // should be 100
-step_length(turn(100)) // should be 0
+step_length(draw(100))
+step_length(turn(100))
 println("")
 println("")
-
 
 println("Exercise 2")
+println("")
 
 fun trip_length(t:: List):
   match t
@@ -44,14 +44,13 @@ check trip_length(trip1) ~is 180
 check trip_length(trip2) ~is 180
 check trip_length(List()) ~is 0
 
-trip_length(z_trip) // should be 280
-trip_length(square_trip) // should be 200
+trip_length(z_trip)
+trip_length(square_trip)
 println("")
 println("")
 
-
-println("Exercise 3")
-
+println("Exercise 3") // test s'more
+println("")
 class turtle(x::Number,y::Number,dir::Number)
 
 def t = turtle(24,25,90)
@@ -87,7 +86,7 @@ move(turn(90),turtle(60,50,270))
 println("")
 println("")
 
-println("Exercise 4")
+println("Exercise 4") // test s'more
 println("")
 
 fun draw_step(s, t:: turtle, i):
@@ -95,14 +94,13 @@ fun draw_step(s, t:: turtle, i):
   |turn(a): i
   |draw(d): scene_line(i, t.x, t.y,move(s,t).x,move(s,t).y,"red")
 
-// check scene_line(square(200,"outline","red"),60,50,60,150,"red") ~is draw_step(turn(90),turtle(60,50,270),square(200,"outline","red")) check this
-draw_step(turn(90),turtle(60,50,270),square(200,255,"white"))
-draw_step(draw(90),turtle(60,50,270),square(200,255,"white"))
+draw_step(turn(90),turtle(60,50,270),empty_scene(200,200))
+draw_step(draw(90),turtle(60,50,270),empty_scene(200,200))
 
 println("")
 println("")
 
-println("Exercise 5")
+println("Exercise 5") // test s'more
 println("")
 
 fun draw_trip(ls,t,i):
@@ -110,10 +108,13 @@ fun draw_trip(ls,t,i):
   | []: i
   | [a,b,...]: draw_trip([b,...], move(a, t),draw_step(a,t,i))
 
-draw_trip(square_trip,turtle(75,123,0),square(200,255,"white"))
-draw_trip(z_trip,turtle(120,150,180),square(200,255,"white"))
-draw_trip(trip1,turtle(60,50,270),square(200,255,"white"))
-draw_trip(trip2,turtle(100,150,90),square(200,255,"white"))
+// check draw_trip([],turtle(60,50,270),empty_scene(200,200)) ~is empty_scene(200,200)
+// fails because it expects a Pict(...) but gets a Pict(...)
+
+draw_trip(square_trip,turtle(75,123,0),empty_scene(200,200))
+draw_trip(z_trip,turtle(120,150,180),empty_scene(200,200))
+draw_trip(trip1,turtle(60,50,270),empty_scene(200,200))
+draw_trip(trip2,turtle(100,150,90),empty_scene(200,200))
 println("")
 println("")
 
@@ -129,15 +130,24 @@ check repeat(0,trip1) ~is []
 check repeat(2,trip1) ~is [draw(100), turn(90), draw(80), draw(100), turn(90), draw(80)]
 
 def hexagon_trip = repeat(6,[draw(50),turn(60)])
-draw_trip(hexagon_trip,turtle(130,130,90),square(200,255,"white"))
+draw_trip(hexagon_trip,turtle(130,130,90),empty_scene(200,200))
 
 def ring_trip = repeat(36, [draw(100), turn(130)])
-draw_trip(ring_trip,turtle(120,130,90),square(200,255,"white"))
+draw_trip(ring_trip,turtle(120,130,90),empty_scene(200,200))
 println("")
 println("")
 
-println("Exercise 7")
+println("Exercise 7") // test s'more
 println("")
 
-println("")
-println("")
+fun cartesian_product(ls1, ls2,ls3):
+  def l = MutableList()
+  for (v: ls1):
+    for(w: ls2):
+      for(x: ls3):
+        l.add([v,w,x])
+  l
+
+check cartesian_product(["soup","salad"],["sandwich","stir fry","confit"],["chocolate","tofu","affogato"]).length() ~is 18
+
+cartesian_product(["soup","salad"],["sandwich","stir fry","confit"],["chocolate","tofu","affogato"])
