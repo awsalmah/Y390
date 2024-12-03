@@ -206,7 +206,7 @@ println("")
 fun generations(n):
   if n == 0:
   | []
-  | [draw(10),turn(30),fork(enlarge_trip(0.5,generations(n-1))),turn(-60),fork(enlarge_trip(0.5,generations(n-1)))]
+  | [draw(64),turn(30),fork(enlarge_trip(0.5,generations(n-1))),turn(-60),fork(enlarge_trip(0.5,generations(n-1)))]
 
 draw_trip(generations(7),turtle(40,125,0),empty_scene(200,200))
 println("")
