@@ -5,4 +5,134 @@ import: "../shp.rhm" open
         
 class turn(angle::Number)
 class draw(distance::Number)
-class fork(child)
+class fork(child) // child is of a type trip. A trip is a list of draws and turns.
+
+def child_trip = List[turn(30), draw(50)]
+def y_trip = List[draw( 50), fork(child_trip), turn(-30), draw(50)]
+
+def fork_trip1 = List[turn(-60),draw(20),fork([turn(120),draw(20)]),turn(-60),draw(20)]; // -- λ
+def fork_trip2 = List[turn(-60),draw(20),fork([turn(120),draw(20)]),fork([draw(20)]),turn(-60),draw(20)]; // -- x
+
+// exercise 1
+// draw_trip([turn(-60), draw(20),turn(120),draw(20)],turtle(130,130,90),square(200,255,"white")) -- left side of an x
+// draw_trip([turn(-60), draw(20),turn(-60),draw(20)],turtle(130,130,90),square(200,255,"white")) -- bottom half of an x
+// draw_trip([turn(-60), draw(20),upperleft,upperright,turn(-60),draw(20)],turtle(130,130,90),square(200,255,"white"))
+// draw_trip([turn(-60), draw(20),upperleft,draw(20),turn(-60),draw(20)],turtle(130,130,90),square(200,255,"white"))
+// draw_trip([turn(-60), draw(20),[turn(120),draw(20)],[draw(20)],turn(-60),draw(20)],turtle(130,130,90),square(200,255,"white")) -- x with 2 forks
+// draw_trip([turn(-60), draw(20),[turn(120),draw(20)],turn(-60),draw(20)],turtle(130,130,90),square(200,255,"white")) -- λ with 1 fork
+
+// check exercise 2 and exercise 3
+
+// exercise 4
+fun step_length(s):
+  match s:
+  |turn(a): 0
+  |draw(d): d
+  |fork(c): trip_length(c)
+
+fun trip_length(t:: List):
+  match t
+  |[]: 0
+  |[a,b,...]: step_length(a) + trip_length([b,...])
+
+// exercise 5
+trip_length(y_trip)
+trip_length(fork_trip1)
+trip_length(fork_trip2)
+// they pass because we changed step length
+
+
+class turtle(x::Number,y::Number,dir::Number)
+
+fun turtle_rad(t :: turtle):
+  t.dir * math.pi/180
+
+//exercise 6
+fun move(s,t :: turtle):
+  match s:
+  | turn(a): t with (dir = a + t.dir)
+  | draw(d): t with (x = t.x + d * math.cos(turtle_rad(t)),
+                     y = t.y - d * math.sin(turtle_rad(t)))
+  | fork(c): t // t does not change, rather we create a temporary turtle and move it?
+
+move(draw(100),turtle(60,50,270))
+move(fork(child_trip),turtle(60,50,270))
+
+// exercise 7
+// wip
+fun draw_step(s, t:: turtle, i):
+  match s:
+  |turn(a): i
+  |draw(d): scene_line(i, t.x, t.y,move(s,t).x,move(s,t).y,"red")
+  |fork(c): draw_trip(c,t,i)
+
+fun draw_trip(ls,t,i):
+  match ls:
+  | []: i
+  | [a,b,...]: draw_trip([b,...], move(a, t),draw_step(a,t,i))
+
+// check scene_line(square(200,"outline","red"),60,50,60,150,"red") ~is draw_step(turn(90),turtle(60,50,270),square(200,"outline","red")) check this
+draw_step(draw(90),turtle(60,50,270),square(200,255,"white"))
+//adapting implementin beginning graphics library for beginner programmers in rhombus show examples
+//implement this and heres how to write this and heres the pictures
+//exercise 8
+draw_trip(y_trip,turtle(75,123,0),square(200,255,"white"))
+draw_trip(y_trip,turtle(75,123,0),square(200,255,"white"))
+draw_trip([turn(40),draw(20),fork([turn(120),draw(20)]),turn(0),draw(20)],turtle(75,123,0),square(200,255,"white")) // upside down λ
+draw_trip([turn(40),draw(50),fork([turn(100),draw(50)]),turn(-90),draw(50)],turtle(55,123,0),square(200,255,"white")) // λ
+draw_trip([turn(-60), draw(20),fork([turn(120),draw(20)]),fork([draw(20)]),turn(-60),draw(20)],turtle(75,125,90),square(200,255,"white"))
+
+/*
+Exercise 9. Let’s make some more pretty pictures.
+Design a function radiate that takes a count (a NaturalNumber),
+an angle (a Number), and a Trip, and returns a new Trip.
+The new Trip should generate the given count of child turtles,
+and they should all start at the same current location and perform the same given trip,
+but after each child turtle should be a rotation by the given angle.
+*/
+fun radiate(count :: NonnegReal, angle :: Number, trip):
+  1
+
+
+//exercise 10
+
+fun enlarge_step(n, s):
+  match s:
+  |turn(a): s
+  |draw(d): s with (distance = d * 2)
+  |fork(c): s with (child = enlarge_trip(n,c))
+        // fork(enlarge_trip(n, c)) // accidentally replaced the c with an s....
+
+fun enlarge_trip(n, ls):
+  match ls:
+  | []: ls
+  | [a,b,...]: List.cons(enlarge_step(n, a),enlarge_trip(n, [b,...]))// enlarge step a and then iterate through the rest of the list
+
+enlarge_trip(2,child_trip)
+enlarge_trip(2,List[draw(50), turn(30), draw(50), turn(-30), draw(50)])
+enlarge_trip(2,y_trip)
+
+check enlarge_trip(2,y_trip) ~is [draw(100), fork([turn(30), draw(100)]), turn(-30), draw(100)]
+
+/*
+def child_trip = List[turn(30), draw(50)]
+def y_trip = List[draw(50), fork(child_trip), turn(-30), draw(50)]
+
+fun step_length(s):
+  match s:
+  |turn(a): 0
+  |draw(d): d
+  |fork(c): trip_length(c)
+
+fun trip_length(t:: List):
+  match t
+  |[]: 0
+  |[a,b,...]: step_length(a) + trip_length([b,...])
+
+fun move(s,t :: turtle):
+  match s:
+  | turn(a): t with (dir = a + t.dir)
+  | draw(d): t with (x = t.x + d * math.cos(turtle_rad(t)),
+                     y = t.y - d * math.sin(turtle_rad(t)))
+  | fork(c): t // t does not change, rather we create a temporary turtle and move it?
+*/
