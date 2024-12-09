@@ -92,12 +92,42 @@ fun move(s,t :: turtle):
   | draw(d): t with (x = t.x + d * math.cos(turtle_rad(t)),
                      y = t.y - d * math.sin(turtle_rad(t)))
   | fork(c): t
+
+/*
+(define (move s k)
+  (cond [(draw? s)
+         (make-turtle (+ (turtle-x k)
+                         (* (draw-distance s)
+                            (cos (turtle-rad k))))
+                      (- (turtle-y k)
+                         (* (draw-distance s)
+                            (sin (turtle-rad k))))
+                      (turtle-dir k))]
+        [(turn? s)
+         (make-turtle (turtle-x k)
+                      (turtle-y k)
+                      (+ (turtle-dir k) (turn-angle s)))]
+        [(fork? s) k]))
+*/
              
 fun draw_step(s, t:: turtle, i):
   match s:
   |turn(a): i
-  |draw(d): scene_line(i, t.x, t.y,move(s,t).x,move(s,t).y,"black")
+  |draw(d): scene_line(i, t.x, t.y,move(s,t).x,move(s,t).y,"red")
   |fork(c): draw_trip(c,t,i)
+
+/*
+(define (draw-step s k i)
+  (cond [(draw? s)
+         (scene+line i
+                     (turtle-x k)
+                     (turtle-y k)
+                     (turtle-x (move s k))
+                     (turtle-y (move s k))
+                     "orange")]
+        [(turn? s) i]
+        [(fork? s) (draw-trip (fork-child s) k i)]))
+*/
 
 fun draw_trip(ls,t,i):
   match ls:
@@ -149,35 +179,16 @@ check [draw(0.6)] ~is generate_spiral(0.6)
 
 draw_trip(generate_spiral(64),turtle(60,150,90),empty_scene(200,200))
 
-fun generate_koch(n):
-  if n < 1:
-  |[draw(n)]
-  |generate_koch(1/3 * n) ++ [turn(60)] ++ generate_koch(1/3 * n) ++ [turn(-120)] ++ generate_koch(1/3 * n) ++ [turn(60)] ++ generate_koch(1/3 * n)
-
-// draw_trip(generate_koch(100),turtle(40,100,0),empty_scene(200,200))
-
 fun generate_tree(n):
   if n < 1:
   |[draw(n)]
-  |[draw(n),fork([turn(20)] ++ generate_tree(0.5 * n)),turn(-30)] ++ generate_tree(0.75 * n)
+  |[draw(n),fork([turn(20),generate_tree(0.5 * n)]),turn(-30)] ++ generate_tree(0.75 * n)
 
-check [
-  draw(2),
-  fork(
-    [turn(20), draw(1.0), fork([turn(20), draw(0.5)]), turn(-30), draw(0.75)]
-  ),
-  turn(-30),
-  draw(1.5),
-  fork([turn(20), draw(0.75)]),
-  turn(-30),
-  draw(1.125),
-  fork([turn(20), draw(0.5625)]),
-  turn(-30),
-  draw(0.84375)
-] ~is generate_tree(2)
+/*
+fun generate_spiral(n):
+  if n < 1:
+  |[draw(n)]
+  |[draw(n),turn(-30)] ++ generate_spiral(n * 3/4)
+*/
 
-check [draw(1), fork([turn(20), draw(0.5)]), turn(-30), draw(0.75)] ~is generate_tree(1)
-
-check [draw(0.6)] ~is generate_tree(0.6)
-
-// draw_trip(generate_tree(64),turtle(60,200,90),empty_scene(200,200))
+draw_trip(generate_tree(64),turtle(60,150,90),empty_scene(200,200))

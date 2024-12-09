@@ -209,7 +209,7 @@ fun generations(n):
   | [draw(64),turn(30),fork(enlarge_trip(0.5,generations(n-1))),turn(-50),fork(enlarge_trip(0.5,generations(n-1)))]
 
 draw_trip(generations(6),turtle(40,125,0),empty_scene(200,200))
-draw_trip(radiate(5,-72,[draw(50),turn(120)] ++ radiate(7,-40,[draw(20)] ++ generations(5))),turtle(100,100,0),empty_scene(200,200))
+// draw_trip(radiate(5,-72,[draw(50),turn(120)] ++ radiate(7,-40,[draw(20)] ++ generations(5))),turtle(100,100,0),empty_scene(200,200))
 println("")
 
 println("5. Challenge")
