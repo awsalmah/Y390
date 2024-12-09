@@ -4,7 +4,7 @@ import: "../shp.rhm" open
 // 211: Turtle graphics
 // create a check within like function
 // test s'more
-
+//compare pics convert to bitmaps and then compare the bitmaps
 class turn(angle::Number)
 class draw(distance::Number)
 
@@ -147,7 +147,7 @@ fun cartesian_product(ls1, ls2,ls3):
       for(x: ls3):
         l.add([v,w,x])
   l
-
+// is now with mutable lists
 check cartesian_product(["soup","salad"],["sandwich","stir fry","confit"],["chocolate","tofu","affogato"]).length() ~is 18
 
 cartesian_product(["soup","salad"],["sandwich","stir fry","confit"],["chocolate","tofu","affogato"])

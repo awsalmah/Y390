@@ -1,0 +1,64 @@
+#lang rhombus
+
+import: "../shp.rhm" open
+// test s'more
+        
+class bracket(left,right)
+
+def bracket1 = bracket("Bucknell", "Michigan St")
+def bracket2 = bracket("TCU",bracket("Syracuse","Arizona St"))
+def bracket3 = bracket(bracket1,bracket2)
+
+def teams3 = ["Arizona St","Michigan St","TCU","Bucknell","Syracuse"]
+
+def teams1 = ["Michigan St","Bucknell"]
+def teams2 = ["Arizona St","TCU","Syracuse"]
+
+fun odds(ls::List):
+  match ls
+  |[]: []
+  |[a,b,...]: evens([b,...])
+
+fun evens(ls::List):
+  match ls
+  |[]: []
+  |[a,b,...]: [a] ++ odds([b,...])
+
+check odds(teams3) ~is teams1
+check odds([]) ~is []
+check evens(teams3) ~is teams2
+check odds(["a","b","c","d"]) ~is ["b","d"]
+check evens(["a","b","c","d"]) ~is ["a","c"]
+
+fun generate_bracket(ls::List):
+  match ls
+  | [a]: a
+  | [a,b,...]: bracket(generate_bracket(odds(ls)),generate_bracket(evens(ls)))
+
+check generate_bracket(teams3) ~is bracket3
+
+class outcome(left,winner,right)
+
+def outcome3 = outcome(outcome("Bucknell",
+                               "left",
+                               "Michigan St"),
+                       "right",
+                       outcome("TCU",
+                               "left",
+                               outcome("Syracuse",
+                                       "left",
+                                       "Arizona St")))
+
+fun champion(x):
+  match x
+  | outcome(a,"left",c): champion(x.left)
+  | outcome(a,"right",c): champion(x.right)
+  | _: x
+             
+check champion(outcome3) ~is "TCU"
+
+// fake outcome
+
+class draw(distance::Number)
+class turn(angle::Number)
+class fork(child) // child is of a type trip. A trip is a list of draws and turns.

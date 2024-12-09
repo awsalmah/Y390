@@ -3,7 +3,7 @@ import: "../shp.rhm" open
         
 def date = text("OCT.31,1978",24,"WHITE")
 def background = rectangle(200,150,255,"black")
-overlay(background,date)
+overlay(date,background)
 println("")
 
 def random_day = to_string(math.random(1,32)) ++ ","
@@ -18,7 +18,7 @@ def random_year = to_string(math.random(0,2025))
 
 def date2 = text(random_month() ++ random_day ++ random_year,24,"white")
 def background2 = rectangle(math.random(200,400),math.random(150,300),255,"black")
-overlay(background2,date2)
+overlay(date2,background2)
 
 println("")
 println("")
