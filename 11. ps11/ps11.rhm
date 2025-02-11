@@ -151,11 +151,12 @@ draw_trip(generate_spiral(64),turtle(60,150,90),empty_scene(200,200))
 
 fun generate_koch(n):
   if n < 1:
-  |[draw(n)]
-  |generate_koch(1/3 * n) ++ [turn(60)] ++ generate_koch(1/3 * n) ++ [turn(-120)] ++ generate_koch(1/3 * n) ++ [turn(60)] ++ generate_koch(1/3 * n)
+  | [draw(n)]
+  // | List.append(generate_koch(1/3 * n),[turn(60)],generate_koch(1/3 * n),[turn(-120)],generate_koch(1/3 * n),[turn(60)],generate_koch(1/3 * n))
+  | generate_koch(1/3 * n) ++ [turn(60)] ++ generate_koch(1/3 * n) ++ [turn(-120)] ++ generate_koch(1/3 * n) ++ [turn(60)] ++ generate_koch(1/3 * n)
 
 // draw_trip(generate_koch(100),turtle(40,100,0),empty_scene(200,200))
-
+    
 fun generate_tree(n):
   if n < 1:
   |[draw(n)]
@@ -180,4 +181,4 @@ check [draw(1), fork([turn(20), draw(0.5)]), turn(-30), draw(0.75)] ~is generate
 
 check [draw(0.6)] ~is generate_tree(0.6)
 
-// draw_trip(generate_tree(64),turtle(60,200,90),empty_scene(200,200))
+draw_trip(generate_tree(64),turtle(60,200,90),empty_scene(200,200)).freeze()

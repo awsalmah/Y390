@@ -1,9 +1,184 @@
 #lang rhombus
 
 import: "../shp.rhm" open
-// 211: Turtle graphics
-// create a check within like function
 // test s'more
+        
 class bracket(left,right)
-class turn(angle::Number)
+
+def bracket1 = bracket("Bucknell", "Michigan St")
+def bracket2 = bracket("TCU",bracket("Syracuse","Arizona St"))
+def bracket3 = bracket(bracket1,bracket2)
+
+def teams3 = ["Arizona St","Michigan St","TCU","Bucknell","Syracuse"]
+
+def teams1 = ["Michigan St","Bucknell"]
+def teams2 = ["Arizona St","TCU","Syracuse"]
+
+fun odds(ls::List):
+  match ls
+  |[]: []
+  |[a,b,...]: evens([b,...])
+
+fun evens(ls::List):
+  match ls
+  |[]: []
+  |[a,b,...]: [a] ++ odds([b,...])
+
+check odds(teams3) ~is teams1
+check odds([]) ~is []
+check evens(teams3) ~is teams2
+check odds(["a","b","c","d"]) ~is ["b","d"]
+check evens(["a","b","c","d"]) ~is ["a","c"]
+
+fun generate_bracket(ls::List):
+  match ls
+  | [a]: a
+  | [a,b,...]: bracket(generate_bracket(odds(ls)),generate_bracket(evens(ls)))
+
+check generate_bracket(teams3) ~is bracket3
+
+class outcome(left,winner,right)
+
+def outcome3 = outcome(outcome("Bucknell",
+                               "left",
+                               "Michigan St"),
+                       "right",
+                       outcome("TCU",
+                               "left",
+                               outcome("Syracuse",
+                                       "left",
+                                       "Arizona St")))
+
+fun champion(x):
+  match x
+  | outcome(a,"left",c): champion(x.left)
+  | outcome(a,"right",c): champion(x.right)
+  | _: x
+             
+check champion(outcome3) ~is "TCU"
+
+// fake outcome
+
 class draw(distance::Number)
+class turn(angle::Number)
+class fork(child) // child is of a type trip. A trip is a list of draws and turns.
+
+fun repeat(n,t):
+  match n
+  |0: []
+  | ~else: t ++ repeat(n-1,t)
+
+check [
+  draw(25),
+  turn(-30),
+  draw(25),
+  turn(-30),
+  draw(25),
+  turn(-30),
+  draw(25),
+  turn(-30),
+  draw(25),
+  turn(-30)
+] ~is repeat(5,[draw(25),turn(-30)])
+
+class turtle(x::Number,y::Number,dir::Number)
+
+fun turtle_rad(t :: turtle):
+  t.dir * math.pi/180
+
+fun move(s,t :: turtle):
+  match s:
+  | turn(a): t with (dir = a + t.dir)
+  | draw(d): t with (x = t.x + d * math.cos(turtle_rad(t)),
+                     y = t.y - d * math.sin(turtle_rad(t)))
+  | fork(c): t
+             
+fun draw_step(s, t:: turtle, i):
+  match s:
+  |turn(a): i
+  |draw(d): scene_line(i, t.x, t.y,move(s,t).x,move(s,t).y,"black")
+  |fork(c): draw_trip(c,t,i)
+
+fun draw_trip(ls,t,i):
+  match ls:
+  | []: i
+  | [a,b,...]: draw_trip([b,...], move(a,t),draw_step(a,t,i))
+
+draw_trip(repeat(5,[draw(25),turn(-30)]),turtle(60,100,90),empty_scene(200,200))
+
+fun generate_spiral(n):
+  if n < 1:
+  |[draw(n)]
+  |[draw(n),turn(-30)] ++ generate_spiral(n * 3/4)
+
+check [
+  draw(64),
+  turn(-30),
+  draw(48),
+  turn(-30),
+  draw(36),
+  turn(-30),
+  draw(27),
+  turn(-30),
+  draw(81/4),
+  turn(-30),
+  draw(243/16),
+  turn(-30),
+  draw(729/64),
+  turn(-30),
+  draw(2187/256),
+  turn(-30),
+  draw(6561/1024),
+  turn(-30),
+  draw(19683/4096),
+  turn(-30),
+  draw(59049/16384),
+  turn(-30),
+  draw(177147/65536),
+  turn(-30),
+  draw(531441/262144),
+  turn(-30),
+  draw(1594323/1048576),
+  turn(-30),
+  draw(4782969/4194304),
+  turn(-30),
+  draw(14348907/16777216)
+] ~is generate_spiral(64)
+
+check [draw(0.6)] ~is generate_spiral(0.6)
+
+draw_trip(generate_spiral(64),turtle(60,150,90),empty_scene(200,200))
+
+fun generate_koch(n):
+  if n < 1:
+  | [draw(n)]
+  // | List.append(generate_koch(1/3 * n),[turn(60)],generate_koch(1/3 * n),[turn(-120)],generate_koch(1/3 * n),[turn(60)],generate_koch(1/3 * n))
+  | generate_koch(1/3 * n) ++ [turn(60)] ++ generate_koch(1/3 * n) ++ [turn(-120)] ++ generate_koch(1/3 * n) ++ [turn(60)] ++ generate_koch(1/3 * n)
+
+// draw_trip(generate_koch(100),turtle(40,100,0),empty_scene(200,200))
+    
+fun generate_tree(n):
+  if n < 1:
+  |[draw(n)]
+  |[draw(n),fork([turn(20)] ++ generate_tree(0.5 * n)),turn(-30)] ++ generate_tree(0.75 * n)
+
+check [
+  draw(2),
+  fork(
+    [turn(20), draw(1.0), fork([turn(20), draw(0.5)]), turn(-30), draw(0.75)]
+  ),
+  turn(-30),
+  draw(1.5),
+  fork([turn(20), draw(0.75)]),
+  turn(-30),
+  draw(1.125),
+  fork([turn(20), draw(0.5625)]),
+  turn(-30),
+  draw(0.84375)
+] ~is generate_tree(2)
+
+check [draw(1), fork([turn(20), draw(0.5)]), turn(-30), draw(0.75)] ~is generate_tree(1)
+
+check [draw(0.6)] ~is generate_tree(0.6)
+
+// draw_trip(generate_tree(64),turtle(60,200,90),empty_scene(200,200))
