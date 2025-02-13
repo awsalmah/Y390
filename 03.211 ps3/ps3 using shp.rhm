@@ -1,13 +1,5 @@
-#lang rhombus/and_meta
-// #lang rhombus
-
+#lang rhombus
 import: "../shp.rhm" open
-        pict as p
-        lib("2htdp/image.rkt")
-        lib("2htdp/universe.rkt"):
-          expose #{big-bang} as _big_bang
-          expose #{on-tick} as _on_tick
-          expose #{to-draw} as _to_draw
 
 println("1. Drawing the rocket")
 
@@ -66,28 +58,5 @@ launch(200)
 launch(400)
 launch(600)
 launch(800)
-/*
-Use your launch function with the animate we discussed in class to produce
-an animation of a rocket launching with an initial angle to the horizontal
-and an initial speed.
-*/
-expr.macro 'big_bang $(init :: expr_meta.Parsed):
-              ~draw: $(draw :: expr_meta.Parsed)
-              ~tick: $(tick :: expr_meta.Parsed)':
-  expr_meta.pack_s_exp(['_big_bang', init,
-                        ['_on_tick', tick],
-                        ['_to_draw', draw]])
 
-fun draw(n):
-  image.overlay(image.circle(n,"solid","green"),
-                image.rectangle(400,400, "solid", "black"))
-
-fun tick(n): n+1
-// universe.animate(launch)
-universe.animate(draw)
-
-/*
-big_bang 0+100:
-  ~draw: draw
-  ~tick: fun (n): n+1
-*/
+animate(launch)
