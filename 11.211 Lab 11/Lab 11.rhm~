@@ -7,23 +7,19 @@ class turn(angle::Number)
 class draw(distance::Number)
 class fork(child) // child is of a type trip. A trip is a list of draws and turns.
 
-def child_trip = List[turn(30), draw(50)]
-def y_trip = List[draw( 50), fork(child_trip), turn(-30), draw(50)]
+def child_trip = [turn(30), draw(50)]
+def y_trip = [draw(50), fork(child_trip), turn(-30), draw(50)]
 
-def fork_trip1 = List[turn(-60),draw(20),fork([turn(120),draw(20)]),turn(-60),draw(20)]; // -- λ
-def fork_trip2 = List[turn(-60),draw(20),fork([turn(120),draw(20)]),fork([draw(20)]),turn(-60),draw(20)]; // -- x
-
+println("Exercise 1")
+println("")
 // exercise 1
-// draw_trip([turn(-60), draw(20),turn(120),draw(20)],turtle(130,130,90),square(200,255,"white")) -- left side of an x
-// draw_trip([turn(-60), draw(20),turn(-60),draw(20)],turtle(130,130,90),square(200,255,"white")) -- bottom half of an x
-// draw_trip([turn(-60), draw(20),upperleft,upperright,turn(-60),draw(20)],turtle(130,130,90),square(200,255,"white"))
-// draw_trip([turn(-60), draw(20),upperleft,draw(20),turn(-60),draw(20)],turtle(130,130,90),square(200,255,"white"))
-// draw_trip([turn(-60), draw(20),[turn(120),draw(20)],[draw(20)],turn(-60),draw(20)],turtle(130,130,90),square(200,255,"white")) -- x with 2 forks
-// draw_trip([turn(-60), draw(20),[turn(120),draw(20)],turn(-60),draw(20)],turtle(130,130,90),square(200,255,"white")) -- λ with 1 fork
+def fork_trip1 = [turn(40),draw(50),fork([turn(100),draw(50)]),turn(-90),draw(50)]
+def fork_trip2 = [turn(-60),draw(20),fork([turn(120),draw(20)]),fork([draw(20)]),turn(-60),draw(20)]
 
-// check exercise 2 and exercise 3
+// exercise 2 and exercise 3 - wip
 
-// exercise 4
+println("Exercise 4")
+println("")
 fun step_length(s):
   match s:
   |turn(a): 0
@@ -35,104 +31,186 @@ fun trip_length(t:: List):
   |[]: 0
   |[a,b,...]: step_length(a) + trip_length([b,...])
 
-// exercise 5
+step_length(turn(90))
+step_length(draw(90))
+step_length(fork([turn(100),draw(50)]))
+
 trip_length(y_trip)
 trip_length(fork_trip1)
 trip_length(fork_trip2)
-// they pass because we changed step length
+println("")
 
+println("Exercise 5")
+println("")
+check step_length(turn(90)) ~is 0
+check step_length(draw(90)) ~is 90
+check step_length(fork([turn(100),draw(50)])) ~is 50
 
+check trip_length([]) ~is 0
+check trip_length([turn(30), draw(50)]) ~is 50
+check trip_length(y_trip) ~is 150
+check trip_length(fork_trip1) ~is 150
+check trip_length(fork_trip2) ~is 80
+// they pass because we changed step_length
+println("")
+
+println("Exercise 6") // test s'more
+println("")
 class turtle(x::Number,y::Number,dir::Number)
+
+def t = turtle(24,25,90)
+check t.x ~is 24
+check t.y ~is 25
+check t.dir ~is 90
 
 fun turtle_rad(t :: turtle):
   t.dir * math.pi/180
 
-//exercise 6
 fun move(s,t :: turtle):
   match s:
   | turn(a): t with (dir = a + t.dir)
   | draw(d): t with (x = t.x + d * math.cos(turtle_rad(t)),
                      y = t.y - d * math.sin(turtle_rad(t)))
-  | fork(c): t // t does not change, rather we create a temporary turtle and move it?
+  | fork(c): t
 
 move(draw(100),turtle(60,50,270))
 move(fork(child_trip),turtle(60,50,270))
+println("")
 
-// exercise 7
-// wip
+println("Exercise 7") // test s'more
+println("")
 fun draw_step(s, t:: turtle, i):
   match s:
   |turn(a): i
   |draw(d): scene_line(i, t.x, t.y,move(s,t).x,move(s,t).y,"red")
   |fork(c): draw_trip(c,t,i)
 
+// check scene_line(square(200,"outline","red"),60,50,60,150,"red") ~is draw_step(turn(90),turtle(60,50,270),square(200,"outline","red")) check this
+draw_step(draw(90),turtle(60,50,270),empty_scene(200,200))
+
 fun draw_trip(ls,t,i):
   match ls:
   | []: i
   | [a,b,...]: draw_trip([b,...], move(a, t),draw_step(a,t,i))
 
-// check scene_line(square(200,"outline","red"),60,50,60,150,"red") ~is draw_step(turn(90),turtle(60,50,270),square(200,"outline","red")) check this
-draw_step(draw(90),turtle(60,50,270),square(200,255,"white"))
+draw_trip(y_trip,turtle(75,125,0),empty_scene(200,200))
+draw_trip(fork_trip1,turtle(75,125,0),empty_scene(200,200))
+draw_trip(fork_trip2,turtle(85,85,0),empty_scene(200,200))
+println("")
 //adapting implementin beginning graphics library for beginner programmers in rhombus show examples
 //implement this and heres how to write this and heres the pictures
-//exercise 8
-draw_trip(y_trip,turtle(75,123,0),square(200,255,"white"))
-draw_trip(y_trip,turtle(75,123,0),square(200,255,"white"))
-draw_trip([turn(40),draw(20),fork([turn(120),draw(20)]),turn(0),draw(20)],turtle(75,123,0),square(200,255,"white")) // upside down λ
-draw_trip([turn(40),draw(50),fork([turn(100),draw(50)]),turn(-90),draw(50)],turtle(55,123,0),square(200,255,"white")) // λ
-draw_trip([turn(-60), draw(20),fork([turn(120),draw(20)]),fork([draw(20)]),turn(-60),draw(20)],turtle(75,125,90),square(200,255,"white"))
 
-/*
-Exercise 9. Let’s make some more pretty pictures.
-Design a function radiate that takes a count (a NaturalNumber),
-an angle (a Number), and a Trip, and returns a new Trip.
-The new Trip should generate the given count of child turtles,
-and they should all start at the same current location and perform the same given trip,
-but after each child turtle should be a rotation by the given angle.
-*/
+println("Exercise 8") // test s'more
+println("")
+// Exercise 8. Add a test for draw-trip that uses make-fork.
+// they pass because we changed draw_step
+
+println("Exercise 9") // test s'more // Check when count is 0 and when count is 1
+println("")
 fun radiate(count :: NonnegReal, angle :: Number, trip):
-  1
+  if count == 0:
+  |[]
+  |List.append(List(fork(trip))).add(turn(angle)) ++ radiate(count-1, angle,trip)
 
+radiate(10,-15,[draw(80)])
+radiate(5,-72,[draw(50),turn(120)] ++ radiate(7,-40,[draw(20)]))
 
-//exercise 10
+check [fork([draw(80)]),
+       turn(-15),
+       fork([draw(80)]),
+       turn(-15),
+       fork([draw(80)]),
+       turn(-15),
+       fork([draw(80)]),
+       turn(-15),
+       fork([draw(80)]),
+       turn(-15),
+       fork([draw(80)]),
+       turn(-15),
+       fork([draw(80)]),
+       turn(-15),
+       fork([draw(80)]),
+       turn(-15),
+       fork([draw(80)]),
+       turn(-15),
+       fork([draw(80)]),
+       turn(-15)
+       ] ~is radiate(10,-15,[draw(80)])
 
+check radiate(10,-15,[draw(80)]) ~is [fork([draw(80)]),
+                                      turn(-15),
+                                      fork([draw(80)]),
+                                      turn(-15),
+                                      fork([draw(80)]),
+                                      turn(-15),
+                                      fork([draw(80)]),
+                                      turn(-15),
+                                      fork([draw(80)]),
+                                      turn(-15),
+                                      fork([draw(80)]),
+                                      turn(-15),
+                                      fork([draw(80)]),
+                                      turn(-15),
+                                      fork([draw(80)]),
+                                      turn(-15),
+                                      fork([draw(80)]),
+                                      turn(-15),
+                                      fork([draw(80)]),
+                                      turn(-15)
+                                      ]
+
+draw_trip(radiate(10,-15,[draw(80)]),turtle(90,100,90),empty_scene(200,200))
+draw_trip(radiate(5,-72,[draw(50),turn(120)] ++ radiate(7,-40,[draw(20)])),turtle(100,100,0),empty_scene(200,200))
+println("")
+
+println("Exercise 10")
+println("")
 fun enlarge_step(n, s):
   match s:
   |turn(a): s
-  |draw(d): s with (distance = d * 2)
+  |draw(d): s with (distance = d * n)
   |fork(c): s with (child = enlarge_trip(n,c))
-        // fork(enlarge_trip(n, c)) // accidentally replaced the c with an s....
 
 fun enlarge_trip(n, ls):
   match ls:
   | []: ls
-  | [a,b,...]: List.cons(enlarge_step(n, a),enlarge_trip(n, [b,...]))// enlarge step a and then iterate through the rest of the list
+  | [a,b,...]: List.cons(enlarge_step(n, a),enlarge_trip(n, [b,...]))
 
-enlarge_trip(2,child_trip)
-enlarge_trip(2,List[draw(50), turn(30), draw(50), turn(-30), draw(50)])
+enlarge_step(2,turn(90))
+enlarge_step(3,turn(90))
+enlarge_step(2,draw(90))
+enlarge_step(3,draw(90))
+enlarge_step(2,fork([turn(100),draw(50)]))
+enlarge_step(3,fork([turn(100),draw(50)]))
+
+enlarge_trip(2,[])
+enlarge_trip(3,[])
 enlarge_trip(2,y_trip)
+enlarge_trip(3,y_trip)
 
+check enlarge_step(2,turn(90)) ~is turn(90)
+check enlarge_step(3,turn(90)) ~is turn(90)
+check enlarge_step(2,draw(90)) ~is draw(180)
+check enlarge_step(3,draw(90)) ~is draw(270)
+check enlarge_step(2,fork([turn(100),draw(50)])) ~is fork([turn(100), draw(100)])
+check enlarge_step(3,fork([turn(100),draw(50)])) ~is fork([turn(100), draw(150)])
+
+check enlarge_trip(2,[]) ~is []
+check enlarge_trip(3,[]) ~is []
 check enlarge_trip(2,y_trip) ~is [draw(100), fork([turn(30), draw(100)]), turn(-30), draw(100)]
+check enlarge_trip(3,y_trip) ~is [draw(150), fork([turn(30), draw(150)]), turn(-30), draw(150)]
+println("")
 
-/*
-def child_trip = List[turn(30), draw(50)]
-def y_trip = List[draw(50), fork(child_trip), turn(-30), draw(50)]
+println("Exercise 11") // wip
+println("")
+fun generations(n):
+  if n == 0:
+  | []
+  | [draw(64),turn(30),fork(enlarge_trip(0.5,generations(n-1))),turn(-50),fork(enlarge_trip(0.5,generations(n-1)))]
 
-fun step_length(s):
-  match s:
-  |turn(a): 0
-  |draw(d): d
-  |fork(c): trip_length(c)
+draw_trip(generations(6),turtle(40,125,0),empty_scene(200,200))
+// draw_trip(radiate(5,-72,[draw(50),turn(120)] ++ radiate(7,-40,[draw(20)] ++ generations(5))),turtle(100,100,0),empty_scene(200,200))
+println("")
 
-fun trip_length(t:: List):
-  match t
-  |[]: 0
-  |[a,b,...]: step_length(a) + trip_length([b,...])
-
-fun move(s,t :: turtle):
-  match s:
-  | turn(a): t with (dir = a + t.dir)
-  | draw(d): t with (x = t.x + d * math.cos(turtle_rad(t)),
-                     y = t.y - d * math.sin(turtle_rad(t)))
-  | fork(c): t // t does not change, rather we create a temporary turtle and move it?
-*/
+println("5. Challenge")
+println("")

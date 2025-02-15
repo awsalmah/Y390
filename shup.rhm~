@@ -1,0 +1,15 @@
+;; shup stands for ShortHandUniverseProgram
+#lang rhombus/and_meta
+
+import: pict as p
+        pict/radial as pr
+        draw
+        rhombus/rx open
+        lib("2htdp/universe.rkt"): expose #{big-bang} as _big_bang
+                                   expose #{on-tick} as _on_tick
+                                   expose #{to-draw} as _to_draw
+        lib("pict/main.rkt") as pict: expose #{pict->bitmap} as to_bitmap
+        lib("2htdp/image.rkt") as img2: expose #{rotate} as rotatee
+        lib("pict/convert.rkt"): expose #{pict-convert} as pict_convert
+
+export: animate

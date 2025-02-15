@@ -1,9 +1,6 @@
 #lang rhombus
 
-// change #lang shrubbery
-
-import: "../shp.rhm" open
-        pict/radial as pr
+import: "../ship.rhm" open
 
 println("1 Warmup: calculating numbers")
 println("")
@@ -31,7 +28,6 @@ fun cube(x :: Number):
 cube(4)
 cube(1)
 println("")
-println("")
 
 // Exercise 4.
 // cube(cube(cube(3)))
@@ -44,7 +40,6 @@ println("")
 // 19683*19683*19683
 // 387420489*19683
 
-
 println("2 Eat/Die")
 println("")
 
@@ -52,7 +47,7 @@ println("Exercise 5")
 def eat= text("EAT",30,"darkgreen")
 def rd_crcl = circle(47.5,"solid","red")
 def grn_dmd = rotate(45,square(100, "solid", "darkgreen"))
-def diamond_eat = overlay(grn_dmd,rd_crcl,eat)
+def diamond_eat = overlay(eat,rd_crcl,grn_dmd)
 diamond_eat
 println("")
 
@@ -62,8 +57,8 @@ println("Exercise 6")
 fun diamond(string):
   def txt = text(string,30,"darkgreen")
   def rd_crcl = circle(47.5,"solid","red")
-  def grn_dmd = rotate(45,square(100, "solid", "darkgreen"))
-  overlay(grn_dmd,rd_crcl,txt)
+  def grn_dmd = rhombus(100,90,255,"darkgreen")
+  overlay(txt,rd_crcl,grn_dmd)
 
 diamond("EAT")
 def diamond_eat1 = diamond("EAT")
@@ -75,12 +70,11 @@ def dipytch = beside(diamond("EAT"),diamond("DIE"))
 dipytch
 println("")
 
-
 println("3 Womb")
 println("")
 
 println("Exercise 8")
-def blue_arrow_on_yellow = overlay(circle(50,"solid","yellow"),above(triangle(45,"solid","blue"),rectangle(20,45,"solid","blue")))
+def blue_arrow_on_yellow = overlay(above(triangle(45,"solid","blue"),rectangle(20,45,"solid","blue")),circle(50,"solid","yellow"))
 blue_arrow_on_yellow
 println("")
 
@@ -88,7 +82,7 @@ println("Exercise 9")
 // arrow : Color Color -> Image
 // draw an arrow of the first color inside a circle of the second color
 fun arrow(clr1, clr2):
-  overlay(circle(50,"solid",clr2),above(triangle(45,"solid",clr1),rectangle(20,45,"solid",clr1)))
+  overlay(above(triangle(45,"solid",clr1),rectangle(20,45,"solid",clr1)),circle(50,"solid",clr2))
 
 arrow("blue", "yellow")
 def blue_arrow_on_yellow0 = arrow("blue", "yellow")
@@ -107,34 +101,36 @@ def arrow3 = rotate(270,arrow("darkgreen", "red"))
 def arrow4 = arrow("blue","yellow")
 above(beside(arrow1,arrow2),beside(arrow3,arrow4))
 println("")
-println("")
-
 
 println("Extra fun")
+println("")
+
+println("Exercise 12")
 fun american_dream(inpt):
   def american_dream_circle = circle(50,"solid","black")
   def txt = text(inpt,30,"white")
-  overlay(american_dream_circle,txt)
+  overlay(txt,american_dream_circle)
 
-def eat12 = american_dream("EAT")
-def hug12 = american_dream("HUG")
-def die12 = american_dream("DIE")
-def err12 = american_dream("ERR")
-def bg12 = square(300,255,"white")
-def img112 = place_image(hug12,145,70,bg12)
-def img212 = place_image(eat12,70,150,img112)
-def img312 = place_image(die12,220,150,img212)
-def img412 = place_image(err12,145,225,img312)
-img412
+def eat_ef = american_dream("EAT")
+def hug_ef = american_dream("HUG")
+def die_ef = american_dream("DIE")
+def err_ef = american_dream("ERR")
+def bg_ef = square(300,255,"white")
+def img_ef = place_image(hug_ef,145,70,bg_ef)
+def img_ef2 = place_image(eat_ef,70,150,img_ef)
+def img_ef3 = place_image(die_ef,220,150,img_ef2)
+def img_ef4 = place_image(err_ef,145,225,img_ef3)
+img_ef4
+println("")
 
 println("Exercise 13")
 fun trmph_of_tra(txt,txt_clr,bg_crcl_clr,sqr_clr,sml_crcl_clr,str_clr,rott):
   def bg_crcl = circle(75,"solid",bg_crcl_clr)
   def sqr = square(100,"solid",sqr_clr).rotate(rott)
   def sml_crcl = circle(50,"solid",sml_crcl_clr)
-  def star = pr.star(~points:5, ~width:100,~fill:str_clr)
+  def str =  star(65,255,str_clr)
   def tot_txt = text(txt,16,txt_clr)
-  overlay(bg_crcl,sqr,sml_crcl,star,tot_txt)
+  overlay(tot_txt,str,sml_crcl,sqr,bg_crcl)
 
 def law = trmph_of_tra("LAW","blue","yellow","black","red","black",0.758)
 def cat = trmph_of_tra("CAT","yellow","red","blue","black","red",0)
@@ -145,7 +141,7 @@ def sex = trmph_of_tra("SEX","blue","yellow","black","blue","red",0.758)
 def row2 = beside(men,square(10, "outline","black"),sex)
 
 def all_circles = above(row1,square(10, "outline","black"),row2)
-def triumph_of_tira = overlay(square(325,255,"black"),all_circles)
+def triumph_of_tira = overlay(all_circles,square(325,255,"black"))
 triumph_of_tira
 println("")
 
@@ -165,74 +161,3 @@ fun horizontal_triband(clr1, clr2, clr3):
   rotate(270,scaled_image)
 
 horizontal_triband("darkred", "white", "blue")
-println("")
-/*
-
-place_image(triangle(32,"solid","red"), 0, 0, rectangle(48,48,"solid","gray"))
-place_image(triangle(32,"solid","red"), 24, 24, rectangle(48,48,"solid","gray"))
-place_image(triangle(64,"solid","red"), 24, 24, rectangle(48,48,"solid","gray"))
-
-
-place_image(
-  circle(4,"solid","white"),
-  18,
-  20,
-  place_image(
-    circle(4,"solid","white"),
-    0,
-    6,
-    place_image(
-      circle(4,"solid","white"),
-      14,
-      2,
-      place_image(
-        circle(4,"solid","white"),
-        8,
-        14,
-        rectangle(24,24,"solid","goldenrod")
-      )
-    )
-  )
-)
-
-circle(20,"outline","red")
-circle(20,"solid","blue")
-circle(20,100,"blue")
-*/
-// ask about the \n in p.text(string,~font:draw.Font(~size:font_size)).colorize(color)
-// p.text("Hello\nWorld!",~font:draw.Font(~size:24)).colorize("darkgreen")
-// ask about this as it might be a bug
-/*
-p.line(~dy:1, ~dx: 10, ~line_width: 30)
-p.line(~dx: 1, ~dy: 10, ~line: "blue", ~line_width: 3)
-p.line(~dx: 10, ~dy: 10)
-p.line(~dx: 10, ~line_width: 3)
-p.line(~dy: 10, ~line: "blue", ~line_width: 3)
-p.line(~dx: 10, ~dy: 10)
-
-circle(20,255,"red") is_a p.Pict
-*/
-// above(triangle(100,"solid","red"),rotate(180,triangle(100,"solid","red")))
-/*
-rx'"hello"'.match("hello")
-rx'"hello world hello how are hello you"'.match("hello")
-rx'"\n"'.split("a\nb")
-*/
-/*
-//p.stack(& rainbow( p.square(~size:10,~fill:#'inherit)))
-place_image(triangle(100,"solid","red"), 24, 24, rectangle(48,48,"solid","gray"))
-def scene = rectangle(48,48,"solid","gray")
-def image = triangle(100,"solid","red")
-def x1=24
-def y =24
-p.pin(~on: scene,~at: p.Find.left_top(scene,~dx:x1,~dy:y),~pinhole: p.Find.center(image),image)
-
-p.pin(~on: scene,~at: p.Find.left_top(scene,~dx:x1,~dy:y),~pinhole: p.Find.center(image),image.clip().pad())
-
-p.pin(~on: scene,~at: p.Find.left_top(scene,~dx:x1,~dy:y),~pinhole: p.Find.center(image),image).clip() // do this
-*/
-def t = triangle(100,255,"red")
-t.width
-t.height
-
-arrow("blue","yellow")

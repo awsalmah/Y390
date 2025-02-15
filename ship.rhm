@@ -1,19 +1,11 @@
-;; shp stands for ShortHandProgram
-#lang rhombus/and_meta
-// #lang rhombus
+;; ship stands for ShortHandImageProgram
+#lang rhombus
+
 import: pict as p
         pict/radial as pr
         draw
         rhombus/rx open
-        lib("2htdp/universe.rkt"): expose #{big-bang} as _big_bang
-                                   expose #{on-tick} as _on_tick
-                                   expose #{to-draw} as _to_draw
-        lib("pict/main.rkt") as pict: expose #{pict->bitmap} as to_bitmap
-        lib("2htdp/image.rkt") as img2: expose #{rotate} as rotatee
-        lib("pict/convert.rkt"): expose #{pict-convert} as pict_convert
-import pict as image // import pict as p
-
-
+        
 export: mode_to_color
         circle
         ellipse
@@ -32,7 +24,8 @@ export: mode_to_color
         scene_line
         rotate
         scale_xy
-        animate
+        place_images
+        posn
         
 // check make pen
 // call racket functions from 2htdp img
@@ -229,14 +222,23 @@ check scale_xy(2,3,rectangle(100,90,255,"red")).height ~is 270
 check scale_xy(3,2,ellipse(20,30,"solid","blue")).width ~is 60
 check scale_xy(3,2,ellipse(20,30,"solid","blue")).height ~is 60
 
-expr.macro 'big_bang $(init :: expr_meta.Parsed):
-              ~draw: $(_draw :: expr_meta.Parsed)
-              ~tick: $(tick :: expr_meta.Parsed)':
-  'block:
-     let draw = fun (w): pict.to_bitmap($_draw(w))
-     $(expr_meta.pack_s_exp(['_big_bang', init,
-                             ['_on_tick', tick],
-                             ['_to_draw', 'draw']]))'
+class posn(x,y)
 
-fun animate(x):
-  universe.animate(fun (n): pict.to_bitmap(x(n)))
+fun place_images(i :: List.of(p.Pict), p :: List.of(posn), scene :: p.Pict):
+  match i
+  | []: scene
+  | ~else: place_images(List.rest(i),List.rest(p), place_image(i[0],p[0].x,p[0].y,scene))
+
+/*
+place_images([circle(4,"solid","white"),
+              circle(4,"solid","white"),
+              circle(4,"solid","white"),
+              circle(4,"solid","white")
+              ],
+             [posn(18,20),posn(0,6),
+              posn(14,2),posn(8,14)],
+             rectangle(24,24,255,"goldenrod"))
+*/
+  // fun place_image(image :: p.Pict, x :: Real, y :: Real, scene :: p.Pict):
+  
+// [circle(20,255,"red"),circle(20,255,"red")] is_a List.of(p.Pict)

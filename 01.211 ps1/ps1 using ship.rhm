@@ -1,5 +1,5 @@
 #lang rhombus
-import: "../shp.rhm" open
+import: "../ship.rhm" open
         
 def date = text("OCT.31,1978",24,"WHITE")
 def background = rectangle(200,150,255,"black")

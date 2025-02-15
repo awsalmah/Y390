@@ -1,6 +1,6 @@
 #lang rhombus
 
-import: "../shp.rhm" open
+import: "../ship.rhm" open
 // test s'more
         
 class bracket(left,right)
