@@ -1,6 +1,6 @@
 #lang rhombus
 
-import: "../shp.rhm" open
+import: "../ship.rhm" open
 // 211: Forking turtles
         
 class turn(angle::Number)

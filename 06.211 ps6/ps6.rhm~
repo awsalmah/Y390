@@ -1,0 +1,216 @@
+#lang rhombus
+
+import: "../ship.rhm" open
+        "../shup.rhm" open
+        
+class movie(title, year, minutes)
+class sitcom(series, season, episode)
+
+def show1 = movie("One Cut of the Dead",2017,97)
+def show2 = sitcom("Rick and Morty",2,6)
+def show3 = movie("Welt am Draht",1973,205)
+def show4 = sitcom("Futurama",4,15)
+
+// Exercise 1:
+/*
+fun process_show(s):
+  cond
+  | s is_a movie: ... 
+  | s is_a sitcom: ... 
+*/
+
+// Exercise 2:
+fun show_minutes(s):
+  cond
+  | s is_a movie: s.minutes 
+  | s is_a sitcom: 20 // s.season * s.episode * 20 
+
+// Exercise 3:
+fun show_name(s):
+  cond
+  | s is_a movie: s.title ++ " " ++ to_string(s.year)
+  | s is_a sitcom: s.series ++ " S" ++ to_string(s.season) ++ "E" ++ to_string(s.episode)
+
+// 2 Charting jobs
+
+// Exercise 4:
+// A Job is one of:
+// - class entry(Number)
+// - class promotion(Number, Job)
+class entry(initial_salary)
+class promotion(raise,old_job)
+
+// Exercise 5:
+entry(10)
+promotion(20,entry(10))
+promotion(100,promotion(20,entry(10)))
+
+// Exercise 6:
+/*
+fun process_job(x):
+  cond
+  | x is_a entry: ....
+  | x is_a promotion: ...
+*/
+
+// Exercise 7:
+fun salary(x):
+  cond
+  | x is_a entry: x.initial_salary
+  | x is_a promotion: x.raise + salary(x.old_job)
+
+// Exercise 8:
+fun paycut(x):
+  cond
+  | x is_a entry: #false
+  | x is_a promotion: cond
+                      | x.raise < 0 : #true
+                      | ~else paycut(x.old_job)
+
+// Exercise 9:
+fun promote(job,raise_amount):
+  promotion(raise_amount,job)
+
+// Exercise 10:
+fun chart(job):
+  cond
+  |job is_a entry: rectangle(40, job.initial_salary,255,"blue")
+  | ~else: beside_align("bottom",chart(job.old_job),
+                        square(10,255,"white"),
+                        rectangle(40,salary(job),255,"blue"))
+
+// Exercise 11:
+class leaf(weight)
+class rod(lm,ld,rd,rm)
+
+leaf(10)
+rod(leaf(10),20,10,leaf(10))
+rod(rod(leaf(10),20,10,leaf(10)),40,20,rod(leaf(10),20,10,leaf(10)))
+
+// Exercise 12:
+/*
+fun process_mobile(m):
+  cond
+  | m is_a leaf: ...
+  | m is_a rod: ...
+*/
+
+// Exercise 13:
+fun weight(m):
+  cond
+  | m is_a leaf: m.weight
+  | m is_a rod: weight(m.lm) + weight(m.rm)
+
+// Exercise 14:
+fun average_leaf_weight_helper(m):
+  cond
+  | m is_a leaf: 1
+  | m is_a rod: average_leaf_weight_helper(m.lm) + average_leaf_weight_helper(m.rm)
+
+fun average_leaf_weight(m):
+  cond
+  | m is_a leaf: weight(m)
+  | m is_a rod: weight(m)/average_leaf_weight_helper(m)
+
+// Exercise 15: hmmm
+fun balanced(m):
+  cond
+  | m is_a leaf: #true
+  |m is_a rod: (m.ld * weight(m.lm)) == (m.rd * weight(m.rm))
+
+fun count(m):
+  cond
+  | m is_a leaf: 0
+  | m is_a rod: cond
+                | balanced(m) == #true: 0
+                | ~else : 1
+
+fun unbalanced_count(m):
+  cond
+  | m is_a leaf: 0
+  | m is_a rod: count(m) + count(m.lm) + count(m.rm)
+
+// Exercise 16:
+fun lighten(m):
+  cond
+  | m is_a leaf: leaf(m.weight/2)
+  | m is_a rod: rod(lighten(m.lm),m.ld,m.rd,lighten(m.rm))
+
+// Exercise 17:
+fun enlarge(num,m):
+  cond
+  | m is_a leaf: m
+  | m is_a rod: rod(enlarge(num,m.lm),m.ld * num,num * m.rd,enlarge(num,m.rm))
+
+// Exercise 18:
+fun counterbalance(x):
+  rod(x,20,20,x)
+  
+fun all_balanced_mobile(num::NonnegInt):
+  cond
+  | num == 1: leaf(11)
+  | ~else: counterbalance(all_balanced_mobile(num-1))
+
+// 4 Challenge: abstract painting
+class solid(color)
+class hsplit(top,bottom)
+class vsplit(left,right)
+
+def solid_example = solid("red")
+def hsplit_example = hsplit(solid("red"),solid("black"))
+def vsplit_example = vsplit(solid("green"),solid("blue"))
+def an_example = vsplit(hsplit_example,vsplit_example)
+
+fun draw_painting(p,w,h):
+  cond
+  | p is_a solid : rectangle(w,h,"solid",p.color)
+  | p is_a hsplit: above(draw_painting(p.top,w,h/2),draw_painting(p.bottom,w,h/2))
+  | p is_a vsplit: beside(draw_painting(p.left,w/2,h),draw_painting(p.right,w/2,h))
+
+fun update(p,w,h,x,y):
+  cond
+  | p is_a solid: solid(next_color(p))
+  | p is_a hsplit: cond
+                   | y < h/2 : hsplit(update(p.top,w,h,x,y),p.bottom)
+                   | y >= h/2 : hsplit(p.top,update(p.bottom,w,h,x,y))
+  | p is_a vsplit: cond
+                   | x < w/2 : hsplit(update(p.left,w,h,x,y),p.right)
+                   | x >= w/2 : hsplit(p.left,update(p.right,w,h,x,y))
+  
+
+fun next_color(p):
+//  solid("black")
+  cond
+  | p.color == "red": "orange"
+  | p.color == "orange": "yellow"
+  | p.color == "yellow": "green"
+  | p.color == "green": "blue"
+  | p.color == "blue": "indigo"
+  | p.color == "indigo" : "violet"
+  | p.color == "violet": "red"
+
+def painting_size = 255
+
+def p = draw_painting(hsplit_example,painting_size,painting_size)
+
+fun update_helper(p,x,y,mouse_event)://???
+  cond
+  | mouse_event == "button-down": update(p,painting_size,painting_size,x,y)
+  | ~else: p
+
+fun draw_one_arg(p):
+  draw_painting(p,painting_size,painting_size)
+
+// update_helper(solid_example,1,1,"button-down")
+
+// draw_painting(an_example,255,255)
+
+big_bang an_example:
+// big_bang draw_painting(an_example,255,255):
+  ~draw: draw_one_arg
+  // (on-mouse update_helper)
+  ~tick: fun(n) : n + 1// update_helper // (on-mouse update_helper)
+         // fun(n): update_helpern + 1
+//  ~tick: fun (n): update_helper//??
+// big_bang(an_example,~draw:draw_painting,~tickupdate_helper)
+// big_bang(update_helper,~draw:painting_size, update_helper)

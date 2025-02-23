@@ -1,6 +1,6 @@
 #lang rhombus
 
-import: "../ship.rhm" open
+import: "../image.rhm" open
 
 println("1 Warmup: calculating numbers")
 println("")

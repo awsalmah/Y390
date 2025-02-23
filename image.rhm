@@ -26,6 +26,7 @@ export: mode_to_color
         scale_xy
         place_images
         posn
+        beside_align
         
 // check make pen
 // call racket functions from 2htdp img
@@ -242,3 +243,14 @@ place_images([circle(4,"solid","white"),
   // fun place_image(image :: p.Pict, x :: Real, y :: Real, scene :: p.Pict):
   
 // [circle(20,255,"red"),circle(20,255,"red")] is_a List.of(p.Pict)
+fun align(y):
+  cond
+  | y == "top": #'top
+  | y == "topline": #'topline
+  | y == "center": #'center
+  | y == "baseline": #'baseline
+  | y == "bottom": #'bottom
+                     
+fun beside_align(y, x :: p.Pict,...):
+  p.beside(~vert: align(y), x,...)
+  

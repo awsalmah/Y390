@@ -1,6 +1,7 @@
 #lang rhombus
 import: "../ship.rhm" open
-
+        "../shup.rhm" open
+// add unit tests
 println("1. Drawing the rocket")
 
 // Exercise 1:
@@ -35,8 +36,6 @@ fun y_pos(t):
 
 y_pos(0)
 
-// check_within and check_expect
-
 // Exercise 6:
 
 fun x_pos(t):
@@ -59,9 +58,9 @@ launch(400)
 launch(600)
 launch(800)
 
-animate(launch)
+// animate(launch)
 
-// Challenge
+// Challenge:
 fun init_x_vel_fn(angle):
   init_speed * math.cos(angle)
 
@@ -85,7 +84,8 @@ fun draw_trail(angle):
                 newsprite,newsprite,newsprite,newsprite,newsprite,newsprite,
                 newsprite,newsprite,newsprite,newsprite,newsprite,newsprite,
                 newsprite,newsprite,newsprite,newsprite,newsprite,newsprite]
-               ,[posn(nx_pos(30,0.07 * angle),300 - ny_pos(15,0.07 * angle)),
+               ,[posn(nx_pos(0,0.07 * angle),300 - ny_pos(0,0.07 * angle)),
+                 posn(nx_pos(30,0.07 * angle),300 - ny_pos(30,0.07 * angle)),
                  posn(nx_pos(60,0.07 * angle),300 - ny_pos(60,0.07 * angle)),
                  posn(nx_pos(90,0.07 * angle),300 - ny_pos(90,0.07 * angle)),
                  posn(nx_pos(120,0.07 * angle),300 - ny_pos(120,0.07 * angle)),
@@ -111,4 +111,4 @@ fun draw_trail(angle):
                  posn(nx_pos(720,0.07 * angle),300 - ny_pos(720,0.07 * angle))],
                overlay_sprite(0,0.07*angle,newsprite))
 
-animate(draw_trail)
+// animate(draw_trail)

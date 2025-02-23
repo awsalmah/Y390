@@ -1,7 +1,7 @@
 #lang rhombus
 
-import: "../ship.rhm" open
-        "../shup.rhm" open
+import: "../image.rhm" open
+        "../universe.rhm" open
 
 // 1. Conditionals
 fun turkey(temperature):
@@ -217,5 +217,5 @@ star_wars_opening(300)
 star_wars_opening(350)
 
 // Exercise 22:
-// animate(star_wars_opening)
+animate(star_wars_opening)
 // enjoyed!
