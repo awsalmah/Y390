@@ -39,8 +39,10 @@ check instructor("Carlo") ~is #true
 check instructor("Ken") ~is #false
 
 // Exercise 3:
+
+def background = rectangle(956,400,255,"black")
+
 fun star_wars(x):
-  def background = rectangle(956,400,255,"black")
   cond
   | x < 100: overlay(above(text("STAR",200 - (2 * x),"yellow"),text("WARS",200 - (2 * x),"yellow")),background)
   | ~else: background
@@ -187,7 +189,7 @@ check next_color("violet") ~is "red"
 
 // 7 Challenge: intervals are cuts
 
-def background = rectangle(956,400,255,"black")
+// def background = rectangle(956,400,255,"black")
 def epigraph1 = "A long time ago in a galaxy far,"
 def epigraph2 = "far away...."
 def story_text = above(text("It is a period of civil war",40,"yellow"),
@@ -217,5 +219,6 @@ star_wars_opening(300)
 star_wars_opening(350)
 
 // Exercise 22:
+// Enjoy (animate star-wars-opening). Can you improve the movie?
+// Enjoyed! wip?
 animate(star_wars_opening)
-// enjoyed!
