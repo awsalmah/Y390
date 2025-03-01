@@ -1,0 +1,133 @@
+#lang rhombus
+
+import: "../image.rhm" open
+
+// 2 Counting words
+
+// Exercise 4
+fun remove_lte_100(l :: List.of(Number)):
+  match l
+  | [] : []
+  | [ h , t, ...] : if h <= 100
+                    | remove_lte_100([t,...])
+                    | [h] ++ remove_lte_100([t,...])
+
+check remove_lte_100([]) ~is []
+check remove_lte_100([1,200]) ~is [200]
+check remove_lte_100([1,200,3,300,4]) ~is [200,300]
+check remove_lte_100([101,200,300,400]) ~is [101,200,300,400]
+
+// Exercise 5
+class frequency(str :: String, num :: Number)
+
+// Exercise 6
+// list of strings is either
+// the empty list or
+// a list of strings
+
+// list of frequency is either
+// the empty list or
+// a list of frequency (we defined this in exercise 5)
+
+// Exercise 7
+fun count_word(l :: List.of(frequency), strng):
+  match l
+  | [] : [frequency(strng,1)]
+  | [ h , t , ...] : if h.str == strng
+                     | [frequency(h.str,h.num + 1)] ++ [t,...]
+                     | [h] ++ count_word([t,...],strng)
+
+// Exercise 8
+fun count_all_words(l :: List.of(String)):
+  match l
+  | [] : []
+  | [h , t , ...] : count_word(count_all_words([t,...]), h)
+
+// Exercise 9 TK
+
+// Exercise 10 TK
+fun frequents(l :: List.of(frequency)):
+  match l
+  | [] : []
+  | [ h , t, ...] : if h.num <= 100
+                    | frequents([t,...])
+                    | [h] ++ frequents([t,...])
+
+// 3 Turtle graphics
+
+// This is basically Lab 8.
+// Nothing to see here.
+
+class turn(angle::Number)
+class draw(distance::Number)
+
+// Examples of Trips
+def square_trip = List[draw(50),turn(90),draw(50),turn(90),draw(50),turn(90),draw(50)]
+def z_trip = List[draw(80),turn(-135),draw(120),turn(135),draw(80)]
+def trip1 = List[draw(100),turn(90),draw(80)] // shaped like L
+def trip2 = List[draw(100),turn(120),draw(50),turn(-90),draw(30)] // shaped like how some people write 4
+
+// Exercise 11
+fun step_length(s):
+  match s:
+  |turn(a): 0
+  |draw(d): d
+
+// Exercise 12
+fun trip_length(t:: List):
+  match t
+  |List(): 0
+  |List(a,b,...): step_length(a) + trip_length([b,...])
+
+// Exercise 13
+class turtle(x::Number,y::Number,dir::Number)
+
+fun turtle_rad(t :: turtle):
+  t.dir * math.pi/180
+
+fun move(s,t :: turtle):
+  match s:
+  | turn(a): t with (dir = a + t.dir)
+  | draw(d): t with (x = t.x + d * math.cos(turtle_rad(t)),
+                     y = t.y - d * math.sin(turtle_rad(t)))
+
+// Exercise 14
+fun draw_step(s, t:: turtle, i):
+  match s:
+  |turn(a): i
+  |draw(d): scene_line(i, t.x, t.y,move(s,t).x,move(s,t).y,"red")
+
+// Exercise 15
+fun draw_trip(ls,t,i):
+  match ls:
+  | []: i
+  | [a,b,...]: draw_trip([b,...], move(a, t),draw_step(a,t,i))
+
+draw_trip(square_trip,turtle(75,123,0),empty_scene(200,200))
+draw_trip(z_trip,turtle(120,150,180),empty_scene(200,200))
+
+// Exercise 16
+
+fun repeat(n,t):
+  match n
+  |0: []
+  | ~else: t ++ repeat(n-1,t)
+
+def hexagon_trip = repeat(6,[draw(50),turn(60)])
+draw_trip(hexagon_trip,turtle(130,130,90),empty_scene(200,200))
+
+def ring_trip = repeat(36, [draw(100), turn(130)])
+draw_trip(ring_trip,turtle(120,130,90),empty_scene(200,200))
+
+// 4 Challenge
+
+// Exercise 17 TK
+fun cartesian_product(ls1, ls2,ls3): // Solve this recursively
+  def l = MutableList()
+  for (v: ls1):
+    for(w: ls2):
+      for(x: ls3):
+        l.add([v,w,x])
+  l
+
+cartesian_product(["soup","salad","fries"],["sandwich","stir fry"],["chocolate","tofu","affogato"])
