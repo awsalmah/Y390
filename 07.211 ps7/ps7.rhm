@@ -131,3 +131,17 @@ fun cartesian_product(ls1, ls2,ls3): // Solve this recursively
   l
 
 cartesian_product(["soup","salad","fries"],["sandwich","stir fry"],["chocolate","tofu","affogato"])
+
+fun cartprod(l1,l2):
+  match l1
+  | [] : []
+  | [h,t,...] : cartprod2(h,l2) ++ cartprod([t,...],l2)
+
+fun cartprod2(h1,l2):
+  match l2
+  | [] : []
+  | [h,t,...] : if h is_a List
+                | [[h1] ++ h] ++ cartprod2(h1,[t,...])
+                | [[h1] ++ [h]] ++ cartprod2(h1,[t,...])
+
+cartprod(["soup","salad","fries"],cartprod(["sandwich","stir fry"],["chocolate","tofu","affogato"]))

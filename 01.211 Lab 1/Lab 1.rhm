@@ -97,7 +97,7 @@ animate(num)
 
 def background = rectangle(956,400,255,"black")
 
-// the main issue arises when we're using text
+// the main issue arises due to the text size being treated differently
 fun star_wars(x):
   cond
   | x < 100: overlay(circle(200-(2*x),255,"yellow"),background)

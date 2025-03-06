@@ -1,5 +1,4 @@
 ;; ship stands for ShortHandImageProgram
-;; to_do: fix the text size
 #lang rhombus
 
 import: pict as p
