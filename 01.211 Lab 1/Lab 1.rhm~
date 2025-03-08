@@ -1,1 +1,107 @@
 #lang rhombus
+// TK: exercise 8 and inserting pictures into the definitions
+// TK: compare overlay in Exercise 19 to that in Lab 3
+import: "../image.rhm" open
+        "../universe.rhm" open
+
+// 3 Arithmetic and constants
+
+// Exercise 6
+2 + 3
+2 - 3
+2 * 3
+2 / 3
+2 ** 3
+4 ** 1/2
+
+// Exercise 7
+def big_number = 10 ** 10
+big_number
+
+def bigger_number = big_number * big_number
+bigger_number
+bigger_number/big_number
+def bigger_number_sqrd = bigger_number * bigger_number
+bigger_number_sqrd
+
+// 4 Images
+
+// Exercise 8
+// def cat_img = 1
+def placeholder_img = circle(25,"outline","black")
+// placeholder_img
+
+// Exercise 9
+def rect = rectangle(100,100,255,"black")
+// rect
+
+// Exercise 10
+overlay(placeholder_img,rect)
+println("")
+
+// Exercise 11
+def crc = circle(75/2,"outline","black")
+def rct = rectangle(math.pi * 75,105,"outline","black")
+above(crc,rct,crc)
+println("")
+
+// Exercise 12
+def crcl = circle(85/2,"outline","black")
+def rctngl = rectangle(math.pi * 85,40,"outline","black")
+above(crcl,rctngl,crcl)
+println("")
+
+// 5 Functions
+
+// Exercise 13
+fun can(diameter,height):
+  def c = circle(diameter/2,"outline","black")
+  def r = rectangle(math.pi * diameter,height,"outline","black")
+  above(c,r,c)
+
+// can(75,105)
+// can(85,40)
+
+// Exercise 14
+fun surface_area(diameter,height):
+  def radius = diameter/2
+  (2 * math.pi * radius * height) + (2 * math.pi * (radius ** 2))
+
+// Exercise 15
+
+// 6 Food
+
+// Exercise 16
+fun burger(x):
+  def bun = rectangle(x,x/3,255,"Goldenrod")
+  def tomato = rectangle(x,x/8,255,"red")
+  def patty = rectangle(x,x/4,255,"brown")
+  def lettuce = rectangle(x,x/8,255,"LawnGreen")
+  above(bun,tomato,patty,lettuce,bun)
+
+burger(100)
+println("")
+
+// Exercise 17
+// we get an err.
+
+// 7 Animation
+
+// Exercise 18
+fun num(x):
+  overlay(circle(x,255,"black"),rectangle(956,400,"outline","black"))
+
+num(100)
+
+//animate(num)
+
+def background = rectangle(956,400,255,"black")
+
+// the main issue arises due to the text size being treated differently
+fun star_wars(x):
+  cond
+  | x < 100: overlay(circle(200-(2*x),255,"yellow"),background)
+  //| x < 100: overlay(above(text("STAR",200 - (2 * x),"yellow"),text("WARS",200 - (2 * x),"yellow")),background).clip()
+  | ~else: background
+
+//animate (star_wars)

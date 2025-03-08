@@ -1,5 +1,5 @@
 #lang rhombus
-
+// WIP Exercises 9 and 10
 import: "../image.rhm" open
 
 // 2 Counting words

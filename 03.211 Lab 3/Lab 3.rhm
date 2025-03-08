@@ -41,13 +41,12 @@ check instructor("Ken") ~is #false
 // Exercise 3:
 
 def background = rectangle(956,400,255,"black")
-// the main issue arises due to the text size being treated differently
+
 fun star_wars(x):
   cond
   | x < 100: overlay(above(text("STAR",200 - (2 * x),"yellow"),text("WARS",200 - (2 * x),"yellow")),background).clip()
   | ~else: background
            
-// check this as the background moves at the beginning
 // animate(star_wars)
 
 // 2. Data Definitions
@@ -220,6 +219,7 @@ star_wars_opening(350)
 
 // Exercise 22:
 // Enjoy (animate star-wars-opening). Can you improve the movie?
-// Enjoyed! wip?
-animate(star_wars)
+// Enjoyed! 
+
+// animate(star_wars)
 // animate(star_wars_opening)

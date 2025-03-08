@@ -12,7 +12,7 @@
       ((< x 100) (overlay(above (text "STAR" (- 200 (* 2 x)) "yellow") (text "WARS" (- 200 (* 2 x)) "yellow")) background))
       (else background))))
 
-(animate star-wars)
+;;(animate star-wars)
 
 (define epigraph1 "A long time ago in a galaxy far,")
 
@@ -42,3 +42,5 @@
 
 (image-width (above (text "STAR" 200 "yellow") (text "WARS" 200 "yellow")))
 (image-height (above (text "STAR" 200 "yellow") (text "WARS" 200 "yellow")))
+(image-height (text "STAR" 200 "yellow"))
+(image-height (text "A" 200 "yellow"))

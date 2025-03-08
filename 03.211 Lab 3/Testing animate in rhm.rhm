@@ -5,6 +5,8 @@ import: "../image.rhm" open
 
 def background = rectangle(956,400,255,"black")
 
+// 2htdp takes the string, it splits it up into individual letters and horizontally
+// appends them // do baseline with beside
 // the main issue arises when we're using text
 //text size is different when comparing rhombus and racket htdp
 fun star_wars(x):
@@ -13,7 +15,7 @@ fun star_wars(x):
   //| x < 100: overlay(above(text("STAR",200 - (2 * x),"yellow"),text("WARS",200 - (2 * x),"yellow")),background).clip()
   | ~else: background
 
-animate(star_wars)
+// animate(star_wars)
 
 fun star_wars_c(x):
   cond
@@ -84,3 +86,6 @@ fun star_wars_tx(x):
 
 above(text("STAR",200,"yellow"),text("WARS",200,"yellow")).width
 above(text("STAR",200,"yellow"),text("WARS",200,"yellow")).height
+
+text("STAR",200,"yellow").width
+text("A",2,"yellow").height
