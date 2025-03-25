@@ -1,0 +1,187 @@
+#lang rhombus
+
+import: "../image.rhm" open
+        "../universe.rhm" open
+        
+// 2 Year, Month and Day
+
+// Exercise 1:
+fun next_month(m):
+  match m
+  | "January" : "February"
+  | "February" : "March"
+  | "March" : "April"
+  | "April" : "May"
+  | "May" : "June"
+  | "June" : "July"
+  | "July" : "August"
+  | "August" : "September"
+  | "September" : "October"
+  | "October" : "November"
+  | "November" : "December"
+  | "December" : "January"
+
+check next_month("September") ~is "October"
+check next_month("December") ~is "January"
+
+// Exercise 2:
+fun fall(m):
+  match m
+  | "September" || "October" || "November" : #true
+  | ~else: #false
+
+check fall("September") ~is #true
+check fall("October") ~is #true
+check fall("November") ~is #true
+check fall("December") ~is #false
+check fall("January") ~is #false
+check fall("February") ~is #false
+check fall("March") ~is #false
+check fall("April") ~is #false
+check fall("May") ~is #false
+check fall("June") ~is #false
+check fall("July") ~is #false
+check fall("August") ~is #false
+
+// 3 calendar
+
+// Exercise 3:
+fun format_month(m,f):
+  match f
+  | "long": m
+  | "short": m.substring(..3)
+  | ~else: error("oops")
+
+// Exercise 4:
+fun year_month_day_date(year :: NonnegInt,month :: String ,day :: Int.in(0,31),dateorder :: String,monthformat :: String):
+  match dateorder
+  | "MDY" : format_month(month,monthformat) ++ ", " ++ to_string(day) ++ " " ++ to_string(year)
+  | "DMY" : to_string(day) ++ " " ++ format_month(month,monthformat) ++ " " ++ to_string(year)
+  | ~else: error("oops")
+
+check year_month_day_date(1936,"November",12,"MDY","long") ~is "November, 12 1936"
+check year_month_day_date(1936,"November",12,"MDY","short") ~is "Nov, 12 1936"
+check year_month_day_date(1936,"November",12,"DMY","long") ~is "12 November 1936"
+check year_month_day_date(1936,"November",12,"DMY","short") ~is "12 Nov 1936"
+
+// Exercise 5:
+fun calendar(year :: NonnegInt,month :: String ,day :: Int.in(0,31)):
+  def date = text(year_month_day_date(year, month, day, "DMY", "short"),125,"red")
+  def background = rectangle(956,400,255,"black")
+  overlay(date,background)
+
+// calendar(2002,"October",01)
+
+// 4 days-between
+
+// Exercise 6:
+fun month_days_in_year(m):
+  match m
+  | "January" : 0
+  | "February" : 31
+  | "March" : 31 + 28
+  | "April" : 31 + 28 + 31
+  | "May" : 31 + 28 + 31 + 30
+  | "June" : 31 + 28 + 31 + 30 + 31
+  | "July" : 31 + 28 + 31 + 30 + 31 + 30
+  | "August" : 31 + 28 + 31 + 30 + 31 + 30 + 31
+  | "September" : 31 + 28 + 31 + 30 + 31 + 30 + 31 + 31
+  | "October" : 31 + 28 + 31 + 30 + 31 + 30 + 31 + 31 + 30
+  | "November" : 31 + 28 + 31 + 30 + 31 + 30 + 31 + 31 + 30 + 31
+  | "December" : 31 + 28 + 31 + 30 + 31 + 30 + 31 + 31 + 30 + 31 + 30
+
+check month_days_in_year("January") ~is 0
+check month_days_in_year("September") ~is 243
+
+// Exercise 7:
+fun year_month_day_days(y,m,d):
+  y * 365 + month_days_in_year(m) + d - 1
+
+check year_month_day_days(0,"January",1) ~is 0
+check year_month_day_days(2017,"August",28) ~is 736444
+
+// Exercise 8:
+fun days_between(y1,m1,d1,y2,m2,d2):
+  math.abs(year_month_day_days(y2,m2,d2) - year_month_day_days(y1,m1,d1))
+
+check days_between(0,"January",1,0,"January",3) ~is 2
+check days_between(0,"January",1,2017,"August",28) ~is 736444
+
+// 5 time-passing
+
+// Exercise 9:
+fun days_year(d): d div 365
+
+check days_year(364) ~is 0
+check days_year(365) ~is 1
+check days_year(736305) ~is 2017
+check days_year(736505) ~is 2017
+check days_year(year_month_day_days(1999,"December",31)) ~is 1999
+
+// Exercise 10:
+fun days_in_year_month(d):
+  cond
+  | d is_a Int.in(0,31 ~exclusive) : "January"
+  | d is_a Int.in(31,59 ~exclusive) : "February"
+  | d is_a Int.in(59,90 ~exclusive) : "March"
+  | d is_a Int.in(90,120 ~exclusive) : "April"
+  | d is_a Int.in(120,151 ~exclusive) : "May"
+  | d is_a Int.in(151,181 ~exclusive) : "June"
+  | d is_a Int.in(181,212 ~exclusive) : "July"
+  | d is_a Int.in(212,243 ~exclusive) : "August"
+  | d is_a Int.in(243,273 ~exclusive) : "September"
+  | d is_a Int.in(273,304 ~exclusive) : "October"
+  | d is_a Int.in(304,334 ~exclusive) : "November"
+  | d is_a Int.in(334,365 ~exclusive) : "December"
+
+check days_in_year_month(0) ~is "January"
+check days_in_year_month(31) ~is "February"
+check days_in_year_month(242) ~is "August"
+
+fun days_month(d): days_in_year_month(d mod 365)
+
+check days_month(59) ~is "March"
+check days_month(364) ~is "December"
+check days_month(736445) ~is "August"
+check days_month(year_month_day_days(1999,"December",31)) ~is "December"
+
+// Exercise 11:
+// tk
+fun days_in_year_days_in_month(d):
+  d - month_days_in_year(days_in_year_month(d))
+
+check days_in_year_days_in_month(0) ~is 0
+check days_in_year_days_in_month(59) ~is 0
+check days_in_year_days_in_month(364) ~is 30
+
+fun days_day(d):
+  days_in_year_days_in_month(d mod days_year(d)) + 1
+  
+// Exercise 12:
+def first_day = year_month_day_days(2025,"January",13)
+def last_day = first_day + days_between(2025,"January",13,2025,"May",9)
+def cal_rate = 1
+
+fun weekends(d):
+  if d >= last_day:
+  | []
+  | [d + 5, d + 6] ++ weekends(d + 7)
+
+def wknds = weekends(first_day)
+
+fun semester_cal(t):
+  if t <= 116:
+  | def year = days_year(t + first_day)
+    def month = days_month(t + first_day)
+    def day = days_day(t + first_day)
+    // println(year,month,day)
+    if (t + first_day) in wknds:
+    | def date = text(year_month_day_date(year, month, day, "DMY", "short"),125,"black")
+      def background = rectangle(956,400,255,"red")
+      overlay(date,background)
+    | calendar(year,month,day)
+  | calendar(days_year(last_day),days_month(last_day),days_day(last_day))
+    
+fun semester(n): semester_cal((n * cal_rate) div 28)
+
+animate(semester)

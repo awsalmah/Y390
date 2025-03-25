@@ -1,0 +1,6 @@
+#lang rhombus
+
+import: pict open
+
+
+def x = circle(~size:25 * 2, ~fill: #'inherit).colorize("black")
