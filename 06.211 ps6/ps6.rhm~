@@ -1,7 +1,7 @@
 #lang rhombus
 
-import: "../ship.rhm" open
-        "../shup.rhm" open
+import: "../image.rhm" open
+        "../universe.rhm" open
         
 class movie(title, year, minutes)
 class sitcom(series, season, episode)
@@ -172,14 +172,14 @@ fun update(p,w,h,x,y):
   | p is_a solid: solid(next_color(p))
   | p is_a hsplit: cond
                    | y < h/2 : hsplit(update(p.top,w,h,x,y),p.bottom)
-                   | y >= h/2 : hsplit(p.top,update(p.bottom,w,h,x,y))
+                   | y >= h/2 : hsplit(p.top,update(p.bottom,w,h * 1.5,x,y))
+                   
   | p is_a vsplit: cond
-                   | x < w/2 : hsplit(update(p.left,w,h,x,y),p.right)
-                   | x >= w/2 : hsplit(p.left,update(p.right,w,h,x,y))
+                   | x < w/2 : vsplit(update(p.left,w,h,x,y),p.right)
+                   | x >= w/2 : vsplit(p.left,update(p.right,w * 1.5,h,x,y))
   
 
 fun next_color(p):
-//  solid("black")
   cond
   | p.color == "red": "orange"
   | p.color == "orange": "yellow"
@@ -187,13 +187,15 @@ fun next_color(p):
   | p.color == "green": "blue"
   | p.color == "blue": "indigo"
   | p.color == "indigo" : "violet"
-  | p.color == "violet": "red"
+  | p.color == "violet": "black"
+  | p.color == "black": "red"
+                         
 
 def painting_size = 255
 
 def p = draw_painting(hsplit_example,painting_size,painting_size)
 
-fun update_helper(p,x,y,mouse_event)://???
+fun update_helper(p,x,y,mouse_event):
   cond
   | mouse_event == "button-down": update(p,painting_size,painting_size,x,y)
   | ~else: p
@@ -201,16 +203,9 @@ fun update_helper(p,x,y,mouse_event)://???
 fun draw_one_arg(p):
   draw_painting(p,painting_size,painting_size)
 
-// update_helper(solid_example,1,1,"button-down")
-
-// draw_painting(an_example,255,255)
-
+// rename files
 big_bang an_example:
-// big_bang draw_painting(an_example,255,255):
   ~draw: draw_one_arg
-  // (on-mouse update_helper)
-  ~tick: fun(n) : n + 1// update_helper // (on-mouse update_helper)
-         // fun(n): update_helpern + 1
-//  ~tick: fun (n): update_helper//??
-// big_bang(an_example,~draw:draw_painting,~tickupdate_helper)
-// big_bang(update_helper,~draw:painting_size, update_helper)
+  ~tick: fun(n) : n 
+  ~key: fun(n,m) : n
+  ~mouse: update_helper

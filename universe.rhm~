@@ -1,0 +1,44 @@
+;; shup stands for ShortHandUniverseProgram
+#lang rhombus/and_meta
+
+import: "image.rhm" open
+        pict as image
+        lib("2htdp/universe.rkt"): expose #{big-bang} as _big_bang
+                                   expose #{on-tick} as _on_tick
+                                   expose #{to-draw} as _to_draw
+                                   expose #{on-mouse} as _on_mouse
+                                   expose #{on-key} as _on_key
+        lib("pict/main.rkt") as pict: expose #{pict->bitmap} as to_bitmap
+        lib("2htdp/image.rkt") as img2: expose #{rotate} as rotatee
+        lib("pict/convert.rkt"): expose #{pict-convert} as pict_convert
+
+export: animate
+        big_bang
+
+expr.macro 'big_bang $(init :: expr_meta.Parsed):
+              ~draw: $(_draw :: expr_meta.Parsed)
+              ~tick: $(tick :: expr_meta.Parsed)
+              ~key: $(key :: expr_meta.Parsed)
+              ~mouse: $(mouse :: expr_meta.Parsed)':
+  'block:
+     let draw = fun (w): pict.to_bitmap($_draw(w))
+     $(expr_meta.pack_s_exp(['_big_bang', init,
+                             ['_on_tick', tick],
+                             ['_to_draw', 'draw'],
+                             ['_on_key', key],
+                             ['_on_mouse', mouse]]))'
+  
+fun draw(n):
+  image.overlay(image.circle(~size: n),
+                image.square(~size: 400))
+  
+fun animate(x):
+  universe.animate(fun (n): pict.to_bitmap(x(n)))
+
+/*
+big_bang 0+100:
+  ~draw: draw
+  ~tick: fun (n): n+1
+  ~key: fun (n,m): n
+  ~mouse: fun (a,b,c,d): a
+*/

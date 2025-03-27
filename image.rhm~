@@ -1,4 +1,5 @@
 ;; ship stands for ShortHandImageProgram
+;; to_do: fix the text size
 #lang rhombus
 
 import: pict as p
@@ -83,12 +84,31 @@ check line(0,10,"red").height ~is 10
 check line(0,0,"red").width ~is 0
 check line(0,0,"red").height ~is 0
 
-fun text(string :: String, font_size ::  Real.in(1, 255 ~inclusive), color :: String ):
-  def str = rx'"\n"'.split(string)
-  def strs = for List(x : str):
-    p.text(x,~font:draw.Font(~size:font_size)).colorize(color)
-  p.stack(~horiz:#'left,& strs)
+fun string_to_list(s):
+  def x = List.map(s , fun(x): string_to_list_helper(x))
+  def y = for List ( z : x):
+    cond
+    |z.length() == 0: [] ++ [""]
+    | ~else: z
+  y
+  
+fun string_to_list_helper(s):
+  cond
+  | s.length() == 0: []
+  | ~else: [s.substring(0,1)] ++ string_to_list_helper(s.substring(1..))
 
+
+fun text(string :: String, font_size ::  Real.in(1, 255 ~inclusive), color :: String ):
+  def list_of_words = rx'"\n"'.split(string)
+  def lists_of_chars = string_to_list(list_of_words)
+  def st1 = for List (x : lists_of_chars):
+    def st2 = for List ( y : x) :
+      p.text(y,~font:draw.Font(~kind: draw.Font.Kind.swiss,~size:font_size)).colorize(color)
+    p.beside(~vert: #'baseline,&st2)
+  p.stack(~horiz:#'left,& st1)
+// 2htdp takes the string, it splits it up into individual letters and horizontally
+// appends them // do baseline with beside
+  
 fun triangle(side_len :: NonnegReal, mode, color:: String):
   def md = mode_to_color(mode)
   def h = math.round(side_len * math.sqrt(3)/2)

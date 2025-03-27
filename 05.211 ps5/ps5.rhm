@@ -1,0 +1,118 @@
+#lang rhombus
+
+import: "../image.rhm" open
+        "../universe.rhm" open
+        
+// 1 Big Bang
+
+// Exercise 1:
+fun draw(str):
+  overlay(
+    text(str,24,"yellow"),
+    rectangle(500,250,255,"black"))
+
+fun add_letter(str,k): str ++ k
+
+// Exercise 2: big_bang
+
+/*
+big_bang "":
+  ~draw: draw 
+  ~tick: fun (n): n
+  ~key: add_letter
+  ~mouse: fun (a,b,c,d): a
+*/
+                       
+// Exercise 3: modify Exercise 2
+                       
+fun add_letter_no_space(str,k):
+  cond
+  | to_string(k) == " ": ""
+  | ~else: str ++ k
+
+/*
+big_bang "":
+  ~draw: draw 
+  ~tick: fun (n): n
+  ~key: add_letter_no_space
+  ~mouse: fun (a,b,c,d): a
+*/
+           
+// 2 Structures
+           
+// Exercise 4: TK
+
+// Exercise 5:
+class address(street,apartment,city,zip)
+
+// Exercise 6: TK
+
+// Exercise 7:
+fun is_address(a):
+  a.zip <= 4900 && a.zip >= 4600
+
+check is_address(address("a","a","b",4600)) ~is #true
+check is_address(address("a","a","b",4900)) ~is #true
+check is_address(address("a","a","b",900)) ~is #false
+
+// Exercise 8:
+fun format_address(a):
+  a.street ++ " " ++ a.apartment ++ " " ++ a.city ++ " " ++ to_string(a.zip)
+
+check format_address(address("a","a","b",900)) ~is "a a b 900"
+
+// Exercise 9:
+fun smaller_zip(a1,a2):
+  if a1.zip <= a2.zip
+  | a1
+  | a2
+
+// 3 Book exercises
+    
+// Exercise 83
+class editor(pre,post)
+def scene = empty_scene(200,20)
+def cursor = rectangle(1,20,255,"red")
+
+fun render(ed):
+  def content = beside(text(ed.pre,16,"black"),cursor,text(ed.post,16,"black"))
+  overlay_align("left","center",content,scene)
+
+def x = render(editor("Hello","World"))
+x
+
+// Exercise 84
+// match: no matching case for \b \t \r
+//String.copy("a")
+// interestingly enough ~key returns String.copy
+fun edit(ed, ke):
+  cond
+  | ke.length() == 1:
+      match to_string(ke)
+      | "\b" : if ed.pre.length() >= 1
+               | editor(ed.pre.substring(..ed.pre.length()-1),ed.post)
+               | ed
+      | "\t" || "\r" : ed
+      | ~else : editor(ed.pre ++ ke,ed.post)
+  | ~else: match to_string(ke)
+           | "left" : if ed.pre.length() >= 1
+                      | editor(ed.pre.substring(..ed.pre.length()-1),ed.pre[ed.pre.length()-1] +& ed.post)
+                      | ed
+           | "right" :  if ed.post.length() >= 1
+                        | editor(ed.pre +& ed.post[0],ed.post.substring(1..))
+                        | ed
+           | ~else : ed
+
+def y = editor("hello","world")
+def ke = "\b"
+
+fun run(pre):
+  big_bang editor(pre,""):
+    ~draw: render 
+    ~tick: fun (n): n
+    ~key: edit
+    ~mouse: fun (a,b,c,d): a
+
+// run(y.pre)
+
+// 4 Challenge
