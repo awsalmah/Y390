@@ -29,6 +29,7 @@ export: mode_to_color
         posn
         beside_align
         overlay_align
+        above_align
         
 // check make pen
 // call racket functions from 2htdp img
@@ -296,3 +297,7 @@ fun overlay_align(xplace,yplace,i1 :: p.Pict,i2 :: p.Pict,...):
   p.overlay(~horiz: x_place(xplace), ~vert: y_place(yplace), ~order:#'back, i1,i2, ...)
 
 // overlay_align("left","center",rectangle(30,60,255,"orange"),ellipse(60,30,"solid","purple"))
+
+// same comments as the previous 2 functions
+fun above_align(xplace,i1 :: p.Pict,i2 :: p.Pict,...):
+  p.stack(~horiz: x_place(xplace),i1,i2,...)
