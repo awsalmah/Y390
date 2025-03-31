@@ -1,0 +1,27 @@
+#lang rhombus/and_meta
+
+import lib("2htdp/json.rkt"):
+  // PairLists and String.copy
+  expose #{read-json/web} as webb
+  expose #{read-json/file} as filee
+
+// Exercise 1: TK
+
+// Exercise 2: 
+
+def webaddress = "https://iucbs.etaspot.net/service.php?service=get_vehicles&includeETAData=1&inService=1&orderedETAArray=1&token=TESTING"
+// webb("https://iucbs.etaspot.net/service.php?service=get_vehicles&includeETAData=1&inService=1&orderedETAArray=1&token=TESTING")
+
+// filee("buses1.json")
+
+// webb("https://cs.indiana.edu/classes/c211/buses1.json")
+
+// Exercise 3: TK
+
+// Exercise 4: TK
+
+// Exercise 5:
+fun parse(whatever): webb(webaddress)
+
+// Exercise 6:
+// Finish PS9 first

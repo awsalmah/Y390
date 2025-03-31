@@ -1,0 +1,117 @@
+#lang rhombus
+
+import: "../image.rhm" open
+        "../universe.rhm" open
+
+// 1 Data definitions of structures
+
+// A vehicle is vehicle(String,String,Number)
+class vehicle(company,model,year)
+
+// Exercise 1: TK
+
+// Exercise 2: TK
+
+// Exercise 3:
+// A book is book(String,String,Number)
+class book(title,author,pagenum)
+
+// Exercise 4
+// An instructor is instructor(String,Department,Number)
+class instructor(name,department,salary)
+
+// 2 Examples of structures
+
+def brians_vehicle = vehicle("Toyota","Camry",2005)
+def marks_vehicle = vehicle("Ford","F-150 Flareside",1998)
+def rachaels_vehicle = vehicle("Chrysler","PT Cruiser",2005)
+
+// Exercise 5
+// def kens_vehicle = vehicle("Bicycle",1982) // ==> no, returns an error, arity mismatch
+
+// Exercise 6
+// def elons_vehicle = vehicle(2018,"SpaceX","Falcon-9 Heavy") // ==> no, nothing, violates the data definition
+
+// Exercise 7
+// book("The Hobbit, or There and Back Again","J. R. R. Tolkien", 310) // 1937
+// book("A Game of Thrones","George R. R. Martin", 694) // 1996
+
+// Exercise 8
+// instructor("A","computer science",100)
+// instructor("AM","english",100)
+
+// 3 Courtesy functions for structures
+
+rachaels_vehicle.company
+// "Chrysler"
+rachaels_vehicle.model
+// "PT Cruiser"
+rachaels_vehicle.year
+// 2005
+
+brians_vehicle is_a vehicle
+// #true
+marks_vehicle is_a vehicle
+// #true
+"Geology" is_a vehicle
+// #false
+"Camry" is_a vehicle
+// #false
+
+// Exercise 9: TK
+
+// Exercise 10: TK
+
+// Exercise 11: TK
+
+// 4 Templates from structures
+
+// Exercise 12: TK
+
+// Exercise 13: TK
+
+// Exercise 14: TK
+
+// Exercise 15: TK
+
+// 5 Functions on structures
+
+fun praise_vehicle(x):
+  x.company ++ " " ++ x.model ++ ", a car you can trust."
+
+praise_vehicle(brians_vehicle)
+
+fun upgrade_vehicle(x):
+  vehicle(x.company,x.model,x.year+3)
+
+brians_vehicle
+upgrade_vehicle(brians_vehicle)
+
+// Exercise 16
+fun tome(x):
+  x.pagenum > 300
+
+// Exercise 17
+fun salary(d):
+  match d
+  | "biology" : 100000
+  | "business" : 110000
+  | "computer science" : 120000
+  | "English" : 130000
+
+fun equalize_salary(i):
+  instructor(i.name,i.department,salary(i.department))
+
+// 6 Challenge: a chase
+
+// Exercise 18: TK
+
+// Exercise 19: TK
+
+// Exercise 20: TK
+
+// Exercise 21: TK
+
+// Exercise 22: TK
+
+// do 23-25
