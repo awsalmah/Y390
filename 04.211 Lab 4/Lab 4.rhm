@@ -113,5 +113,31 @@ fun equalize_salary(i):
 // Exercise 21: TK
 
 // Exercise 22: TK
+class psn(pet :: posn,goal :: posn)
 
-// do 23-25
+def aa = psn(posn(0,0),posn(100,100))
+
+//fun draw(pet,goal):
+fun draw(psns):
+  place_image(circle(20,255,"red"),psns.pet.x,psns.pet.y,place_image(star(20,255,"purple"),psns.goal.x,psns.goal.y,empty_scene(400,400)))
+
+// Exercise 23:
+// fun update_pet(pet,goal):
+fun update_pet(psns):
+  psn(posn((psns.pet.x + psns.goal.x)/2,(psns.pet.y + psns.goal.y)/2),psns.goal)
+
+// Exercise 24:
+fun update_goal(psns,num1,num2,mouse_event):
+  cond
+  | mouse_event == "button-down": psn(psns.pet,posn(num1,num2))
+  | ~else: psns
+           
+// Exercise 25:
+
+// To slow down the pet so you can see more clearly, you can give on-tick an additional number that says how many seconds per tick.
+
+big_bang aa:
+  ~draw: draw
+  ~tick: update_pet
+  ~key: fun (n,m): n
+  ~mouse: update_goal
