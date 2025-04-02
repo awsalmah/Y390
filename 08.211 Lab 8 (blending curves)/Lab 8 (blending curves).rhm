@@ -1,0 +1,201 @@
+#lang rhombus
+
+import: "../image.rhm" open
+        "../universe.rhm" open
+
+// 1 Blending numbers
+
+// for exercises 1 to 4 make sure the input can only be between 0 and 100
+        
+// Exercise 1
+fun number_between_20_and_180(x):
+  ((x * (180 - 20)) / 100) + 20
+
+check number_between_20_and_180(0) ~is 20
+check number_between_20_and_180(50) ~is 100
+check number_between_20_and_180(100) ~is 180
+
+// Exercise 2
+fun number_between_90_and_10(x):
+  ((x * (10 - 90)) / 100) + 90
+
+check number_between_90_and_10(0) ~is 90
+check number_between_90_and_10(50) ~is 50
+check number_between_90_and_10(100) ~is 10
+
+// Exercise 3 : TK
+
+// 2 Blending points
+
+// Exercise 4
+// fun line1(x): posn(number_between_20_and_180(x),number_between_90_and_10(x))
+
+// Exercise 5
+fun number_between_30_and_10(x):
+  ((x * (10 - 30)) / 100) + 30
+
+fun number_between_200_and_0(x):
+  ((x * (0 - 200)) / 100) + 200
+
+// fun line2(x): posn(number_between_30_and_10(x),number_between_200_and_0(x))
+
+// Exercise 6
+fun posn_between(start,end,n):
+  posn(
+    ((n * (end.x - start.x)) / 100) + start.x
+    ,
+    ((n * (end.y - start.y)) / 100) + start.y
+  )
+
+// Exercise 7
+
+fun line1(x): posn_between(posn(20,90),posn(180,10),x)
+
+fun line2(x): posn_between(posn(30,200),posn(10,0),x)
+
+// 3 Drawing curves
+
+def background = empty_scene(200,200)
+
+// Exercise 8: TK
+/*
+fun draw_wave(n,bg):
+  cond
+  | n == 0: bg
+  | ~else: place_image(circle(1,255,"dark green"),n * 2, 70 + (30 * math.sin(n/5)),draw_wave(n-1,bg))
+
+draw_wave(0,background)
+draw_wave(3,background)
+draw_wave(100,background)
+*/
+
+// Exercise 9: TK
+/*
+fun draw_line1(n,bg):
+  cond
+  | n == 0: bg
+  | ~else: place_image(circle(1,255,"blue"),line1(n).x, line1(n).y,draw_line1(n-1,bg))
+
+draw_line1(0,background)
+draw_line1(3,background)
+draw_line1(100,background)
+*/
+
+// Exercise 10: TK
+
+// Exercise 11
+
+fun draw_wave(n,bg):
+  cond
+  | n == 0: bg
+  | ~else: place_image(circle(1,255,"dark green"),n * 2, 70 + (30 * math.sin(n/5)),draw_wave(n-1,bg))
+
+draw_wave(0,background)
+draw_wave(3,background)
+draw_wave(100,background)
+
+fun draw_line1(n,bg):
+  cond
+  | n == 0: bg
+  | ~else: place_image(circle(1,255,"blue"),line1(n).x, line1(n).y,draw_line1(n-1,bg))
+
+draw_line1(0,background)
+draw_line1(3,background)
+draw_line1(100,background)
+
+// Exercise 12
+fun wave(n):
+  posn(
+    n * 2
+    ,
+    70 + (30 * math.sin(n/5))
+  )
+
+fun draw_wave_wave(n,bg):
+  cond
+  | n == 0: bg
+  | ~else: place_image(circle(1,255,"dark green"),wave(n).x, wave(n).y, draw_wave_wave(n-1,bg))
+
+draw_wave_wave(0,background)
+draw_wave_wave(3,background)
+draw_wave_wave(100,background)
+
+// Exercise 13: TK
+
+// Exercise 14
+fun draw_line2(n,bg):
+  cond
+  | n == 0: bg
+  | ~else: place_image(circle(1,255,"red"),line2(n).x, line2(n).y,draw_line2(n-1,bg))
+
+draw_line2(0,background)
+draw_line2(3,background)
+draw_line2(100,background)
+
+// Exercise 15
+
+fun curve1(n):
+  posn_between(line1(n),wave(n),n)
+
+curve1(100)
+
+fun draw_curve1(n,bg):
+  cond
+  | n == 0: bg
+  | ~else: place_image(circle(1,255,"blue"),curve1(n).x, curve1(n).y,draw_curve1(n-1,bg))
+
+draw_curve1(100,background)
+
+fun curve2(n):
+  posn_between(line2(n),line1(n),n)
+
+fun draw_curve2(n,bg):
+  cond
+  | n == 0: bg
+  | ~else: place_image(circle(1,255,"purple"),curve2(n).x, curve2(n).y,draw_curve2(n-1,bg))
+
+draw_curve2(100,background)
+
+// Exercise 16 : TK
+
+// Exercise 17
+
+fun curve3(n):
+  posn_between(line2(n),wave(n),n)
+
+fun draw_curve3(n,bg):
+  cond
+  | n == 0: bg
+  | ~else: place_image(circle(1,255,"orange"),curve3(n).x, curve3(n).y,draw_curve3(n-1,bg))
+
+draw_curve3(100,background)
+
+// Exercise 18
+
+fun curve4(n):
+  posn_between(line1(n),line2(n),n)
+
+fun draw_curve4(n,bg):
+  cond
+  | n == 0: bg
+  | ~else: place_image(circle(1,255,"pink"),curve4(n).x, curve4(n).y,draw_curve4(n-1,bg))
+
+draw_curve4(100,background)
+
+// Exercise 19
+
+fun curve5(n):
+  posn_between(curve2(n),curve4(n),n)
+
+fun draw_curve5(n,bg):
+  cond
+  | n == 0: bg
+  | ~else: place_image(circle(1,255,"pink"),curve5(n).x, curve5(n).y,draw_curve5(n-1,bg))
+
+draw_curve5(100,background)
+
+// Exercise 20 : TK
+
+// Exercise 21 : TK
+
+// 5 Challenges
