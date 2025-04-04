@@ -254,7 +254,7 @@ fun place_images(i :: List.of(p.Pict), p :: List.of(posn), scene :: p.Pict):
   | ~else: place_images(List.rest(i),List.rest(p), place_image(i[0],p[0].x,p[0].y,scene))
 
 //did not do pinhole here so ask about it
-// middle and center
+// middle and center ==
 // topline
 // "top", "bottom", "middle", "center", "baseline", "pinhole".
 fun y_place(x): 
@@ -270,7 +270,7 @@ fun beside_align(y, x :: p.Pict,...):
   p.beside(~vert: y_place(y), x,...)
 
 //did not do pinhole here so ask about it
-// "left", "right", "middle", "center", "pinhole".
+// "left", "right", "middle" == "center", "".
 fun x_place(x):
   cond
   | x == "left": #'left

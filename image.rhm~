@@ -1,5 +1,5 @@
 ;; ship stands for ShortHandImageProgram
-;; to_do: fix the text size
+;; to_do: fix the text size -- done
 #lang rhombus
 
 import: pict as p
@@ -28,10 +28,13 @@ export: mode_to_color
         place_images
         posn
         beside_align
+        overlay_align
+        above_align
         
 // check make pen
 // call racket functions from 2htdp img
 // unit testing: test: text, place_image, rotate
+// add more tests and check the 3 align functions (beside_align, overlay_align, above_align) and x_place and y_place
 fun mode_to_color(mode):
   cond
   | mode == "solid": [#'inherit,1]
@@ -250,27 +253,36 @@ fun place_images(i :: List.of(p.Pict), p :: List.of(posn), scene :: p.Pict):
   | []: scene
   | ~else: place_images(List.rest(i),List.rest(p), place_image(i[0],p[0].x,p[0].y,scene))
 
-/*
-place_images([circle(4,"solid","white"),
-              circle(4,"solid","white"),
-              circle(4,"solid","white"),
-              circle(4,"solid","white")
-              ],
-             [posn(18,20),posn(0,6),
-              posn(14,2),posn(8,14)],
-             rectangle(24,24,255,"goldenrod"))
-*/
-  // fun place_image(image :: p.Pict, x :: Real, y :: Real, scene :: p.Pict):
-  
-// [circle(20,255,"red"),circle(20,255,"red")] is_a List.of(p.Pict)
-fun align(y):
+//did not do pinhole here so ask about it
+// middle and center
+// topline
+// "top", "bottom", "middle", "center", "baseline", "pinhole".
+fun y_place(x): 
   cond
-  | y == "top": #'top
-  | y == "topline": #'topline
-  | y == "center": #'center
-  | y == "baseline": #'baseline
-  | y == "bottom": #'bottom
-                     
+  | x == "top": #'top
+  | x == "topline": #'topline
+  | x == "center": #'center
+  | x == "baseline": #'baseline
+  | x == "bottom": #'bottom
+
+//missing arg?
 fun beside_align(y, x :: p.Pict,...):
-  p.beside(~vert: align(y), x,...)
-  
+  p.beside(~vert: y_place(y), x,...)
+
+//did not do pinhole here so ask about it
+// "left", "right", "middle", "center", "pinhole".
+fun x_place(x):
+  cond
+  | x == "left": #'left
+  | x == "center": #'center
+  | x == "right": #'right
+
+// add pinhole
+// fix expects 4
+fun overlay_align(xplace,yplace,i1 :: p.Pict,i2 :: p.Pict,...):
+  p.overlay(~horiz: x_place(xplace), ~vert: y_place(yplace), ~order:#'back, i1,i2, ...)
+
+// same comments as the previous 2 functions
+// should expect 3
+fun above_align(xplace,i1 :: p.Pict,i2 :: p.Pict,...):
+  p.stack(~horiz: x_place(xplace),i1,i2,...)

@@ -230,31 +230,11 @@ scale_xy(2,2,draw_styles(ls,background)).freeze()
 fun drawc(crv):
   draw_styles(crv,background)
 
-// ?
-
-fun curvennn(a,b,n=0): posn_between(a(n),a(n),n)
-        /*             
-fun curvenn(a,b):
-  curvennn(a,b,n)
-  */
-  
-  //println(a,b)
-  //posn_between(curve1(n),line2(n),n) // it uses a random everytime!
-    //ls[math.random(0,ls.filter(~keep: (_.curve is_a Function)).length())].curve(n),
-    //ls[math.random(0,ls.filter(~keep: (_.curve is_a Function)).length())].curve(n),
-    //n
-  //)
-  
 fun remove_curve(ls,ke):
   if ls.length() == 0 || to_string(ke) != "\b"
-  | ls
-  /*
   | if ls.length() == 0 || to_string(ke) != "\r"
     | ls
-    | def a = ls[math.random(0,ls.filter(~keep: (_.curve is_a Function)).length())].curve
-      def b = ls[math.random(0,ls.filter(~keep: (_.curve is_a Function)).length())].curve
-      ls.add(style(curvenn(a,b),"green"))//ls.sublist(0,ls.length()-1)
-  */
+    | ls.sublist(0,ls.length()-1)
   | ls.sublist(0,ls.length()-1)
   
 fun add_fixed(ls,x,y,mouse_event):
@@ -262,11 +242,17 @@ fun add_fixed(ls,x,y,mouse_event):
   | mouse_event == "button-down": ls.add(style(posn(x,y),"red"))
   | ~else: ls
 
+// Exercise 25
+
+/*
 big_bang ls:
   ~draw: drawc
   ~tick: fun (n): n
   ~key: remove_curve
   ~mouse: add_fixed
+*/
+fun curvenn(n):
+  posn_between(ls[math.random(0,ls.filter(~keep: (_.curve is_a Function)).length())].curve(n),ls[math.random(0,ls.filter(~keep: (_.curve is_a Function)).length())].curve(n),n)
 
 for:
   each v in ls
@@ -276,5 +262,4 @@ for:
 
 ls.filter(~keep: (_.curve is_a Function))
 ls[math.random(0,ls.filter(~keep: (_.curve is_a Function)).length())].curve
-//draw_curven(style(curvenn,"blue"),100,background)
-// Exercise 25
+
