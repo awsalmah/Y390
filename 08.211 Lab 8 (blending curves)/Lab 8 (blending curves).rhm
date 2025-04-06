@@ -200,10 +200,9 @@ draw_curve5(100,background)
 
 // 5 Challenges
 
-// Exercise 22 ??
+// Exercise 22 TK
 curve5(0)
 curve5(1)
-
 
 // Exercise 23
 
@@ -227,35 +226,29 @@ def ls = [style(curve5,"indigo"),style(curve2,"green"),style(curve4,"chocolate")
 scale_xy(2,2,draw_styles(ls,background)).freeze()
 
 // Exercise 24
+
 fun drawc(crv):
   draw_styles(crv,background)
 
-// ?
-
-fun curvennn(a,b,n=0): posn_between(a(n),a(n),n)
-        /*             
-fun curvenn(a,b):
-  curvennn(a,b,n)
-  */
-  
-  //println(a,b)
-  //posn_between(curve1(n),line2(n),n) // it uses a random everytime!
-    //ls[math.random(0,ls.filter(~keep: (_.curve is_a Function)).length())].curve(n),
-    //ls[math.random(0,ls.filter(~keep: (_.curve is_a Function)).length())].curve(n),
-    //n
-  //)
-  
-fun remove_curve(ls,ke):
-  if ls.length() == 0 || to_string(ke) != "\b"
-  | ls
-  /*
-  | if ls.length() == 0 || to_string(ke) != "\r"
-    | ls
-    | def a = ls[math.random(0,ls.filter(~keep: (_.curve is_a Function)).length())].curve
-      def b = ls[math.random(0,ls.filter(~keep: (_.curve is_a Function)).length())].curve
-      ls.add(style(curvenn(a,b),"green"))//ls.sublist(0,ls.length()-1)
-  */
-  | ls.sublist(0,ls.length()-1)
+// update_curve is the same as remove_curve
+fun update_curve(ls,ke):
+  cond
+  | to_string(ke) == "\b":
+      cond
+      | ls.length() == 0: ls
+      | ~else : ls.sublist(0,ls.length()-1)
+  | to_string(ke) == "\r":
+      cond
+      | ls.length() == 0: ls.add(style(line1,"red"))
+      | ls.length() == 1: ls.add(style(line2,"red"))
+      | ~else : def a = math.random(0,ls.length())
+                def b = math.random(0,ls.length())
+                cond
+                | ls[a].curve is_a posn || ls[b].curve is_a posn : def c = math.random(0,201)
+                                                                   def d = math.random(0,201)
+                                                                   ls.add(style(posn(c,d),"black"))
+                | ~else : ls.add(style(fun(n):posn_between(ls[a].curve(n),ls[b].curve(n),n),"red"))                                         
+  | ~else : ls
   
 fun add_fixed(ls,x,y,mouse_event):
   cond
@@ -265,16 +258,5 @@ fun add_fixed(ls,x,y,mouse_event):
 big_bang ls:
   ~draw: drawc
   ~tick: fun (n): n
-  ~key: remove_curve
+  ~key: update_curve
   ~mouse: add_fixed
-
-for:
-  each v in ls
-  //if v.curve is_a Function
-  skip_when v.curve is_a Function == #false
-  println(v)
-
-ls.filter(~keep: (_.curve is_a Function))
-ls[math.random(0,ls.filter(~keep: (_.curve is_a Function)).length())].curve
-//draw_curven(style(curvenn,"blue"),100,background)
-// Exercise 25

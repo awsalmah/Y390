@@ -9,7 +9,7 @@ import: "image.rhm" open
                                    expose #{on-mouse} as _on_mouse
                                    expose #{on-key} as _on_key
         lib("pict/main.rkt") as pict: expose #{pict->bitmap} as to_bitmap
-        lib("2htdp/image.rkt") as img2: expose #{rotate} as rotatee
+        //lib("2htdp/image.rkt") as img2: expose #{rotate} as rotatee
         lib("pict/convert.rkt"): expose #{pict-convert} as pict_convert
 
 export: animate

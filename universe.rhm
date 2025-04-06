@@ -18,14 +18,15 @@ export: animate
 expr.macro 'big_bang $(init :: expr_meta.Parsed):
               ~draw: $(_draw :: expr_meta.Parsed)
               ~tick: $(tick :: expr_meta.Parsed)
-              ~key: $(key :: expr_meta.Parsed)
+              ~key: $(_key :: expr_meta.Parsed)
               ~mouse: $(mouse :: expr_meta.Parsed)':
   'block:
      let draw = fun (w): pict.to_bitmap($_draw(w))
+     let key = fun(w, k): $_key(w, to_string(k))
      $(expr_meta.pack_s_exp(['_big_bang', init,
                              ['_on_tick', tick],
                              ['_to_draw', 'draw'],
-                             ['_on_key', key],
+                             ['_on_key', 'key'],
                              ['_on_mouse', mouse]]))'
   
 fun draw(n):
