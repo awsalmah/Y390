@@ -1,5 +1,7 @@
 ;; ship stands for ShortHandImageProgram
 ;; to_do: fix the text size -- done
+;; add more tests
+                 
 #lang rhombus
 
 import: pict as p
@@ -266,23 +268,19 @@ fun y_place(x):
   | x == "bottom": #'bottom
 
 //missing arg?
-fun beside_align(y, x :: p.Pict,...):
-  p.beside(~vert: y_place(y), x,...)
+fun beside_align(y, x1 :: p.Pict, x2 :: p.Pict, x3 :: p.Pict, ...):
+  p.beside(~vert: y_place(y), x1,x2,x3,...)
 
 //did not do pinhole here so ask about it
 // "left", "right", "middle" == "center", "".
 fun x_place(x):
   cond
   | x == "left": #'left
-  | x == "center": #'center
+  | x == "center" || x == "middle": #'center
   | x == "right": #'right
 
-// add pinhole
-// fix expects 4
-fun overlay_align(xplace,yplace,i1 :: p.Pict,i2 :: p.Pict,...):
-  p.overlay(~horiz: x_place(xplace), ~vert: y_place(yplace), ~order:#'back, i1,i2, ...)
+fun overlay_align(xplace,yplace,i1 :: p.Pict,i2 :: p.Pict, i3 :: p.Pict, ...):
+  p.overlay(~horiz: x_place(xplace), ~vert: y_place(yplace), ~order:#'back, i1,i2,i3, ...)
 
-// same comments as the previous 2 functions
-// should expect 3
-fun above_align(xplace,i1 :: p.Pict,i2 :: p.Pict,...):
-  p.stack(~horiz: x_place(xplace),i1,i2,...)
+fun above_align(xplace,i1 :: p.Pict,i2 :: p.Pict, i3 :: p.Pict, ...):
+  p.stack(~horiz: x_place(xplace),i1,i2,i3,...)

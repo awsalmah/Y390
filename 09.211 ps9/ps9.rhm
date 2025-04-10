@@ -1,0 +1,110 @@
+#lang rhombus
+
+import: "../image.rhm" open
+        "../universe.rhm" open
+
+// 1 Converting Numbers
+        
+fun convert(a1,b1,a2,b2,a):
+  ((b1*(a2 - a)) + (b2 * (a-a1)))/(a2-a1)
+
+check convert(0,32,100,212,0) ~is 32
+check convert(0,32,100,212,100) ~is 212
+check convert(0,32,100,212,50) ~is 122
+
+// Exercise 1
+fun celsius_to_farenheit(c):
+  // (c * 9/5) + 32
+  convert(0,32,100,212,c)
+
+check celsius_to_farenheit(0) ~is 32
+check celsius_to_farenheit(5) ~is 41
+check celsius_to_farenheit(10) ~is 50
+
+// Exercise 2
+fun twenty_to_one_eighty(n):
+  convert(0,20,100,180,n)
+
+check twenty_to_one_eighty(0) ~is 20
+check twenty_to_one_eighty(50) ~is 100
+check twenty_to_one_eighty(100) ~is 180
+
+// Exercise 3
+fun farenheit_to_celsius(f):
+  // (c * 9/5) + 32
+  convert(32,0,212,100,f)
+
+check farenheit_to_celsius(32) ~is 0
+check farenheit_to_celsius(41) ~is 5
+check farenheit_to_celsius(50) ~is 10
+
+// 2 Plotting posns
+
+// Exercise 4
+def width = 200
+def height = 200
+empty_scene(200,200)
+
+// substitute for build-list
+def l = ((0..300).to_list()).map(fun(n): posn(n*5,n*5))
+// l
+
+// Exercise 5
+fun visible(l):
+  l.filter(~skip: fun(n): n.x > width || n.y > height)
+
+// Exercise 6
+// double check the height thing
+fun draw_lop_helper(ls,bg):
+  match ls
+  | [] : bg
+  | ~else : draw_lop_helper(ls.rest,
+                            place_image(circle(2,255,"red"), ls.first.x, height - ls.first.y, bg)
+                            )
+
+// ask abt foldr
+// ask abt visible
+fun draw_lop(ls):
+  draw_lop_helper(visible(ls),empty_scene(width,height))
+
+def my_plot = draw_lop(l)
+
+// 3 Converting places
+
+// Optional exercise W
+def wells_library = posn(-86.5170, 39.1710)
+def sample_gates = posn(-86.5270, 39.1665)
+def courthouse = posn(-86.5340, 39.1670)
+def stadium = posn(-86.5255, 39.1810)
+def college_mall = posn(-86.4955, 39.1615)
+def bloomington_places =[wells_library, sample_gates, courthouse, stadium, college_mall]
+
+// Optional exercise X
+// ask abt round and abs or maybe converting to int
+fun bloomington_x_screen(a):
+  math.round(math.abs(convert(-86.5725,0,-86.4725,width,a)))
+
+check bloomington_x_screen(-86.5725) ~is 0.0
+check bloomington_x_screen(-86.5225) ~is width/2.0
+check bloomington_x_screen(-86.4725) ~is width/1.0
+
+// Optional exercise Y
+// ask abt abs and truncate//round
+fun bloomington_y_screen(a):
+  math.round(math.abs(convert(39.2150,0,39.1150,height,a)))
+
+check bloomington_y_screen(39.2150) ~is 0.0
+check bloomington_y_screen(39.1650) ~is height/2.0
+check bloomington_y_screen(39.1150) ~is height/1.0
+
+// Optional exercise Z
+fun bloomington_screen(a):
+  posn(bloomington_x_screen(a.x),bloomington_y_screen(a.y))
+
+bloomington_screen(wells_library)
+check bloomington_screen(wells_library) ~is posn(math.truncate(width * 0.555),math.truncate(height * 0.440)) // check decimal places // it was an issue with the posn itself
+check bloomington_screen(sample_gates) ~is posn(width * 0.455,height * 0.485)
+
+bloomington_places
+draw_lop(bloomington_places.map(bloomington_screen(_)))
+bloomington_places.map(bloomington_screen(_))
