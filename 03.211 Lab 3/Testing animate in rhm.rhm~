@@ -1,4 +1,0 @@
-#lang rhombus
-
-import: "../image.rhm" open
-        "../universe.rhm" open
