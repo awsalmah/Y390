@@ -1,0 +1,187 @@
+;; Lecture 6: big_bang for interactive animations
+; big_bang is like animate but is more general
+; and we don't have to use numbers
+#lang rhombus
+import : "../../image.rhm" open
+         "../../universe.rhm" open
+
+// Whatever we use is called a world.
+// big_bang requires 2 functions
+// - how to draw a world as an image
+// - how to turn each world into the next world
+
+// A World is a TrafficLight
+// draw_tl : World -> Image
+// next_tl : World -> World
+
+// 1. Data definitions
+
+// A TrafficLight is one of:
+// - "red"
+// - "yellow"
+// - "green"
+
+// 2. Signature, purpose, header
+// draw_tl: TrafficLight -> Imae
+// draw a simple traffic light
+// fun draw_tl(tl): ...
+
+// 3. Examples
+def backgroundtl = rectangle(100, 300, "solid", "black")
+// todo: check before definition
+
+// 4. Template
+// fun draw_tl(tl):
+//   cond
+//   | "red" == tl : ...
+//   | "yellow" == tl : ...
+//   | "green" == tl : ...
+// todo: string=?
+// string=? is pronounced string equal huh
+
+// 5. Definition
+fun draw_tl(tl):
+  cond
+  | "red" == tl : place_image(circle(40,"solid",tl),50,50,backgroundtl)
+  | "yellow" == tl : place_image(circle(40,"solid",tl),50,150,backgroundtl)
+  | "green" == tl : place_image(circle(40,"solid",tl),50,250,backgroundtl)
+
+// check draw_tl("red") ~is place_image(circle(40,"solid","red"), 50, 50, backgroundtl)
+// check draw_tl("yellow") ~is place_image(circle(40,"solid","yellow"), 50, 150, backgroundtl)
+// check draw_tl("green") ~is place_image(circle(40,"solid","green"), 50, 250, backgroundtl)
+// todo: check before definition
+
+// 1. Data definitions
+
+// A TrafficLight is one of:
+// - "red"
+// - "yellow"
+// - "green"
+
+// 2. Signature, purpose, header
+// next_tl: TrafficLight -> TrafficLight
+// returns the next traffic light
+// fun next_tl(tl):
+
+// 3. Examples
+// todo: check before definition
+
+// 4. Template
+// fun next_tl(tl):
+//   cond
+//   | "red" == tl : ...
+//   | "yellow" == tl : ...
+//   | "green" == tl : ...
+
+fun next_tl(tl):
+  cond
+  | "red" == tl : "green"
+  | "yellow" == tl : "red"
+  | "green" == tl : "yellow"
+
+check next_tl("red") ~is "green"
+check next_tl("yellow") ~is "red"
+check next_tl("green") ~is "yellow"
+
+// The first world we give to big_bang is the initial world
+// we can change the speed of ticks in big_bang
+/*
+big_bang "red":
+  ~draw: draw_tl
+  ~tick: next_tl
+  ~key: fun (n,m): n
+  ~mouse: fun (a,b,c,d): a
+*/
+// todo: big_bang speed of ticks
+// todo: big_bang multiple arguments
+
+// we can build a big_bang application that advances every time a keyboard is pressed or a mouse is clicked
+
+// key_tl : World KeyEvent -> World
+// handle any key by advancing the traffic light
+// fun key_tl(tl,ke): ...
+
+// fun key_tl(tl,ke): ... tl ke ...
+
+fun key_tl(tl,ke): next_tl(tl)
+
+check key_tl("red","j") ~is "green"
+check key_tl("yellow","j") ~is "red"
+// todo: check before definition
+
+/*
+big_bang "red":
+  ~draw: draw_tl
+  ~tick : next_tl // whenever someone presses a key, use the function key_tl to handle the key
+  ~key : key_tl   // whenever a key event happens, the handler to use is the function key_tl
+  ~mouse: fun (a,b,c,d): a
+*/
+// todo: big_bang multiple arguments
+// todo: big_bang optional arguments
+// todo: big_bang order of arguments
+
+/*
+big_bang "red":
+  ~draw: draw_tl
+  ~tick : fun(n): n // whenever someone presses a key, use the function key_tl to handle the key
+  ~key : key_tl     // whenever a key event happens, the handler to use is the function key_tl
+  ~mouse: fun (a,b,c,d): a
+*/
+
+// Exercise 1. Design a function called reset-to-red that takes a TrafficLight and a KeyEvent as inputs and always returns the TrafficLight "red".
+
+// 1. Data definitions
+
+// A TrafficLight is one of:
+// - "red"
+// - "yellow"
+// - "green"
+
+// A KeyEvent is any key pressed
+
+// 2. Signature, purpose, header
+// reset_to_red: TrafficLight KeyEvent -> TrafficLight
+// returns the TrafficLight "red" whenever a key is pressed
+// fun reset_to_red(tl,ke): ...
+
+/*
+fun reset_to_red(tl,ke):
+  cond
+  | "red" == tl : ...
+  | "yellow" == tl : ...
+  | "green" == tl : ...
+*/
+
+fun reset_to_red(tl,ke):
+  cond
+  | "red" == tl : "red"
+  | "yellow" == tl : "red"
+  | "green" == tl : "red"
+
+check reset_to_red("red", "a") ~is "red"
+check reset_to_red("yellow", "a") ~is "red"
+check reset_to_red("green", "a") ~is "red"
+// todo: check before definition
+
+// Exercise 2. Change the big_bang in the video above so that the traffic light still changes every 2 seconds but,
+// whenever any key is pressed, the traffic light becomes red immediately.
+
+// The diagrams below illustrate how you are supposed to enrich the animation in this exercise.
+// In the first diagram, each arrow represents an example for how the handlers [to-draw draw-tl] and [on-tick next-tl] should behave.
+// In the second diagram, the three additional (orange) arrows represent examples for how your new [on-key reset-to-red] handler should behave.
+
+/*
+big_bang "red":
+  ~draw: draw_tl
+  ~tick : fun(n): n 
+  ~key : reset_to_red     
+  ~mouse: fun (a,b,c,d): a
+*/
+
+/*
+big_bang "red":
+  ~draw: draw_tl
+  ~tick : next_tl
+  ~key : reset_to_red     
+  ~mouse: fun (a,b,c,d): a
+*/

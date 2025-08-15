@@ -1,0 +1,92 @@
+;; Lab 1: Getting Started
+#lang rhombus
+
+import : "../../image.rhm" open
+         "../../universe.rhm" open
+
+// 3 Arithmetic and constants
+// Exercise 7
+def big_number = 100
+def bigger_number = big_number * big_number
+def bigger_number_2 = bigger_number * bigger_number
+
+// 4 Images
+// Exercise 8
+// todo: add copy and paste functionality for images
+def x = square(100, 255, "blue")
+
+// Exercise 9
+rectangle(255, 255, 255, "Ivory")
+
+// Exercise 10
+overlay(x, rectangle(255, 255, 255, "Ivory"))
+
+// Exercise 11
+def c = circle(75/2, "outline", "black")
+def r = rectangle(math.pi * 75, 105, "outline", "black") // todo: add math lib to the base
+above(c,r,c)
+
+// Exercise 12
+def c2 = circle(85/2, "outline", "black")
+def r2 = rectangle(math.pi * 85, 40, "outline", "black")
+above(c2, r2, c2)
+
+// 5 Functions
+// Exercise 13
+// can : Number Number -> Pict
+// Produce a Pict that can be printed, folded up, and taped together to make the cylinder of the given diameter and height.
+fun can(d, h):
+  above(circle(d/2, "outline", "black"),
+        rectangle(math.pi * d, h, "outline", "black"),
+        circle(d/2, "outline", "black"))
+
+can(75, 105)
+can(85, 40)
+
+// Exercise 14
+// surface_area : Number Number -> Number
+// compute the surface area of the cylinder of the given diameter and height.
+fun surface_area(d,h):
+  (2 * math.pi * (d/2) * (d/2)) + (2 * math.pi * (d/2) * h)
+
+surface_area(85, 40)
+
+// Exercise 15
+// There are three kinds of errors you can make when writing a program in DrRacket.
+// Come up with examples of each and try them out. Examine any error messages you get back.
+
+// syntax error, when you write something that DrRacket doesn’t recognize as a program -> 1 * a
+
+// run-time error, such as when you provide the wrong kinds of inputs to an operation -> 10 / 0
+
+// logical error, when your program produces an answer, but it’s the wrong answer -> def mult = 10 + 2
+
+// 6 Food
+// Exercise 16
+// food : Number -> Pict
+// draws a Pict of a Pizza Slice
+import draw
+fun food(x):
+  overlay(
+    triangle(x/2, "solid",draw.Color(190, 70, 10)),
+    triangle(x, "solid", draw.Color(250, 230, 190)))
+// todo: add draw.Color to the image library
+food(60)
+
+// Exercise 17. What happens if you feed the number -1234567/89 to the function you just defined?
+// What range or kind of numbers can your function actually handle correctly?
+// Write down your answer clearly.
+// we get a run-time error. nonnegative real numbers.
+
+// 7 Animation
+// Exercise 18
+// Number -> Pict
+// produces the same Pict no matter the number input
+fun constimg(n):
+  overlay(circle(n, 255, "black"),
+          rectangle(1000, 400, "outline", "black"))
+
+constimg(1)
+
+// Exercise 19
+animate(constimg)

@@ -1,0 +1,280 @@
+;; Lab 3: Multiple cases
+#lang rhombus
+import: "../../image.rhm" open
+        "../../universe.rhm" open
+
+// 1 Conditionals
+// Exercise 1
+// pie_dough : Number -> String
+// returns what to do with pie dough at the given Farenheit temperature
+// fun pie_dough(temperature): ...
+// todo: function header
+
+// fun pie_dough(temperature): ... temperature
+// todo: function template
+
+fun pie_dough(temperature):
+  cond
+  | temperature <= 68 : "wait"
+  | temperature <= 75 : "roll out"
+  | ~else: "refrigerate"
+
+check pie_dough(60) ~is "wait"
+check pie_dough(70) ~is "roll out"
+check pie_dough(80) ~is "refrigerate"
+// todo: check before definition
+
+// Exercise 2
+// instructor : String -> Boolean
+
+fun instructor(x):
+  cond
+  | "Sam" == x : #true
+  | "Carlo" == x : #true
+  | ~else : #false
+
+check instructor("Sam") ~is #true
+check instructor("Carlo") ~is #true
+check instructor("Dan") ~is #false
+// todo: check before definition
+
+// Exercise 3
+// star_wars : Number -> Pict
+// make the text STAR WARS shrink then disappear
+// fun star_wars(t): ...
+// todo: function header
+
+// fun star_wars(t): ... t ...
+// todo: function template
+
+def background = rectangle(956,400,"solid","black")
+// todo: check before definition
+// todo: add check functionality for Picts
+
+fun star_wars(t):
+  cond
+  | t < 100: overlay(above(text("STAR",200 - (t * 2), "yellow"),text("WARS",200 - (t * 2), "yellow")), background)
+  | ~else: background
+
+// (animate star-wars)
+// What happens when you (animate star-wars)? The text keeps getting smaller until it disappears and we are left with the background
+
+// 2 Data definitions
+// wibble : Wobble Cloud -> Image
+// they need to write data definitions for Wobble and Cloud
+
+
+// 3 Enumerations
+// A Department is one of:
+// - "biology"
+// - "business"
+// - "computer science"
+// - "English"
+
+// Exercise 5
+// Put the data definition above into the Definitions Window of DrRacket. What happens when you run the program? Nothing happens since they are commented out
+// What happens if you remove the semicolons and then run the program? You get a syntax error
+
+// Exercise 6
+// A deck of cards has four suits: clubs, diamonds, hearts, and spades. Define an enumeration for a suit of cards.
+// A Deck of cards is one of:
+// - clubs
+// - diamonds
+// - hearts
+// - spades
+
+// Exercise 7
+// The colors of the rainbow are hot pink, red, orange, yellow, green, turquoise, indigo, and violet. Define an enumeration for the colors of the rainbow.
+// A Color of the rainbow is one of:
+// - hot pink
+// - red
+// - orange
+// - yellow
+// - green
+// - turquoise
+// - indigo
+// - violet
+
+
+// 4 Examples of enumerations
+def alices_department = "computer science"
+def bobs_department = "business"
+def charlies_department = "English"
+
+// Exercise 8
+def suit_1 = "clubs"
+def suit_2 = "diamonds"
+
+// Exercise 9
+def color_1 = "hot pink"
+def color_2 = "red"
+
+// Exercise 10
+def dans_department = "geology" // Not an example of a Department
+
+// Exercise 11
+def color_9 = "black"
+
+
+// 5 Templates from enumerations
+// Exercise 12
+// draw_department: Department -> Pict
+// displays the department as a Pict text
+// fun draw_department(d): ...
+// This is a function header. The body is just a series of ellipsis
+
+// Exercise 13
+// process_department: Department -> ...
+// ...
+// fun process_department(d):
+//   cond
+//   | "biology" == d: ...
+//   | "business" == d: ...
+//   | "computer science" == d: ...
+//   | "English" == d: ...
+// This is a function template. The body is more than just a series of ellipsis,
+// it has crucial information which will guide the function definition.
+
+// Exercise 14
+// fun process_suit_of_cards(soc):
+//   cond
+//   | "clubs" == soc: ...
+//   | "diamonds" == soc: ...
+//   | "hearts" == soc: ...
+//   | "spades" == soc: ...
+
+// Exercise 15
+// fun process_rainbow(c):
+//   cond
+//   | "hot pink" == c: ...
+//   | "red" == c: ...
+//   | "orange" == c: ...
+//   | "yellow" == c: ...
+//   | "green" == c: ...
+//   | "turquoise" == c: ...
+//   | "indigo" == c: ...
+//   | "violet" == c: ...
+
+
+// 6 Functions on enumerations
+// Exercise 16
+// There are 4 examples
+// There are 4 template cases
+// They are the same number
+// The number of test cases should be the same number of the edges
+
+// Exercise 17
+// suit_points : String -> Number
+// calculates how many points a suit of cards is worth
+// fun suit_points(soc): ...
+
+/*
+fun suit_points(soc):
+  cond
+  | "clubs" == soc : ...
+  | "diamonds" == soc : ...
+  | "hearts" == soc : ...
+  | "spades" == soc : ...
+*/
+
+fun suit_points(soc):
+  cond
+  | "clubs" == soc : 1
+  | "diamonds" == soc : 2
+  | "hearts" == soc : 3
+  | "spades" == soc : 4
+
+check suit_points("clubs") ~is 1
+check suit_points("diamonds") ~is 2
+check suit_points("hearts") ~is 3
+check suit_points("spades") ~is 4
+// todo: check before definition
+
+// Exercise 18
+// next_color: String -> String
+// returns the next color of the rainbow
+// fun next_color(c): ...
+
+/*
+fun next_color(c):
+  cond
+  | "hot pink" == c: ...
+  | "red" == c: ...
+  | "orange" == c: ...
+  | "yellow" == c: ...
+  | "green" == c: ...
+  | "turquoise" == c: ...
+  | "indigo" == c: ...
+  | "violet" == c: ...
+*/
+
+fun next_color(c):
+  cond
+  | "hot pink" == c: "red"
+  | "red" == c: "orange"
+  | "orange" == c: "yellow"
+  | "yellow" == c: "green"
+  | "green" == c: "turquoise"
+  | "turquoise" == c: "indigo"
+  | "indigo" == c: "violet"
+  | "violet" == c: "hot pink"
+
+check next_color("hot pink") ~is "red"
+check next_color("red") ~is "orange"
+check next_color("orange") ~is "yellow"
+check next_color("yellow") ~is "green"
+check next_color("green") ~is "turquoise"
+check next_color("turquoise") ~is "indigo"
+check next_color("indigo") ~is "violet"
+check next_color("violet") ~is "hot pink"
+// todo: check before definition
+
+
+// 7 Challenge: intervals are cuts
+def epigraph1 = "A long time ago in a galaxy far,"
+def epigraph2 = "far away...."
+def story_text = above(text("It is a period of civil war.",40,"yellow"),text("Rebel spaceships, striking",40,"yellow"),text("lorem ipsum dolor sit",40,"yellow"))
+
+// Exercise 19
+def epigraph_text = above(text(epigraph1,40,"blue"),text(epigraph2,40,"blue"))
+def shot1 = overlay(epigraph_text,background)
+
+// Exercise 20
+fun shot3(t):
+  star_wars((200 - t)/2)
+
+// Exercise 21
+// A Time is one of:
+// - a number less than 150
+// - a number at least 150 and less than 200
+// - a number at least 200 and less than 300
+// - a number at least 300
+ 
+// star_wars_opening : Time -> Pict
+// returns the image at the given frame number
+// in our Star Wars opening crawl
+// fun star_wars_opening(t): ...
+
+// todo: check before definition
+// todo: add check functionality for Picts
+
+// Use the following template. Note how it corresponds to the data definition for Time.
+// fun star_wars_opening(t):
+//   cond
+//   | t < 150 : ... t ...
+//   | t < 200 : ... t ...
+//   | t < 300 : ... t ...
+//   | ~else : ... t ...
+
+fun star_wars_opening(t):
+  cond
+  | t < 150 : shot1
+  | t < 200 : background
+  | t < 300 : shot3(200 - (2 * (t - 200)))
+  | ~else : place_image(story_text,956/2,470-(t-300),background)
+
+
+// Exercise 22
+// animate(star_wars_opening)
+// Yes. We can add slides such as the LUCASFILM slide or we can add stars to the background.
+   

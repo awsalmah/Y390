@@ -1,0 +1,188 @@
+;; Problem set 3: Moving rockets
+#lang rhombus
+import : "../../image.rhm" open
+         "../../universe.rhm" open
+
+// Drawing the rocket
+// Exercise 1
+def scenery = empty_scene(800,300)
+
+// Exercise 2
+// draw_sprite : Number Number -> Pict
+// draws a sprite on a scenery
+// fun draw_sprite(x,y): ...
+// todo: function header
+
+// todo: check before definition
+// todo: add check functionality for Picts
+
+// fun draw_sprite(x,y): ... x y ...
+// todo: function template
+
+def sprite = above(triangle(20,255,"black"),
+                   overlay(overlay(circle(5,"outline","black"),
+                                   circle(5,255,"white")),
+                           rectangle(20,20,255,"gray")))
+
+fun draw_sprite(x,y):
+  place_image(sprite,x,300 - y,scenery)
+
+// 2 Computing the trajectory
+// Exercise 3
+def init_speed = 1.5
+def init_angle = 0.3 * math.pi
+// todo: math scope
+
+// Exercise 4
+def init_x_vel = init_speed * math.cos(init_angle)
+def init_y_vel = init_speed * math.sin(init_angle)
+// todo: math scope
+
+// Exercise 5
+// y_pos : Number -> Number
+// calculates the altitude of the sprite
+// fun y_pos(t): ...
+// todo: function header
+
+// fun y_pos(t): ... t ...
+// todo: function template
+
+
+fun y_pos(t):
+  (init_y_vel * t) - (0.5 * 0.003 * t * t)
+
+check y_pos(0) ~is 0
+// check y_pos(100) ~is 106.352
+// todo: check_within
+// todo: check before definition
+
+// Exercise 6
+// x_pos : Number -> Number
+// calculates the horizontal position of the sprite
+// fun x_pos(t): ...
+// todo: function header
+
+// fun x_pos(t): ... t ...
+// todo: function template
+
+fun x_pos(t): init_x_vel * t
+
+check x_pos(0) ~is 0
+// check x_pos(100) ~is 88.167
+// todo: check_within
+// todo: check before definition
+
+
+// 3 Putting it together
+// Exercise 7
+// launch: Number -> Image
+// draws an image of a flying sprite
+// fun launch(t): ...
+// todo: function header
+
+// todo: check before definition
+// todo: add check functionality for Picts
+
+// fun launch(t): ... t ...
+// todo: function template
+
+fun launch(t):
+  draw_sprite(x_pos(t), y_pos(t))
+
+
+// 4 Challenge
+// init_x_vel_fn : Number -> Number
+// returns the appropriate horizontal velocity
+// fun init_x_vel_fn(a): ...
+// todo: function header
+  
+// fun init_x_vel_fn(a): ... a ...
+// todo: function template
+
+fun init_x_vel_fn(a): init_speed * math.cos(a)
+// todo: math scope
+
+// check init_x_vel_fn(0) ~is 1.5
+// check init_x_vel_fn(init_angle) ~is 0.881
+// check init_x_vel_fn(100) ~is 1.293
+// todo: check within
+// todo: check before definition
+
+// init_y_vel_fn : Number -> Number
+// returns the appropriate vertical velocity
+// fun init_y_vel_fn(a): ...
+// todo: add function header
+  
+// fun init_y_vel_fn(a): ... a ...
+// todo: add function templated
+
+fun init_y_vel_fn(a): init_speed * math.sin(a)
+// todo: math scope
+
+// check init_y_vel_fn(0) ~is 0
+// check init_y_vel_fn(init_angle) ~is 1.213
+// check init_y_vel_fn(100) ~is -0.759
+// todo: check within
+// todo: check before definition
+
+// overlay_sprite: Number Number Pict -> Pict
+// draws a sprite at the appropriate position
+// fun overlay_sprite(a,t,i): ...
+// todo: function header
+
+// todo: check before definition
+// todo: add check functionality for Picts
+                      
+// fun overlay_sprite(a,t,i): ... a t i
+// todo: function template
+
+// y_pos_fn : Number Number -> Number
+// returns the appropriate vertical position
+// fun y_pos_fn(t,a): ...
+// todo: function header
+
+// fun y_pos_fn(t,a): ...
+// todo: function template
+
+fun y_pos_fn(t,a):
+  (init_y_vel_fn(a) * t) - (0.5 * 0.003 * t * t)
+
+// check y_pos_fn(0,45) ~is 0
+// check y_pos_fn(100,45) ~is 112.635
+// todo: check within
+// todo: check before definition
+
+// x_pos_fn : Number Number -> Number
+// returns the appropriate horizontal position
+// fun x_pos_fn(t,a): ...
+// todo: function header
+
+// fun x_pos_fn(t,a): ...
+// todo: function template
+
+fun x_pos_fn(t,a):
+  init_x_vel_fn(a) * t
+
+// check x_pos_fn(0,45) ~is 0
+// check x_pos_fn(100,45) ~is 78.798
+// todo: check within
+// todo: check before definition
+  
+def red_sprite = circle(5,"solid","red")
+fun overlay_sprite(a,t,i): place_image(red_sprite, x_pos_fn(t,a), 300 - y_pos_fn(t,a), i)
+
+// draw_trail: Number -> Pict
+// draws a sprite at several different positions
+// fun draw_trail(a): ...
+// todo: function header
+
+// todo: add check functionality for Picts
+// todo: check before definition
+                           
+// fun draw_trail(a): ... a ...
+// todo: function template
+
+fun draw_trail(a):
+  overlay_sprite(a/90, 0, overlay_sprite(a/90, 50, overlay_sprite(a/90, 100, overlay_sprite(a/90, 150, overlay_sprite(a/90, 200, overlay_sprite(a/90, 250, overlay_sprite(a/90, 300, overlay_sprite(a/90, 350, overlay_sprite(a/90, 400, overlay_sprite(a/90, 450, overlay_sprite(a/90, 500, overlay_sprite(a/90, 550, scenery))))))))))))
+
+// animate(draw_trail)

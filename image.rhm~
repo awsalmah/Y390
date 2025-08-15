@@ -19,15 +19,13 @@ export: mode_to_color
         rectangle
         rhombus
         star
-        overlay
-        underlay
+        overlay 
         beside
         above
         empty_scene
         place_image
         scene_line
         rotate
-        scale
         scale_xy
         place_images
         posn
@@ -53,11 +51,9 @@ check mode_to_color("solid") ~is [#'inherit,1]
 check mode_to_color("outline") ~is [#false,1]
 check mode_to_color(11) ~is [#'inherit,11/255]
 
-fun circle(radius :: NonnegReal, mode, color :: String || draw.Color):
+fun circle(radius :: NonnegReal, mode, color :: String):
   def md = mode_to_color(mode)
   p.circle(~size:radius * 2, ~fill: md[0]).colorize(color).alpha(md[1])
-
-// p.circle(~size:50 * 2, ~fill: "solid").colorize(draw.Color(100,100,100,1))
 
 check circle(30,"outline","red").width ~is 60
 check circle(30,"outline","red").height ~is 60
@@ -66,7 +62,7 @@ check circle(20,"solid","blue").height ~is 40
 check circle(0,100,"blue").width ~is 0
 check circle(0,100,"blue").height ~is 0
 
-fun ellipse(width :: NonnegReal, height :: NonnegReal, mode, color :: String || draw.Color):
+fun ellipse(width :: NonnegReal, height :: NonnegReal, mode, color :: String):
   def md = mode_to_color(mode)
   p.ellipse(~width:width,~height:height,~fill:md[0]).colorize(color).alpha(md[1])
 
@@ -107,7 +103,7 @@ fun string_to_list_helper(s):
   | ~else: [s.substring(0,1)] ++ string_to_list_helper(s.substring(1..))
 
 
-fun text(string :: String, font_size ::  Real.in(1, 255 ~inclusive), color :: String || draw.Color ):
+fun text(string :: String, font_size ::  Real.in(1, 255 ~inclusive), color :: String ):
   def list_of_words = rx'"\n"'.split(string)
   def lists_of_chars = string_to_list(list_of_words)
   def st1 = for List (x : lists_of_chars):
@@ -118,7 +114,7 @@ fun text(string :: String, font_size ::  Real.in(1, 255 ~inclusive), color :: St
 // 2htdp takes the string, it splits it up into individual letters and horizontally
 // appends them // do baseline with beside
   
-fun triangle(side_len :: NonnegReal, mode, color :: String || draw.Color):
+fun triangle(side_len :: NonnegReal, mode, color:: String):
   def md = mode_to_color(mode)
   def h = math.round(side_len * math.sqrt(3)/2)
   p.polygon([[side_len/2,0], [side_len,h], [0,h]], ~fill: md[0]).colorize(color).alpha(md[1])
@@ -128,7 +124,7 @@ check triangle(100,255,"red").height ~is 87.0
 check triangle(40,255,"red").width ~is 40
 check triangle(40,255,"red").height ~is 35.0
 
-fun square(side_len :: NonnegReal, mode, color :: String || draw.Color):
+fun square(side_len :: NonnegReal, mode, color :: String):
   def md = mode_to_color(mode)
   p.square(~size:side_len, ~fill: md[0]).colorize(color).alpha(md[1])
 
@@ -139,7 +135,7 @@ check square(40,"solid","slateblue").height ~is 40
 check square(50,"outline","darkmagenta").width ~is 50
 check square(50,"outline","darkmagenta").height ~is 50
 
-fun rectangle(width :: NonnegReal, height :: NonnegReal, mode, color :: String || draw.Color):
+fun rectangle(width :: NonnegReal, height :: NonnegReal, mode, color :: String):
   def md = mode_to_color(mode)
   p.rectangle(~width:width, ~height:height, ~fill:md[0]).colorize(color).alpha(md[1])
 
@@ -150,7 +146,7 @@ check rectangle(40,20,"outline","black").height ~is 20
 check rectangle(20,40,"solid","blue").width ~is 20
 check rectangle(20,40,"solid","blue").height ~is 40
 
-fun rhombus(side_length :: NonnegReal, angle :: Number, mode, color :: String || draw.Color):
+fun rhombus(side_length :: NonnegReal, angle :: Number, mode, color :: String):
   def md = mode_to_color(mode)
   def new_angle = angle/2
   def opposite_angle = ((180 - angle) / 2) * math.pi / 180
@@ -163,7 +159,7 @@ check rhombus(40,45,"solid","magenta").height ~is 74.0
 check rhombus(80,150,"solid","mediumpurple").width ~is 155.0
 check rhombus(80,150,"solid","mediumpurple").height ~is 41.0
 
-fun star(side_length :: Number, mode, color :: String || draw.Color):
+fun star(side_length :: Number, mode, color :: String):
   def md = mode_to_color(mode)
   def angle = 36 * math.pi / 180
   def Rc = side_length / (2 * math.sin(angle))
@@ -177,9 +173,6 @@ check star(40,"solid","gray").height ~is 62.0
   
 fun overlay(x :: p.Pict,...): 
   p.overlay(~order:#'back,x,...)
-
-fun underlay(x :: p.Pict,...): 
-  p.overlay(~order:#'front,x,...)
 
 check overlay(rectangle(30,60,"solid","orange"),ellipse(60,30,"solid","purple")).width ~is 60
 check overlay(rectangle(30,60,"solid","orange"),ellipse(60,30,"solid","purple")).height ~is 60
@@ -247,9 +240,6 @@ check scene_line(ellipse(0,0,"outline","maroon"),0,40,40,0,"maroon").height ~is 
 fun rotate(angle :: Number, image :: p.Pict): // rotate extends the bounding box
   image.rotate(angle * math.pi/180)
   
-fun scale(n :: NonnegReal, image :: p.Pict):
-  image.scale(n)
-
 fun scale_xy(x :: NonnegReal, y :: NonnegReal, image :: p.Pict):
   image.scale(x,y)
 
@@ -289,7 +279,6 @@ fun x_place(x):
   | x == "center" || x == "middle": #'center
   | x == "right": #'right
 
-// overlay must expect at least 2 args
 fun overlay_align(xplace,yplace,i1 :: p.Pict,i2 :: p.Pict, i3 :: p.Pict, ...):
   p.overlay(~horiz: x_place(xplace), ~vert: y_place(yplace), ~order:#'back, i1,i2,i3, ...)
 

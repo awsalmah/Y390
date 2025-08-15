@@ -1,0 +1,78 @@
+;; Problem set 2: Robert Indiana
+#lang rhombus
+import : "../../image.rhm" open
+         "../../universe.rhm" open
+
+// 1 Warmup: calculating numbers
+// Exercise 1
+def big_number = 100
+def y = big_number * big_number * big_number
+
+// Exercise 2
+// def y = big_number * big_number * big_number
+// def y = 100 * big_number * big_number
+// def y = 100 * 100 * big_number
+// def y = 100 * 100 * 100
+// def y = 1000000
+// todo: stepper button equivalent
+
+// Exercise 3
+// cube : Number -> Number
+// produces the third power of the given number
+// fun cube(n): ...
+// todo: function header
+
+//    given: 0        expect: 0
+//    given: 1       expect: 1
+//    given: 4       expect: 64
+//    given: 100      expect: 1000000
+// todo: check before definition
+
+// fun cube(n) ... n ...
+// todo: function template
+
+fun cube(n):
+  n * n * n
+
+check cube(0) ~is 0
+check cube(1) ~is 1
+check cube(4) ~is 64
+check cube(100) ~is 1000000
+
+// Exercise 4
+// cube(cube(cube(3)))
+// cube(cube(3 * 3 * 3))
+// cube(cube(27))
+// cube(27 * 27 * 27)
+// cube(19683)
+// 19683 * 19683 * 19683
+
+
+// 2 Eat/Die
+// Exercise 5
+// def diam
+// def diamond_eat = overlay(text("EAT", 30, "darkgreen"),
+//                           circle(35, 255, "red"),
+//                           rotate(45,square(75,255,"darkgreen")))
+// diamond_eat
+
+// Exercise 6
+// diamond: String -> Image
+// draw a diamond with the given text inside
+// fun diamond(str): ...
+// todo: function header
+
+//    given: "EAT"        expect: diamond("EAT")
+//    given: "DIE"       expect: diamond("DIE")
+// todo: check before definition
+
+// fun diamond(str): ... str ...
+// todo: function template
+
+fun diamond(str):
+  overlay(text("EAT", 30, "darkgreen"),
+          circle(35, 255, "red"),
+          rotate(45,square(75,255,"darkgreen")))
+
+// 6. Testing
+// todo: add check functionality for images

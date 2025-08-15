@@ -1,0 +1,208 @@
+;; Lecture 4: The design recipe
+#lang rhombus
+
+// 1
+def total = (3 * 0.80) + (5 * 0.60) + 4.00 + (2 * 3.00)
+(3 * 0.80) + (5 * 0.60) + 4.00 + (2 * 3.00)
+
+// Exercise 2. Answer each problem below with one arithmetic formula. Indent each formula properly.
+// 1. At the market, I bought an apple for $1 and a sandwich for $5. What is the total that I spent? The answer to this problem is (+ 1 5), so put this in your Definitions Window:
+def part1 = 1 + 5
+
+// 2. At the market, I bought an apple for $1 and a sandwich for $5. Because a sandwich is a prepared food item, it is taxed 7%. What is the total that I spent? Define a constant named part2 with your formula.
+def part2 = 1 + (1.07 * 5)
+
+// 3. At the market, I bought a baked apple for $1 and a sandwich for $5. Because both are prepared food items, both are taxed 7%. What is the total that I spent? Define a constant named part3 with your formula.
+def part3 = 1.07 * (1 + 5)
+
+// 4. At the restaurant, I ordered a baked apple for $1 and a sandwich for $5. Both are taxed 7%, and I also decided to pay 20% tip on the amount before tax was added. The tip is not taxed. What is the total that I spent? Define a constant named part4 with your formula.
+def part4 = (.20 * (1 + 5)) + (1.07 * (1 + 5))
+
+// 5. At the restaurant, I ordered a baked apple for $1 and a sandwich for $5. Both are taxed 7%, and I also decided to pay 20% tip on the amount after tax was added. What is the total that I spent? Define a constant named part5 with your formula.
+def part5 = 1.20 * 1.07 * (1 + 5)
+
+// 6. Like the last probem, but what if I rounded up the final amount to the nearest dollar (using the ceiling function)? Define a constant named part6 with your formula.
+def part6 = math.ceiling(part5)
+
+
+// Designing a function with 1 input
+// The design recipe is a 6 step process that you can use to design any program.
+
+// 1. Data definitions
+// A Temperature is ...
+// A Temperature is a Number
+
+// 2. Signature, purpose, header
+// ftoc: Temperature -> Temperature (this is the Function Signature)
+// convert farenheit to Celsius (Purpose Statement)
+// fun ftoc(f): ... (Function header)
+// todo: function header
+
+// 3. Function examples
+//    given: 32    expect: 0 (one Function Example)
+//    given: 212   expect: 100
+// todo: check before definition
+
+// 4. Function template
+// fun ftoc(f): ... f ... (Function Template)
+// todo: function template
+
+// 5. Function definition
+fun ftoc(f):
+  (f - 32) / 1.8 // (Function Definition)
+
+// 6. Testing
+check ftoc(32) ~is 0
+check ftoc(212) ~is 100.0
+check ftoc(99.5) ~is 37.5
+
+// Exercise 3. Design a function named ctok that converts a temperature in Celsius to a temperature in Kelvin. Start by copying the following list of steps into your Definitions Window:
+// Exercise 3
+
+// 1. Data definitions
+// A Temperature is a Number
+
+// 2. Signature, purpose, header
+// ctok: Temperature -> Temperature
+// converts Celsius to Kelvin
+// fun ctok(c): ...
+// todo: function header
+
+// 3. Function Examples
+//    given: 0    expect: 273.15
+//    given: 100  expect: 373.15
+// todo: check before definition
+
+// 4. Function template
+// fun ctok(c): ... c ...
+// todo: function template
+
+// 5. Function definition
+fun ctok(c):
+  c + 273.15
+
+// 6. Testing
+check ctok(0) ~is 273.15
+check ctok(100) ~is 373.15
+
+
+// Design recipe tips
+// its boring to test code over and over again so instead of testing it manually inside the interactions window
+// we can use some automatic testing (e.g. check-expect). Because check-expect is so useful, you can just write
+// the test directly instead of comments in step 3 of the design recipe (albeit you'll have to wait until
+// step 6 to test your code)
+check ftoc(32) ~is 0
+check ftoc(212) ~is 100.0
+check ftoc(99.5) ~is 37.5
+// todo: 100.0 ~= 100
+
+// it is v important to follow the design recipe steps in order (you can still backtrack)
+
+// different steps of the design recipe produce products that look v different
+// you also don't have to write the names of the steps
+
+// Exercise 4. Turn all your function examples from comments into automatic tests.
+
+
+// 3 Designing a Function with 2 inputs
+// 1. Data definitions
+// A Height is a Number
+
+// 2. Signature, purpose, header
+// fitocm: Height Height -> Height
+// convert feet and inches to centimeters
+// fun fitocm(f,i): ...
+// todo: function header
+
+// 3. Function examples
+//    given: 0 0       expect: 0
+//    given: 0 1       expect: 2.5
+//    given: 1 0       expect: 30    
+//    given: 6 0       expect: 180
+//    given: 5 10      expect: 175
+// todo: check before definition
+
+// 4. Function template
+// fun fitocm(f,i): ... f i ...
+// todo: function template
+
+// 5. Function definition
+fun fitocm(f,i):
+  (30 * f) + (2.5 * i)
+
+// 6. Testing
+check fitocm(0,0) ~is 0
+check fitocm(0,1) ~is 2.5
+check fitocm(1,0) ~is 30
+check fitocm(6,0) ~is 180
+check fitocm(5,10) ~is 175.0
+
+// Exercise 5. Design a function named coins that takes as inputs how many nickels and how many dimes I have and
+// calculates how many dollars I have in those coins. Hint: If you need to review how to write a template, you can watch this additional video.
+
+// Money is a Number
+
+// coins: Money Money -> Money
+// converts nickels and dimes to dollars
+// fun coins(n,d): ...
+
+//    given: 0 0        expect: 0
+//    given: 0 10       expect: 1
+//    given: 20 0       expect: 1
+//    given: 10 20      expect: 2.5
+//    given: 10 5       expect: 1
+// todo: check before definition
+
+// fun coins(n,d): ... n d ...
+
+fun coins(n,d):
+  (n / 20) + (d / 10)
+
+check coins(0,0) ~is 0
+check coins(0,10) ~is 1
+check coins(20,0) ~is 1
+check coins(10,20) ~is 5/2
+// todo: 5/2 ~= 2.5
+check coins(10,5) ~is 1
+
+
+// How many data definitions?
+// make sure that whatever words you use in your signature are already
+// defined in your data definitions or are already well known
+// data definitions such as a Number.
+
+
+// Designing an animation
+import : "../../image.rhm" open
+         "../../universe.rhm" open
+
+// 1. Data Definitions
+
+// 2. Signature, purpose, header
+// place_rocket: Number -> Pict
+// put a rocket on the scene, so that the rocket flies up
+// fun place_rocket(t): ...
+
+// 3. Function examples
+def rocket_sprite = above(triangle(20,255,"black"),
+                          overlay(overlay(circle(5,"outline","black"),
+                                          circle(5,255,"white")),
+                                  rectangle(20,20,255,"gray")))
+
+def background = empty_scene(200,200)
+
+//    given: place_rocket(0)      expect: place_image(rocket_sprite, 100, 185, background)
+//    given: place_rocket(100)      expect: place_image(rocket_sprite, 100, 85, background)
+// todo: add check functionality for images
+
+// 4. Function template
+// fun place_rocket(t): ... t ...
+
+// 5. Function definition
+fun place_rocket(t): place_image(rocket_sprite,100, 185 - t, background)
+
+// 6. Testing
+
+animate(place_rocket)
+
+// todo: add tests passed counter

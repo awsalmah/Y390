@@ -1,0 +1,38 @@
+;; Problem set 1: Paint a date in DrRacket
+#lang rhombus
+import : "../../image.rhm" open
+         "../../universe.rhm" open
+         
+// 4 Create a program that paints a date
+// Problem 5
+overlay(text("OCT.31,1978", 50, "white"),
+        rectangle(400, 200, 255, "black"))
+
+// Problem 6
+def p1 = place_image(square(60, 255, "red"), 30, 30, square(400, 255, "black"))
+def p2 = place_image(rectangle(330, 60, 255, "white"), 235, 30, p1)
+def p3 = place_image(rectangle(60, 330, 255, "white"), 30, 235, p2)
+def p4 = place_image(square(300, 255, "white"), 220, 220, p3)
+def p5 = place_image(rectangle(20, 105, 255, "blue"), 390, 122, p4)
+def p6 = place_image(rectangle(20, 300, 255, "white"), 390, 330, p5)
+def p7 = place_image(rectangle(200, 20, 255, "yellow"), 170, 390, p6)
+def pm = place_image(rectangle(90, 20, 255, "gray"), 325, 390, p7) // todo: fix grey and gray
+pm
+
+// Problem 7
+overlay(
+  text(String.append("OCT.", String.from_number(1 + math.random(31)), ",", String.from_number(1 + math.random(2026))), 50, "white"),
+  rectangle(400, 200, 255, "black"))
+// todo: check String.append
+// todo: check math.random
+// todo: check String.from_number
+
+def m1 = place_image(square(math.random(60), 255, "red"), 30, 30, square(400, 255, "black"))
+def m2 = place_image(rectangle(math.random(330), math.random(60), 255, "white"), 235, 30, m1)
+def m3 = place_image(rectangle(math.random(60), math.random(330), 255, "white"), 30, 235, m2)
+def m4 = place_image(square(math.random(300), 255, "white"), 220, 220, m3)
+def m5 = place_image(rectangle(math.random(20), math.random(105), 255, "blue"), 390, 122, m4)
+def m6 = place_image(rectangle(math.random(20), math.random(300), 255, "white"), 390, 330, m5)
+def m7 = place_image(rectangle(math.random(200), math.random(20), 255, "yellow"), 170, 390, m6)
+def mp = place_image(rectangle(math.random(90), math.random(20), 255, "gray"), 325, 390, m7)
+mp

@@ -1,0 +1,191 @@
+;; Lecture 1: DrRacket and arithmetic
+#lang rhombus
+
+// 4. DrRacket as a calculator
+25
+25 - 20
+25 + 20
+25 * 20
+25 / 20
+
+// Exercise 3
+// Add the numbers 123 and 456 together.
+123 + 456
+
+// Exercise 4
+// Add the numbers 123, 456, and 789 together.
+123 + 456 + 789
+
+
+// 5. Chaining Operations
+// we can use the results of previous operations in the next operation(s).
+// 100 - 45
+
+// we can combine multiple operations in the same line.
+// 100 - (25 + 20)
+// (5 * 4) - 1
+
+// Chaining operations is the computer science equivalent of taking 2 parts and putting them together.
+// When building big programs we will build them in parts and put the parts together.
+
+// Exercise 5
+// multiply 10 by the sum of the numbers 123 and 456.
+10 * (123 + 456)
+
+// Exercise 6
+// add the number 123, 456, and 789 together, but do not give the + operation more than 2 inputs at once. Instead, use the + operation twice, each time with just 2 inputs.
+123 + (456 + 789)
+
+// Exercise 7
+// What is wrong with each of the following formulas?
+// (3 + 2) // nothing
+
+// (5) -> nothing 
+
+// ((+ 3 2)) // -> prefix instead of infix
+
+
+// 6. The definitions window
+// The bottom half of drracket (the interactions window).
+// The top half (the definitions window) is for anything you want to save/run/reuse later.
+// The top half is basically a text editor.
+// You can save the code in the top half to be reused later.
+// To run your code, either press the run button or cmd + r.
+
+// Exercise 8
+// Put the 4 formulas you made above in the Definitions Window. Make sure that when you click the Run button, the Interactions Window shows exactly 4 results
+// 579
+// 1368
+// 5790
+// 1368
+// in that order.
+
+
+// 7. Comments
+// Another thing you could do in the definitions window is putting text that helps us understand what is going on.
+// To tell the computer to ignore the text, put 2 forward slashes in front of the text you want to ignore.
+// Anything to the right of the 2 forward slashes is ignored. The ignore text is called a comment.
+// You can also use /**/ to write multiline comments.
+
+// remaining cash
+100 - (25 + 20)
+
+// favorite ice cream
+(5 * 4) - 1
+
+// Exercise 9
+// In the Definitions Window, put the comments
+// Exercise 3
+// Exercise 4
+// Exercise 5
+// Exercise 6
+// above each of the 4 formulas, so that it is easy for people to see which formula is for which exercise above.
+// These comments should be ignored by DrRacket, so make sure that when you click the Run button, the Interactions Window shows the same 4 results as before.
+
+
+// 8. Stepping
+// 100 - (25 + 20) -> we are chaining additiong and subtraction.
+// It is useful to write the results of the operations step by step.
+
+// remaining cash
+100 - (25 + 20)
+// 100 - 45
+// 55
+
+// favorite ice cream flavor
+(5 * 4) - 1
+// 20 - 1
+// 19
+
+// todo: stepper button equivalent
+
+
+// 9. Images
+// todo: add copy and paste functionality for images
+// We can also use a programming language to calculate with images (wip).
+// to work with picts we need to add
+import: "../../image.rhm" open
+// to access our pict library
+// the syntax will be different for the official pict library
+// import: pict open
+
+// import means we need to use a library
+// a library is a bunch of operations that someone has created or bundled together
+
+// we can draw a pict in the definitions window or in the interactions window
+circle(25,255,"red")
+
+def x = square(100,255,"blue")
+def y = square(160,255,"black")
+
+// scale is an operation that takes a number and a pict as an input and produces a pict
+// the above description can be abbreviated as:
+// scale : Number Pict -> Pict
+scale(0.5, x)
+
+// overlay : Pict Pict -> Pict
+// the order of inputs matters in overlay
+overlay(x,y)
+overlay(y,x)
+
+// just as with numbers, we can chain operations for picts
+overlay(scale(0.5,y),x)
+
+// place_image : Pict Number Number Pict
+place_image(x,5,6,y)
+
+// Exercise 11
+// In the Definitions Window, put
+// (require 2htdp/image)
+// to access the 2htdp/image library.
+// Copy two images from the Internet, and combine them using one of the following functions provided by the 2htdp/image library.
+// overlay : Image Image -> Image
+// underlay : Image Image -> Image
+// above : Image Image -> Image
+// beside : Image Image -> Image
+// place-image : Image Number Number Image -> Image
+// Only overlay and place-image are shown in the video above, but you can learn about the other functions by experimenting with them, or by watching this additional optional video about images. By the way, all these operations except place-image can actually take more than 2 inputs at once.
+// Add your formula for combining the images to the bottom of your Definitions, so that when you click the Run button, the Interactions Window shows 4 numbers followed by 1 composite image.
+above(scale(0.5,x),scale(0.3,y))
+beside(scale(0.5,x),scale(0.3,y))
+underlay(scale(0.5,x),scale(0.2,y))
+
+// 10. Making Images
+// A Color is a String
+// text : String Number Color -> Pict
+text("hello",30,"red")
+
+place_image(text("hello",30,"red"),50,60,x)
+
+// you can break out a formula into multiple lines
+// make sure the lines line up horizontally
+// this makes your programs more readable
+// and is necessary because rhombus
+// is white-space sensitive
+
+place_image(text("hello",30,"red"),
+            50,
+            60,
+            x)
+
+// Exercise 12
+// Combine some images with an image that is not copied from the Internet but made from scratch. To make an image from scratch,
+// you can either use the text function described in the video above, or use the circle, square, or rectangle function described in this
+// additional optional video about images. When you click the Run button, the Interactions Window should show 4 numbers followed by 2 composite images.
+overlay(circle(20,255,"red"),circle(40,255,"blue"))
+beside(square(20,255,"red"),square(20,255,"blue"))
+above(square(20,255,"red"),square(20,255,"blue"))
+place_image(square(20,255,"red"),5,5,square(20,255,"blue"))
+
+// Stepping images
+// todo: stepper button equivalent
+
+
+// 11. Definitions
+// A definition is when we take something that is complicated to describe and assign a name to that description
+// so in the future we can use the same name to refer to that thing concisely.
+
+// We will begin with defining a constant aka defining a variable.
+// To make a definition of a constant (this is also called defining a variable).
+def x2 = circle(20,255,"blue")
+// you can replace every occurence of the pict/number with the variable name

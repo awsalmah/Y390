@@ -1,0 +1,297 @@
+;; Lecture 5: Multiple cases
+#lang rhombus
+import : "../../image.rhm" open
+         "../../universe.rhm" open
+
+// Booleans and conditionals
+// There are operations to compare numbers in rhombus
+35 > 29
+20 > 29
+
+// #true and #false are the only 2 boolean values
+
+// A Boolean is one of:
+// - #true
+// - #false
+
+#true
+#false
+// todo: true and false
+
+// There are many operations that return booleans
+// > : Number Number -> Boolean
+// < : Number Number -> Boolean
+// == : Number Number -> Boolean
+// >= : Number Number -> Boolean
+// <= : Number Number -> Boolean
+
+10 <= 29
+10 <= 20 && 20 <= 29
+
+// conditionals are used to make a decision based on a boolean
+
+// def rr = 20
+def rr = 35
+
+// a cond has cases which are enclosed with a vertical bar
+// each case has a question and an answer or a test expression and a result body
+cond
+| 10 <= rr && rr <= 29: 4
+| rr > 29: 3
+| 6 <= rr && rr <= 9: 2
+| 1 <= rr && rr <= 5: 1
+| rr == 0: 0
+
+// one way to understand conditionals better is to understand them using the stepper in drracket
+// todo: stepper button equivalent
+
+// Exercise 1. Copy the three conditionals below into your Definitions Window. What are their results?
+// Exercise 1
+cond
+| 100 < 32 : "solid"
+| 32 <= 100 && 100 <= 212 : "liquid"
+| 100 > 212 : "gas"
+// = ???
+// = ...
+// "liquid"
+// todo: stepper button equivalent
+
+cond
+| -40 < 32 : "solid"
+| 32 <=  -40 <= 212 : "liquid"
+| -40 > 212 : "gas"
+// = ???
+// = ...
+// "solid"
+// todo: stepper button equivalent
+              
+cond
+| 450 < 32 : "solid"
+| 32 <=  450 && 450 <= 212 : "liquid"
+| 450 > 212 : "gas"
+// = ???
+// = ...
+// "gas"
+// todo: stepper button equivalent
+
+
+// Designing using a conditional
+// rate_points : Number -> Number
+// convert respiratory_rate into trauma points
+// fun rate_points(rr): ...
+// todo: function header
+
+fun rate_points(rr):
+  cond
+  | 10 <= rr && rr <= 29: 4
+  | rr > 29: 3
+  | 6 <= rr && rr <= 9: 2
+  | 1 <= rr && rr <= 5: 1
+  | rr == 0: 0
+
+check rate_points(20) ~is 4
+check rate_points(35) ~is 3
+check rate_points(8) ~is 2
+check rate_points(3) ~is 1
+check rate_points(0) ~is 0
+// todo: check before definition
+
+// Exercise 2. Design a function called bp-points to convert the patient’s systolic blood pressure into a coded value. Use the same table we used for the respiratory rate:
+// bp_points: Number -> Number
+// converts systolic blood pressure into trauma points
+// fun bp_points(sbp): ...
+// todo: function header
+
+// fun bp_points(sbp): ... sbp ...
+// todo: function template
+
+fun bp_points(sbp):
+  cond
+  | sbp > 89: 4
+  | 76 <= sbp && sbp <= 89 : 3
+  | 50 <= sbp && sbp <= 75 : 2
+  | 1 <= sbp && sbp <= 49 : 1
+  | sbp == 0 : 0
+
+check bp_points(90) ~is 4
+check bp_points(80) ~is 3
+check bp_points(60) ~is 2
+check bp_points(25) ~is 1
+check bp_points(0) ~is 0
+// todo: check before definition
+
+
+// Bigger numbers
+// tax: Number -> Number
+// compute the income tax of some single person with the given income
+// fun tax(income): ...
+// todo: function header
+
+// fun tax(income): ... income ...
+
+fun tax(income):
+  cond
+  | income <= 9700 : 0.10 * income
+  | ~else : (0.10 * 9700) + (0.12 * (income - 9700))
+                     
+check tax(4980) ~is 498.0
+check tax(19975) ~is 2203.0
+// todo: check before definition
+// todo: check 100.0 == 100
+
+
+// 2 Intervals
+// Designing with intervals
+
+// 4 Designing an animation (From Lecture 4)
+// A Time is one of:
+// - a number less than 100
+// - a number at least 100
+
+// launch_rocket: Number -> Pict
+// make the rocket stay on the ground then fly up
+// fun launch_rocket(t): ...
+// todo: add function header
+def rocket_sprite = above(triangle(20,255,"black"),
+                          overlay(overlay(circle(5,"outline","black"),
+                                          circle(5,255,"white")),
+                                  rectangle(20,20,255,"gray")))
+def background = empty_scene(200,200)
+
+/*
+fun launch_rocket(t):
+  cond
+  | t < 100 : ...
+  | t >= 100 : ...
+// todo: add function template
+
+// Template with else
+fun launch_rocket(t):
+  cond
+  | t < 100 : ...
+  | ~else : ...
+// todo: add function template
+*/
+
+// Definition = template + examples
+fun launch_rocket(t):
+  cond
+  | t < 100 : place_image(rocket_sprite, 100, 185, background)
+  | t >= 100 : place_image(rocket_sprite, 100, 185 - (t - 100), background)
+
+// check launch_rocket(0) ~is place_image(rocket_sprite, 100, 185, background)
+// check launch_rocket(50) ~is place_image(rocket_sprite, 100, 185, background)
+// check launch_rocket(100) ~is place_image(rocket_sprite, 100, 185, background)
+// check launch_rocket(200) ~is place_image(rocket_sprite, 100, 85, background)
+// todo: check before definition
+// todo: add check functionality for images
+
+// animate(launch_rocket)
+
+
+// 3 Enumerations
+// Data definitions are built up of lists of specific data examples are called enumerations
+
+// The first step of the design recipe is to write data definitions
+// This is an important step because all other steps depend on it
+// The data definition enumerates all kinds of possible values
+
+// 1. Data definitions
+
+// A Boolean is one of:-
+// - #true
+// - #false
+
+// A TrafficLight is one of:
+// - "red"
+// - "yellow"
+// - "green"
+
+// 2. Signature, purpose, header
+// draw_tl: TrafficLight -> Imae
+// draw a simple traffic light
+// fun draw_tl(tl): ...
+
+// 3. Examples
+def backgroundtl = rectangle(100, 300, "solid", "black")
+// todo: check before definition
+
+// 4. Template
+// fun draw_tl(tl):
+//   cond
+//   | "red" == tl : ...
+//   | "yellow" == tl : ...
+//   | "green" == tl : ...
+// todo: string=?
+// string=? is pronounced string equal huh
+
+// 5. Definition
+fun draw_tl(tl):
+  cond
+  | "red" == tl : place_image(circle(40,"solid",tl),50,50,backgroundtl)
+  | "yellow" == tl : place_image(circle(40,"solid",tl),50,150,backgroundtl)
+  | "green" == tl : place_image(circle(40,"solid",tl),50,250,backgroundtl)
+
+// check draw_tl("red") ~is place_image(circle(40,"solid","red"), 50, 50, backgroundtl)
+// check draw_tl("yellow") ~is place_image(circle(40,"solid","yellow"), 50, 150, backgroundtl)
+// check draw_tl("green") ~is place_image(circle(40,"solid","green"), 50, 250, backgroundtl)
+// todo: check before definition
+// todo: add check functionality for Picts
+
+
+// Exercise 4. Design a function called next-tl that takes a traffic light as input and returns the next traffic light.
+// Hint: you can reuse the data definition and template written in the video above.
+
+// 1. Data definitions
+
+// A TrafficLight is one of:
+// - "red"
+// - "yellow"
+// - "green"
+
+// 2. Signature, purpose, header
+// next_tl: TrafficLight -> TrafficLight
+// returns the next traffic light
+// fun next_tl(tl):
+
+// 3. Examples
+// todo: check before definition
+
+// 4. Template
+// fun next_tl(tl):
+//   cond
+//   | "red" == tl : ...
+//   | "yellow" == tl : ...
+//   | "green" == tl : ...
+
+fun next_tl(tl):
+  cond
+  | "red" == tl : "green"
+  | "yellow" == tl : "red"
+  | "green" == tl : "yellow"
+
+check next_tl("red") ~is "green"
+check next_tl("yellow") ~is "red"
+check next_tl("green") ~is "yellow"
+
+
+// Exercise 5. In order to handle clicking and dragging and moving of the mouse, we will need to design functions that take a MouseEvent as input.
+// Here is the data definition for a MouseEvent:
+// A MouseEvent is one of:
+// - "button-down"
+// - "button-up"
+// - "move"
+// - "drag"
+// - "enter"
+// - "leave"
+
+// Write the template for a function that processes a MouseEvent. Make your template look like a function called process-mouseevent, and do not put it in a comment.
+// Hint: The data definition for a MouseEvent is an enumeration. Review how to write a template for an enumeration by watching this additional video.
+// fun process_mouseevent(me):
+//   cond
+//   | "button-down" : ...
+//   | "button-up" : ...
+//   | "move" : ...
+//   | "drag" : ...
+//   | "enter" : ...
+//   | "leave" : ...
