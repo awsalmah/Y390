@@ -1,7 +1,9 @@
-# DS_Store files
-*.DS_Store
-
-# First change files
-.bak
-.rkt~
-.rhm~
+.DS_Store
+compiled/
+/doc/
+*~
+*.bak
+*.rkt~
+*.rhm~
+\#*
+.\#*
